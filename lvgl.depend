@@ -8527,14 +8527,11 @@
 	"lvgl.h"
 	"pic_converted_transparent/image_declares.h"
 
-1782798263 source:c:\users\gku\desktop\lv_port_win_codeblocks\lvgl\demos\my_demo_2\my_demo_2.c
+1782803785 source:c:\users\gku\desktop\lv_port_win_codeblocks\lvgl\demos\my_demo_2\my_demo_2.c
 	"my_demo_2.h"
 
-1782792304 c:\users\gku\desktop\lv_port_win_codeblocks\lvgl\demos\my_demo_2\my_demo_2.h
-	<string.h>
-	<stdio.h>
+1782804589 c:\users\gku\desktop\lv_port_win_codeblocks\lvgl\demos\my_demo_2\my_demo_2.h
 	"lvgl.h"
-	"pic_converted_transparent/image_declares.h"
 	"camera_modes.h"
 	"ui_components.h"
 	"ui_roller.h"
@@ -12983,11 +12980,11 @@
 	<stdio.h>
 	"camera_modes.h"
 
-1782792236 c:\users\gku\desktop\lv_port_win_codeblocks\lvgl\demos\my_demo_2\ui_components.h
+1782802858 c:\users\gku\desktop\lv_port_win_codeblocks\lvgl\demos\my_demo_2\ui_components.h
 	"lvgl.h"
 	"camera_modes.h"
 
-1782797562 source:c:\users\gku\desktop\lv_port_win_codeblocks\lvgl\demos\my_demo_2\ui_components.c
+1782802658 source:c:\users\gku\desktop\lv_port_win_codeblocks\lvgl\demos\my_demo_2\ui_components.c
 	<string.h>
 	<stdio.h>
 	"ui_components.h"

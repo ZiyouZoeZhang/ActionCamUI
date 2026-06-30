@@ -45,13 +45,13 @@ void create_pic_lib_icon(lv_obj_t *parent){
 void create_cam_mode_icon(lv_obj_t * parent, int mode){
     img_cam_mode = lv_image_create(parent);
     lv_obj_align(img_cam_mode, LV_ALIGN_BOTTOM_LEFT, 0, 0);
-
     lv_obj_set_user_data(img_cam_mode, (void*)(intptr_t)mode);
-    lv_obj_add_flag(img_cam_mode, LV_OBJ_FLAG_CLICKABLE);
+
     update_cam_mode_icon(mode);
 
     /*CB*/
-    lv_obj_add_event_cb(img_cam_mode, update_cam_mode_cb, LV_EVENT_CLICKED, NULL);
+    lv_obj_add_flag(img_cam_mode, LV_OBJ_FLAG_CLICKABLE);
+    lv_obj_add_event_cb(img_cam_mode, open_scr_cam_modes_cb, LV_EVENT_CLICKED, NULL);
 }
 
 void create_exit_icon(lv_obj_t * parent){
@@ -61,7 +61,12 @@ void create_exit_icon(lv_obj_t * parent){
 
     /*CB*/
     lv_obj_add_flag(img_exit, LV_OBJ_FLAG_CLICKABLE);
-    lv_obj_add_event_cb(img_exit, return_home_cb, LV_EVENT_CLICKED, NULL);
+    lv_obj_add_event_cb(img_exit, open_scr_home_cb, LV_EVENT_CLICKED, NULL);
+}
+
+// TODO (gku#1#): create buttons function for menu scr ...
+void create_buttons(lv_obj_t * parent){
+    printf("create buttons");
 }
 
 
@@ -113,18 +118,24 @@ void update_cam_mode_icon(int mode){
 
 /**CB**/
 
-void update_cam_mode_cb(lv_event_t * e){
-    lv_obj_t *img = lv_event_get_target(e);
-    camera_mode_t mode = (camera_mode_t)(intptr_t)lv_obj_get_user_data(img);
+void open_scr_cam_modes_by_mode(int mode){
     create_scr_mode_selection(mode);
 }
 
-void return_home_cb(lv_event_t * e){
+
+void open_scr_cam_modes_cb(lv_event_t * e){
+    lv_obj_t *img = lv_event_get_target(e);
+    camera_mode_t mode = (camera_mode_t)(intptr_t)lv_obj_get_user_data(img);
+    open_scr_cam_modes_by_mode(mode);
+}
+
+
+void open_scr_home_cb(){
     cur_cam_mode = get_selected_mode_from_roller();
     create_scr_home();
     lv_screen_load(scr_home);
 }
 
-void open_scr_pic_lib_cb(lv_event_t * e){
+void open_scr_pic_lib_cb(){
     create_scr_pic_library();
 }
