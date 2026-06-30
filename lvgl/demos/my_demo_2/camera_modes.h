@@ -31,7 +31,6 @@ typedef enum {
     CAM_MODE_COUNT                        // 模式总数
 } camera_mode_t;
 
-
 typedef struct {
     camera_mode_t mode;
     const char *name;

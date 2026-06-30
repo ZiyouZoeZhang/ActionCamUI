@@ -22,7 +22,6 @@ extern int cur_cam_mode;
 
 ///somehow need to be global
 extern lv_obj_t *scr_home;
-extern lv_obj_t *img_exit;
 
 /**functions**/
 void my_demo_2_create();
@@ -31,6 +30,7 @@ void my_demo_2_create();
 void create_scr_home();
 void create_scr_poweroff();
 void create_scr_mode_selection(int mode);
+void create_scr_pic_library();
 
 ///some how need to be global as well
 void create_cam_mode_roller(lv_obj_t *parent, int cur_mode);

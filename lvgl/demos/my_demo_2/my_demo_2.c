@@ -7,23 +7,22 @@ int sd_status = 1; //0 = none, 1 = available, -1 = error
 float sd_storage = 30.9;
 int cur_cam_mode = 8;
 
-lv_obj_t *img_exit = NULL;
+//global
 lv_obj_t *scr_home = NULL;
 
 /**static SCREENS**/
 static lv_obj_t * scr_poweroff = NULL;
 static lv_obj_t * scr_mode_selection = NULL;
 static lv_obj_t * img_xtu_poweroff = NULL;
+static lv_obj_t * scr_pic_library = NULL;
 
 /**TEST**/
- void cb_test(lv_event_t *e); //UNUSED
+ void test_error_check(); //UNUSED
 
 /**TEST**/
-void cb_test(lv_event_t *e) {
-    lv_obj_t *roller = lv_event_get_target(e);
-    uint16_t selected_idx = lv_roller_get_selected(roller); ///index of seldcted mode
+void  test_error_check(){
+    printf("\nERROR\n");
 }
-
 
 /**SCREENS**/
 
@@ -37,6 +36,9 @@ void create_scr_home(){
     create_sd_icon(scr_home, sd_status, sd_storage);
     create_pic_lib_icon(scr_home);
     create_cam_mode_icon(scr_home, cur_cam_mode);
+
+    /**TEST**/
+    //test_show_modes();
 
     /**load screen**/
     lv_scr_load(scr_home);
@@ -57,11 +59,18 @@ void create_scr_mode_selection(int mode){
     create_cam_mode_roller(scr_mode_selection, mode);
     create_exit_icon(scr_mode_selection);
 
-    /**clicked on exit CB**/
-    lv_obj_add_event_cb(img_exit, return_home_cb, LV_EVENT_CLICKED, NULL);
-
     /**load screen**/
     lv_screen_load(scr_mode_selection);
+}
+
+void create_scr_pic_library(){
+    /**background**/
+    scr_pic_library = lv_obj_create(NULL);
+    lv_obj_set_style_bg_color(scr_pic_library,BG_COLOR_DARK_GREY, LV_PART_MAIN);
+    create_exit_icon(scr_pic_library);
+
+     /**load screen**/
+    lv_screen_load(scr_pic_library);
 }
 
 void my_demo_2_create() {

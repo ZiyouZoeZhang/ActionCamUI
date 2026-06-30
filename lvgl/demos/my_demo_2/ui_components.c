@@ -10,6 +10,7 @@ static lv_obj_t * img_sd = NULL;
 static lv_obj_t * label_sd = NULL;
 static lv_obj_t * img_pic_lib = NULL;
 static lv_obj_t * img_cam_mode = NULL;
+static lv_obj_t * img_exit = NULL;
 
 /**creations**/
 
@@ -34,6 +35,11 @@ void create_pic_lib_icon(lv_obj_t *parent){
     img_pic_lib = lv_image_create(parent);
     lv_obj_align(img_pic_lib, LV_ALIGN_LEFT_MID, -20, 0);
     lv_image_set_src(img_pic_lib, &main_Picture_library);
+
+    /*CB*/
+    lv_obj_add_flag(img_pic_lib, LV_OBJ_FLAG_CLICKABLE);
+    lv_obj_add_event_cb(img_pic_lib, open_scr_pic_lib_cb, LV_EVENT_CLICKED, NULL);
+
 }
 
 void create_cam_mode_icon(lv_obj_t * parent, int mode){
@@ -53,7 +59,9 @@ void create_exit_icon(lv_obj_t * parent){
     lv_obj_align(img_exit, LV_ALIGN_TOP_LEFT, 0, 0);
     lv_image_set_src(img_exit, &common_return);
 
+    /*CB*/
     lv_obj_add_flag(img_exit, LV_OBJ_FLAG_CLICKABLE);
+    lv_obj_add_event_cb(img_exit, return_home_cb, LV_EVENT_CLICKED, NULL);
 }
 
 
@@ -115,4 +123,8 @@ void return_home_cb(lv_event_t * e){
     cur_cam_mode = get_selected_mode_from_roller();
     create_scr_home();
     lv_screen_load(scr_home);
+}
+
+void open_scr_pic_lib_cb(lv_event_t * e){
+    create_scr_pic_library();
 }

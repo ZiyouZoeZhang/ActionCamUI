@@ -19,5 +19,6 @@ void update_cam_mode_icon(int mode);
 /**CB**/
 void update_cam_mode_cb(lv_event_t * e);
 void return_home_cb(lv_event_t * e);
+void open_scr_pic_lib_cb(lv_event_t * e);
 
 #endif // UI_COMPONENTS_H_INCLUDED
