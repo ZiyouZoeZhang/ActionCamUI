@@ -7,6 +7,7 @@
 #include "camera_modes.h"
 #include "ui_components.h"
 #include "ui_roller.h"
+#include "ui_menu_btnm.h"
 
 /**variables for INPUT**/
 extern int battery_level;

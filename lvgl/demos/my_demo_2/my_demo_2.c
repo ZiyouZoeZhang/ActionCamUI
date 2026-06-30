@@ -31,7 +31,6 @@ void open_scr_menu_cb(){
     create_scr_menu();
 }
 
-
 void swipe_scr_main_cb(lv_event_t * e){
      lv_obj_t * screen = lv_event_get_current_target(e);
     lv_dir_t dir = lv_indev_get_gesture_dir(lv_indev_active());
@@ -128,7 +127,9 @@ void create_scr_menu(){
     scr_menu = lv_obj_create(NULL);
     lv_obj_set_style_bg_color(scr_menu, BG_COLOR_DARK_GREY, LV_PART_MAIN);
 
-    create_buttons(scr_menu);
+    create_menu_btnm(scr_menu);
+    create_battery_icon(scr_menu, battery_charging, battery_level);
+    create_exit_icon(scr_menu);
 
     /**CB**/
     lv_obj_add_event_cb(scr_menu, swipe_scr_menu_cb, LV_EVENT_GESTURE, NULL);

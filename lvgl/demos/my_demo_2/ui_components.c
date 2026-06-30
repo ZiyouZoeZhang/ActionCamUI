@@ -64,11 +64,6 @@ void create_exit_icon(lv_obj_t * parent){
     lv_obj_add_event_cb(img_exit, open_scr_home_cb, LV_EVENT_CLICKED, NULL);
 }
 
-// TODO (gku#1#): create buttons function for menu scr ...
-void create_buttons(lv_obj_t * parent){
-    printf("create buttons");
-}
-
 
 /**updates**/
 
