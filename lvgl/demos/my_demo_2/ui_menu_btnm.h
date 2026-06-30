@@ -3,6 +3,8 @@
 
 #include "lvgl.h"
 
+void create_menu_grid() ;
+
 typedef enum {
     BTN_STATE_OFF = 0,
     BTN_STATE_ON = 1
@@ -23,7 +25,8 @@ typedef enum{
 typedef struct {
     menu_btn_t btn;
     const char *name;
-    //const void *icon_src;
+    const void *icon_src_on;
+    const void *icon_src_off;
     btn_state_t state;
     //bool can_toggle;
 } menu_btn_info_t;
@@ -44,7 +47,7 @@ const char* get_menu_btn_name(menu_btn_t btn);
 bool get_menu_btn_can_toggle(menu_btn_t btn);
 
 //action
-//void menu_btn_toggle(menu_btn_t btn);
+void menu_btn_toggle_state_cb(lv_event_t *e);
 //void menu_btn_execute(menu_btn_t btn);
 
 #endif // UI_MENU_BTNM_H_INCLUDED
