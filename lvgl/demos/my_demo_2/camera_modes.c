@@ -1,8 +1,4 @@
 #include "camera_modes.h"
-#include "../../lvgl.h"
-#include <string.h>
-#include <stdio.h>
-#include "../../pic_converted_transparent/image_declares.h"
 
 static const camera_mode_info_t mode_table[] = {
     {CAM_MODE_RAW,            "Raw",     &mode_rawphoto_normal},

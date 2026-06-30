@@ -1,10 +1,11 @@
 #ifndef CAMERA_MODES_H_INCLUDED
 #define CAMERA_MODES_H_INCLUDED
 
-#include "../../lvgl.h"
 #include <string.h>
 #include <stdio.h>
-#include "../../pic_converted_transparent/image_declares.h"
+
+#include "lvgl.h"
+#include "pic_converted_transparent/image_declares.h"
 
 typedef enum {
     // едуудёй╫

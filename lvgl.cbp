@@ -51,7 +51,6 @@
 			<Add option="-Wall" />
 			<Add directory="." />
 		</Compiler>
-		<Unit filename="../pic_converted_transparent" />
 		<Unit filename="lv_conf.h" />
 		<Unit filename="lvgl/demos/my_demo/Yahei.c">
 			<Option compilerVar="CC" />
@@ -80,7 +79,10 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="lvgl/demos/my_demo_2/my_demo_2.h" />
-		<Unit filename="lvgl/demos/my_demo_tests" />
+		<Unit filename="lvgl/demos/my_demo_2/ui_components.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="lvgl/demos/my_demo_2/ui_components.h" />
 		<Unit filename="lvgl/lv_conf_template.h" />
 		<Unit filename="lvgl/lv_version.h" />
 		<Unit filename="lvgl/lvgl.h" />
@@ -2258,9 +2260,6 @@
 		<Unit filename="lvgl/src/widgets/win/lv_win_private.h" />
 		<Unit filename="main.c">
 			<Option compilerVar="CC" />
-		</Unit>
-		<Unit filename="resources.rc">
-			<Option compilerVar="WINDRES" />
 		</Unit>
 		<Extensions />
 	</Project>
