@@ -26,7 +26,8 @@ static void create_pop_up_btn(lv_obj_t * parent);
 static void menu_btn_toggle_state_cb(lv_event_t *e);
 static void hide_btn_cb(lv_event_t *e);
 static void hide_btn_timer_cb(lv_timer_t * t);
-static void return_menu_cb(lv_event_t *e);
+void open_scr_menu_cb(lv_event_t *e);
+void open_scr_poweroff_cb(lv_event_t *e);
 
 /**actions**/
 static void wifi_action(void);
@@ -49,10 +50,6 @@ menu_btn_info_t menu_buttons[] = {
     {CAM_MENU_TURN_OFF,      "Power Off",   &quick_poweroff, &quick_poweroff, BTN_STATE_OFF, poweroff_action},
     {CAM_MENU_GRID_VIEW,     "Grid View",   &quick_grid_enable, &quick_grid_disable, BTN_STATE_OFF, grid_action}
 };
-
-static void return_menu_cb(lv_event_t *e){
-    create_scr_menu();
-}
 
 static void menu_btn_toggle_state_cb(lv_event_t *e){
     lv_obj_t *btn_obj = lv_event_get_target(e);
@@ -193,9 +190,6 @@ static void grid_action(void) {
     lv_timer_resume(timer);
 }
 
-
-//TODO
-
 static void wifi_action(void) {
     lv_obj_t * scr = lv_obj_create(NULL);
     lv_obj_set_style_bg_color(scr, BG_COLOR_DARK_GREY,LV_PART_MAIN);
@@ -209,30 +203,61 @@ static void wifi_action(void) {
     lv_obj_set_style_bg_color(btn, lv_palette_main(LV_PALETTE_BLUE), LV_PART_MAIN);
     lv_obj_set_size(btn, lv_pct(100), lv_pct(25));
     lv_obj_align(btn, LV_ALIGN_BOTTOM_MID, 0, 0);
-    lv_obj_add_event_cb(btn, return_menu_cb, LV_EVENT_CLICKED, NULL);
+    lv_obj_add_event_cb(btn, open_scr_menu_cb, LV_EVENT_CLICKED, NULL);
 
     lv_obj_t * txt = lv_label_create(scr);
     lv_label_set_text(txt, "TQWERTYUIOPASDFGHJ \n\n asdfghjkzxcvbnm \n\n qwertyhbncxfg");
     lv_obj_set_style_text_color(txt, lv_color_white(), LV_PART_MAIN);
-    //lv_obj_set_style_bg_color(txt, lv_color_white(), LV_PART_MAIN);
     lv_obj_align(txt, LV_ALIGN_RIGHT_MID, lv_pct(-30), lv_pct(-15));
 
     lv_obj_t * label = lv_label_create(btn);
     lv_label_set_text(label, "CANCLE");
     lv_obj_center(label);
 
+    lv_screen_load(scr);
+}
+
+void poweroff_action(void) {
+    lv_obj_t * scr = lv_obj_create(NULL);
+    lv_obj_set_style_bg_color(scr, BG_COLOR_DARK_GREY,LV_PART_MAIN);
+
+    /**btn back**/
+    lv_obj_t * btn_back  = lv_button_create(scr);
+    lv_obj_set_style_bg_color(btn_back, lv_palette_main(LV_PALETTE_GREY), LV_PART_MAIN);
+    lv_obj_set_size(btn_back, lv_pct(25), lv_pct(20));
+    lv_obj_align(btn_back, LV_ALIGN_BOTTOM_MID, lv_pct(-20), lv_pct(-25));
+    lv_obj_add_event_cb(btn_back, open_scr_menu_cb, LV_EVENT_CLICKED, NULL);
+
+    lv_obj_t * label_back = lv_label_create(btn_back);
+    lv_label_set_text(label_back, "CANCLE");
+    lv_obj_center(label_back);
+
+    /**btn continue**/
+    lv_obj_t * btn_continue  = lv_button_create(scr);
+    lv_obj_set_style_bg_color(btn_continue, lv_palette_main(LV_PALETTE_BLUE), LV_PART_MAIN);
+    lv_obj_set_size(btn_continue, lv_pct(25), lv_pct(20));
+    lv_obj_align(btn_continue, LV_ALIGN_BOTTOM_MID, lv_pct(20), lv_pct(-25));
+    lv_obj_add_event_cb(btn_continue, open_scr_poweroff_cb, LV_EVENT_CLICKED, NULL);
+
+    lv_obj_t * label_continue = lv_label_create(btn_continue);
+    lv_label_set_text(label_continue, "CONTINUE");
+    lv_obj_center(label_continue);
+
+    lv_obj_t * txt = lv_label_create(scr);
+    lv_label_set_text(txt, "POWEROFF");
+    lv_obj_set_style_text_color(txt, lv_color_white(), LV_PART_MAIN);
+    lv_obj_align(txt, LV_ALIGN_CENTER, 0, lv_pct(-15));
+
+    /**OTHER UI COMPONENTS**/
+    create_exit_icon(scr);
+    create_battery_icon(scr, battery_charging, battery_level);
 
     lv_screen_load(scr);
 }
 
-static void settings_action(void) {
-    printf("Open settings\n");
-    // quick_system_set logic
-}
-
-void poweroff_action(void) {
-    printf("Power off\n");
-    // quick_poweroff logic
+static void lock_action(void) {
+    printf("Lock/Unlock toggle\n");
+    // quick_lock_enable/disable logic
 }
 
 static void bluetooth_action(void) {
@@ -240,7 +265,7 @@ static void bluetooth_action(void) {
     // quick_bt_enable/disable logic
 }
 
-static void lock_action(void) {
-    printf("Lock/Unlock toggle\n");
-    // quick_lock_enable/disable logic
+static void settings_action(void) {
+    printf("Settings\n");
+    // quick_poweroff logic
 }

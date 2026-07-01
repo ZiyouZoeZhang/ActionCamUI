@@ -28,7 +28,6 @@ void  test_error_check(){
 
 /**CB functions**/
 void open_scr_menu_cb(){
-    printf("CB called\n");
     create_scr_menu();
 }
 
@@ -71,6 +70,13 @@ void swipe_scr_mode_selection_cb(lv_event_t *e){
     }
 }
 
+
+/**Access of Screens**/
+
+void open_scr_poweroff_cb(){
+    create_scr_poweroff();
+    lv_screen_load(scr_poweroff);
+}
 
 /**SCREENS**/
 void create_scr_home(){

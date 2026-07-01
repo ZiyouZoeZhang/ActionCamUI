@@ -32,6 +32,7 @@ void create_scr_menu();
 void open_scr_cam_modes_by_mode(int mode);
 void open_scr_pic_lib_cb();
 void open_scr_menu_cb();
+void open_scr_poweroff_cb();
 
 /**CB**/
 void swipe_scr_main_cb(lv_event_t *e);
