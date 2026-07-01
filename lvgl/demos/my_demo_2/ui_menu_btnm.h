@@ -28,26 +28,13 @@ typedef struct {
     const void *icon_src_on;
     const void *icon_src_off;
     btn_state_t state;
-    //bool can_toggle;
+    void (*action)(void); ///
 } menu_btn_info_t;
 
-const menu_btn_info_t * get_all_btns();
+extern menu_btn_info_t menu_buttons[];
 
-extern bool menu_wifi_on;
-extern bool menu_auto_rotation_on;
-extern bool menu_voice_rec_on;
-extern bool menu_bluetooth_on;
-extern bool menu_grid_view_on;
 
+/**CREATE**/
 void create_menu_btnm(lv_obj_t *parent);
-
-//getters
-const char* get_menu_btn_name(menu_btn_t btn);
-//const void* get_menu_btn_icon(menu_btn_t btn);
-bool get_menu_btn_can_toggle(menu_btn_t btn);
-
-//action
-void menu_btn_toggle_state_cb(lv_event_t *e);
-//void menu_btn_execute(menu_btn_t btn);
 
 #endif // UI_MENU_BTNM_H_INCLUDED
