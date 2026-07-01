@@ -9,16 +9,32 @@
 
 static lv_obj_t * pop_up_btn;
 static lv_obj_t * pop_up_btn_label;
-void create_pop_up_btn(lv_obj_t * parent);
 
-void wifi_action(void);
-void rotation_action(void);
-void lock_action(void);
-void settings_action(void);
-void voice_action(void);
-void bluetooth_action(void);
-void poweroff_action(void);
-void grid_action(void);
+lv_obj_t *cont = NULL;
+lv_timer_t * timer = NULL;
+
+/**access**/
+void create_menu_btnm(lv_obj_t * parent);
+
+/**create**/
+static void create_menu_grid();
+static void create_pop_up_btn(lv_obj_t * parent);
+
+/**CB**/
+static void menu_btn_toggle_state_cb(lv_event_t *e);
+static void hide_btn_cb(lv_event_t *e);
+static void hide_btn_timer_cb(lv_timer_t * t);
+
+/**actions**/
+static void wifi_action(void);
+static void rotation_action(void);
+static void lock_action(void);
+static void settings_action(void);
+static void voice_action(void);
+static void bluetooth_action(void);
+static void poweroff_action(void);
+static void grid_action(void);
+
 
 menu_btn_info_t menu_buttons[] = {
     {CAM_MENU_WIFI,          "WiFi",        &quick_wifi_enable, &quick_wifi_disable, BTN_STATE_OFF, wifi_action},
@@ -31,9 +47,9 @@ menu_btn_info_t menu_buttons[] = {
     {CAM_MENU_GRID_VIEW,     "Grid View",   &quick_grid_enable, &quick_grid_disable, BTN_STATE_OFF, grid_action}
 };
 
-lv_obj_t *cont = NULL;
 
-void menu_btn_toggle_state_cb(lv_event_t *e){
+
+static void menu_btn_toggle_state_cb(lv_event_t *e){
     lv_obj_t *btn_obj = lv_event_get_target(e);
     int index = (int)(intptr_t)lv_obj_get_user_data(btn_obj);
 
@@ -44,17 +60,15 @@ void menu_btn_toggle_state_cb(lv_event_t *e){
         menu_buttons[index].state = BTN_STATE_ON;
     }
 
-/**call action**/
-    if (menu_buttons[index].action != NULL) {
-        menu_buttons[index].action();
-    }
+   /**call action**/
+    menu_buttons[index].action();
 
     /**draw**/
     create_menu_grid();
 }
 
 
-void create_menu_grid() {
+static void create_menu_grid() {
     for (int i = 0; i < 8; i++) {
         lv_obj_t *btn = lv_btn_create(cont);
         lv_obj_set_grid_cell(btn, LV_GRID_ALIGN_STRETCH, i % 4, 1, LV_GRID_ALIGN_STRETCH, i / 4, 1);
@@ -80,6 +94,10 @@ void create_menu_grid() {
 }
 
 void create_menu_btnm(lv_obj_t * parent){
+    timer = lv_timer_create(hide_btn_timer_cb, 2000, NULL);
+    lv_timer_pause(timer);
+
+    /**create grid layout**/
     cont = lv_obj_create(parent);
     lv_obj_set_size(cont, 780, 365);
     lv_obj_align(cont, LV_ALIGN_BOTTOM_MID, 0, 0);
@@ -87,7 +105,6 @@ void create_menu_btnm(lv_obj_t * parent){
     lv_obj_set_style_border_width(cont, 0, LV_PART_MAIN);
 
     static const int width = 147;
-    static const int pad = 80;
     static lv_coord_t col_dsc[] = {width, width, width, width, LV_GRID_TEMPLATE_LAST};
     static lv_coord_t row_dsc[] = {width, width, LV_GRID_TEMPLATE_LAST};
     lv_obj_set_grid_dsc_array(cont, col_dsc, row_dsc);
@@ -96,17 +113,24 @@ void create_menu_btnm(lv_obj_t * parent){
     lv_obj_set_style_pad_column(cont, 40, LV_PART_MAIN); //ап╪Д╬Ю
 
     lv_obj_remove_flag(cont, LV_OBJ_FLAG_SCROLLABLE);
+
+    /**create ui components**/
      create_menu_grid();
      create_pop_up_btn(parent);
 }
 
+
 // Callback function for click event
 static void hide_btn_cb(lv_event_t *e) {
-    lv_obj_t *obj = lv_event_get_target(e);
     lv_obj_add_flag(pop_up_btn, LV_OBJ_FLAG_HIDDEN);
 }
 
-/**create pop-up btn**/ /// CALL WHEN ENTER SCREEN
+static void hide_btn_timer_cb(lv_timer_t * t){
+    printf("Called\n");
+    lv_obj_add_flag(pop_up_btn, LV_OBJ_FLAG_HIDDEN);
+    lv_timer_pause(timer);
+}
+
 static void create_pop_up_btn(lv_obj_t * parent){
     pop_up_btn = lv_button_create(parent);
     lv_obj_set_style_bg_color(pop_up_btn, lv_palette_main(LV_PALETTE_BLUE), LV_PART_MAIN);
@@ -116,7 +140,7 @@ static void create_pop_up_btn(lv_obj_t * parent){
     pop_up_btn_label = lv_label_create(pop_up_btn);
     lv_obj_center(pop_up_btn_label);
 
-    /**hIDE BTN**/
+    /**hide btn**/
     lv_obj_add_flag(pop_up_btn, LV_OBJ_FLAG_HIDDEN);
 
     /**cb hide on click**/
@@ -124,7 +148,7 @@ static void create_pop_up_btn(lv_obj_t * parent){
 }
 
 //actions
-void rotation_action(void) {
+static void rotation_action(void) {
     if (menu_buttons[CAM_MENU_AUTO_ROTATION].state == BTN_STATE_ON){
         lv_label_set_text(pop_up_btn_label, "AUTO ROTATION: ON");
     } else {
@@ -132,9 +156,11 @@ void rotation_action(void) {
     }
     lv_obj_remove_flag(pop_up_btn, LV_OBJ_FLAG_HIDDEN);
     lv_obj_move_foreground(pop_up_btn);
+    lv_timer_reset(timer);
+    lv_timer_resume(timer);
 }
 
-void voice_action(void) {
+static void voice_action(void) {
     if (menu_buttons[CAM_MENU_VOICE_REC].state == BTN_STATE_ON){
         lv_label_set_text(pop_up_btn_label, "VOICE RECOGNITION: ON");
     } else {
@@ -142,9 +168,11 @@ void voice_action(void) {
     }
     lv_obj_remove_flag(pop_up_btn, LV_OBJ_FLAG_HIDDEN);
     lv_obj_move_foreground(pop_up_btn);
+    lv_timer_reset(timer);
+    lv_timer_resume(timer);
 }
 
-void grid_action(void) {
+static void grid_action(void) {
 
     if (menu_buttons[CAM_MENU_GRID_VIEW].state == BTN_STATE_ON){
         lv_label_set_text(pop_up_btn_label,"GRID VIEW: ON");
@@ -153,17 +181,19 @@ void grid_action(void) {
     }
     lv_obj_remove_flag(pop_up_btn, LV_OBJ_FLAG_HIDDEN);
     lv_obj_move_foreground(pop_up_btn);
+    lv_timer_reset(timer);
+    lv_timer_resume(timer);
 }
 
 
 //TODO
 
-void wifi_action(void) {
+static void wifi_action(void) {
     printf("WiFi toggle\n");
     // quick_wifi_enable/disable logic
 }
 
-void settings_action(void) {
+static void settings_action(void) {
     printf("Open settings\n");
     // quick_system_set logic
 }
@@ -173,12 +203,12 @@ void poweroff_action(void) {
     // quick_poweroff logic
 }
 
-void bluetooth_action(void) {
+static void bluetooth_action(void) {
     printf("Bluetooth toggle\n");
     // quick_bt_enable/disable logic
 }
 
-void lock_action(void) {
+static void lock_action(void) {
     printf("Lock/Unlock toggle\n");
     // quick_lock_enable/disable logic
 }

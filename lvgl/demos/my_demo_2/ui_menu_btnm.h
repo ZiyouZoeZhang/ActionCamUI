@@ -3,8 +3,6 @@
 
 #include "lvgl.h"
 
-void create_menu_grid() ;
-
 typedef enum {
     BTN_STATE_OFF = 0,
     BTN_STATE_ON = 1
@@ -33,8 +31,6 @@ typedef struct {
 
 extern menu_btn_info_t menu_buttons[];
 
-
-/**CREATE**/
 void create_menu_btnm(lv_obj_t *parent);
 
 #endif // UI_MENU_BTNM_H_INCLUDED
