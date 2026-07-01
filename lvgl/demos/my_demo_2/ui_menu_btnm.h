@@ -28,7 +28,7 @@ typedef struct {
     const void *icon_src_on;
     const void *icon_src_off;
     btn_state_t state;
-    void (*action)(void); ///
+    void (*action)(); ///
 } menu_btn_info_t;
 
 extern menu_btn_info_t menu_buttons[];

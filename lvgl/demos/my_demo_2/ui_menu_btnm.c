@@ -7,6 +7,10 @@
 #include "ui_menu_btnm.h"
 #include "pic_converted_transparent/image_declares.h"
 
+static lv_obj_t * pop_up_btn;
+static lv_obj_t * pop_up_btn_label;
+void create_pop_up_btn(lv_obj_t * parent);
+
 void wifi_action(void);
 void rotation_action(void);
 void lock_action(void);
@@ -27,7 +31,6 @@ menu_btn_info_t menu_buttons[] = {
     {CAM_MENU_GRID_VIEW,     "Grid View",   &quick_grid_enable, &quick_grid_disable, BTN_STATE_OFF, grid_action}
 };
 
-static  lv_obj_t * btnm = NULL;
 lv_obj_t *cont = NULL;
 
 void menu_btn_toggle_state_cb(lv_event_t *e){
@@ -49,6 +52,7 @@ void menu_btn_toggle_state_cb(lv_event_t *e){
     /**draw**/
     create_menu_grid();
 }
+
 
 void create_menu_grid() {
     for (int i = 0; i < 8; i++) {
@@ -93,22 +97,70 @@ void create_menu_btnm(lv_obj_t * parent){
 
     lv_obj_remove_flag(cont, LV_OBJ_FLAG_SCROLLABLE);
      create_menu_grid();
+     create_pop_up_btn(parent);
+}
+
+// Callback function for click event
+static void hide_btn_cb(lv_event_t *e) {
+    lv_obj_t *obj = lv_event_get_target(e);
+    lv_obj_add_flag(pop_up_btn, LV_OBJ_FLAG_HIDDEN);
+}
+
+/**create pop-up btn**/ /// CALL WHEN ENTER SCREEN
+static void create_pop_up_btn(lv_obj_t * parent){
+    pop_up_btn = lv_button_create(parent);
+    lv_obj_set_style_bg_color(pop_up_btn, lv_palette_main(LV_PALETTE_BLUE), LV_PART_MAIN);
+    lv_obj_set_size(pop_up_btn, lv_pct(100), lv_pct(20));
+    lv_obj_set_style_radius(pop_up_btn, 40, LV_PART_MAIN );
+
+    pop_up_btn_label = lv_label_create(pop_up_btn);
+    lv_obj_center(pop_up_btn_label);
+
+    /**hIDE BTN**/
+    lv_obj_add_flag(pop_up_btn, LV_OBJ_FLAG_HIDDEN);
+
+    /**cb hide on click**/
+    lv_obj_add_event_cb(pop_up_btn, hide_btn_cb, LV_EVENT_CLICKED, NULL);
 }
 
 //actions
+void rotation_action(void) {
+    if (menu_buttons[CAM_MENU_AUTO_ROTATION].state == BTN_STATE_ON){
+        lv_label_set_text(pop_up_btn_label, "AUTO ROTATION: ON");
+    } else {
+         lv_label_set_text(pop_up_btn_label, "AUTO ROTATION: OFF");
+    }
+    lv_obj_remove_flag(pop_up_btn, LV_OBJ_FLAG_HIDDEN);
+    lv_obj_move_foreground(pop_up_btn);
+}
+
+void voice_action(void) {
+    if (menu_buttons[CAM_MENU_VOICE_REC].state == BTN_STATE_ON){
+        lv_label_set_text(pop_up_btn_label, "VOICE RECOGNITION: ON");
+    } else {
+        lv_label_set_text(pop_up_btn_label, "VOICE RECOGNITION: OFF");
+    }
+    lv_obj_remove_flag(pop_up_btn, LV_OBJ_FLAG_HIDDEN);
+    lv_obj_move_foreground(pop_up_btn);
+}
+
+void grid_action(void) {
+
+    if (menu_buttons[CAM_MENU_GRID_VIEW].state == BTN_STATE_ON){
+        lv_label_set_text(pop_up_btn_label,"GRID VIEW: ON");
+    } else {
+        lv_label_set_text(pop_up_btn_label, "GRID VIEW: OFF");
+    }
+    lv_obj_remove_flag(pop_up_btn, LV_OBJ_FLAG_HIDDEN);
+    lv_obj_move_foreground(pop_up_btn);
+}
+
+
+//TODO
+
 void wifi_action(void) {
     printf("WiFi toggle\n");
     // quick_wifi_enable/disable logic
-}
-
-void rotation_action(void) {
-    printf("Auto rotation toggle\n");
-    // quick_autorotate_enable/disable logic
-}
-
-void lock_action(void) {
-    printf("Lock/Unlock toggle\n");
-    // quick_lock_enable/disable logic
 }
 
 void settings_action(void) {
@@ -116,9 +168,9 @@ void settings_action(void) {
     // quick_system_set logic
 }
 
-void voice_action(void) {
-    printf("Voice record toggle\n");
-    // quick_voice_enable/disable logic
+void poweroff_action(void) {
+    printf("Power off\n");
+    // quick_poweroff logic
 }
 
 void bluetooth_action(void) {
@@ -126,12 +178,7 @@ void bluetooth_action(void) {
     // quick_bt_enable/disable logic
 }
 
-void poweroff_action(void) {
-    printf("Power off\n");
-    // quick_poweroff logic
-}
-
-void grid_action(void) {
-    printf("Grid view toggle\n");
-    // quick_grid_enable/disable logic
+void lock_action(void) {
+    printf("Lock/Unlock toggle\n");
+    // quick_lock_enable/disable logic
 }
