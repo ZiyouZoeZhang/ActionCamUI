@@ -6,6 +6,7 @@ bool battery_charging = false;
 int sd_status = 1; //0 = none, 1 = available, -1 = error
 float sd_storage = 30.9;
 int cur_cam_mode = 8;
+bool wifi_active = false;
 
 //global
 lv_obj_t *scr_home = NULL;

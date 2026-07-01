@@ -15,6 +15,7 @@ extern bool battery_charging;
 extern int sd_status; //0 = none, 1 = available, -1 = error
 extern float sd_storage;
 extern int cur_cam_mode;
+extern bool wifi_active;
 extern lv_obj_t *scr_home;
 
 /**main**/

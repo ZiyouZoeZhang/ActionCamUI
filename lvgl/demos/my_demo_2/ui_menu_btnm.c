@@ -19,11 +19,14 @@ void create_menu_btnm(lv_obj_t * parent);
 /**create**/
 static void create_menu_grid();
 static void create_pop_up_btn(lv_obj_t * parent);
+///use create scr setting
+///(maybe use create scr bluetooth, or create scr bluetooth)
 
 /**CB**/
 static void menu_btn_toggle_state_cb(lv_event_t *e);
 static void hide_btn_cb(lv_event_t *e);
 static void hide_btn_timer_cb(lv_timer_t * t);
+static void return_menu_cb(lv_event_t *e);
 
 /**actions**/
 static void wifi_action(void);
@@ -47,14 +50,19 @@ menu_btn_info_t menu_buttons[] = {
     {CAM_MENU_GRID_VIEW,     "Grid View",   &quick_grid_enable, &quick_grid_disable, BTN_STATE_OFF, grid_action}
 };
 
-
+static void return_menu_cb(lv_event_t *e){
+    create_scr_menu();
+}
 
 static void menu_btn_toggle_state_cb(lv_event_t *e){
     lv_obj_t *btn_obj = lv_event_get_target(e);
     int index = (int)(intptr_t)lv_obj_get_user_data(btn_obj);
 
     /**toggle state**/
-    if (menu_buttons[index].state == BTN_STATE_ON) {
+    if (index == CAM_MENU_WIFI){
+        if (wifi_active) menu_buttons[index].state == BTN_STATE_ON;
+        else menu_buttons[index].state = BTN_STATE_OFF;
+    } else if (menu_buttons[index].state == BTN_STATE_ON) {
         menu_buttons[index].state = BTN_STATE_OFF;
     } else {
         menu_buttons[index].state = BTN_STATE_ON;
@@ -119,7 +127,6 @@ void create_menu_btnm(lv_obj_t * parent){
      create_pop_up_btn(parent);
 }
 
-
 // Callback function for click event
 static void hide_btn_cb(lv_event_t *e) {
     lv_obj_add_flag(pop_up_btn, LV_OBJ_FLAG_HIDDEN);
@@ -147,7 +154,8 @@ static void create_pop_up_btn(lv_obj_t * parent){
     lv_obj_add_event_cb(pop_up_btn, hide_btn_cb, LV_EVENT_CLICKED, NULL);
 }
 
-//actions
+/**actions**/
+
 static void rotation_action(void) {
     if (menu_buttons[CAM_MENU_AUTO_ROTATION].state == BTN_STATE_ON){
         lv_label_set_text(pop_up_btn_label, "AUTO ROTATION: ON");
@@ -189,8 +197,32 @@ static void grid_action(void) {
 //TODO
 
 static void wifi_action(void) {
-    printf("WiFi toggle\n");
-    // quick_wifi_enable/disable logic
+    lv_obj_t * scr = lv_obj_create(NULL);
+    lv_obj_set_style_bg_color(scr, BG_COLOR_DARK_GREY,LV_PART_MAIN);
+
+    lv_obj_t * qr = lv_image_create(scr);
+    lv_image_set_src(qr, &xtugo_qrcode);
+    lv_obj_align(qr, LV_ALIGN_TOP_LEFT, lv_pct(10), lv_pct(10));
+    lv_obj_set_size(qr, 260, 260);
+
+    lv_obj_t * btn  = lv_button_create(scr);
+    lv_obj_set_style_bg_color(btn, lv_palette_main(LV_PALETTE_BLUE), LV_PART_MAIN);
+    lv_obj_set_size(btn, lv_pct(100), lv_pct(25));
+    lv_obj_align(btn, LV_ALIGN_BOTTOM_MID, 0, 0);
+    lv_obj_add_event_cb(btn, return_menu_cb, LV_EVENT_CLICKED, NULL);
+
+    lv_obj_t * txt = lv_label_create(scr);
+    lv_label_set_text(txt, "TQWERTYUIOPASDFGHJ \n\n asdfghjkzxcvbnm \n\n qwertyhbncxfg");
+    lv_obj_set_style_text_color(txt, lv_color_white(), LV_PART_MAIN);
+    //lv_obj_set_style_bg_color(txt, lv_color_white(), LV_PART_MAIN);
+    lv_obj_align(txt, LV_ALIGN_RIGHT_MID, lv_pct(-30), lv_pct(-15));
+
+    lv_obj_t * label = lv_label_create(btn);
+    lv_label_set_text(label, "CANCLE");
+    lv_obj_center(label);
+
+
+    lv_screen_load(scr);
 }
 
 static void settings_action(void) {
