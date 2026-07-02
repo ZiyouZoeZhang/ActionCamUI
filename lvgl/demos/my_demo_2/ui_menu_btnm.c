@@ -27,7 +27,7 @@ static void menu_btn_toggle_state_cb(lv_event_t *e);
 static void hide_btn_cb(lv_event_t *e);
 static void hide_btn_timer_cb(lv_timer_t * t);
 void open_scr_menu_cb(lv_event_t *e);
-void open_scr_poweroff_cb(lv_event_t *e);
+//void open_scr_poweroff_cb(lv_event_t *e);
 
 /**actions**/
 static void wifi_action(void);

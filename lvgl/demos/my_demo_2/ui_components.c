@@ -182,8 +182,19 @@ void update_cam_mode_icon(int mode){
     lv_image_set_src(img_cam_mode, get_mode_icon(mode));
 }
 
-void update_spot_metering_cb(lv_event_t * e){
-    //TBD
+void update_spot_metering_cb(lv_event_t *e) {
+    lv_indev_t *indev = lv_indev_get_act();
+
+    lv_point_t point;
+    lv_indev_get_point(indev, &point);
+
+    lv_obj_set_align(img_spot_met, LV_ALIGN_TOP_LEFT);
+    lv_coord_t img_w = lv_obj_get_width(img_spot_met);
+    lv_coord_t img_h = lv_obj_get_height(img_spot_met);
+
+    lv_obj_set_pos(img_spot_met,
+                   point.x - img_w / 2,
+                   point.y - img_h / 2);
 }
 
 /**CB**/

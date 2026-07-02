@@ -110,6 +110,8 @@ void create_scr_poweroff(){
     scr_poweroff = lv_obj_create(NULL);
     img_xtu_poweroff = lv_image_create(scr_poweroff);
     lv_image_set_src(img_xtu_poweroff, &xtu_poweroff);
+
+    lv_obj_remove_flag(scr_poweroff, LV_OBJ_FLAG_SCROLLABLE);
 }
 
 void create_scr_mode_selection(int mode){
