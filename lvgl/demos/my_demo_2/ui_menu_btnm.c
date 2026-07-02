@@ -72,7 +72,6 @@ static void menu_btn_toggle_state_cb(lv_event_t *e){
     create_menu_grid();
 }
 
-
 static void create_menu_grid() {
     for (int i = 0; i < 8; i++) {
         lv_obj_t *btn = lv_btn_create(cont);
@@ -255,10 +254,9 @@ void poweroff_action(void) {
     lv_screen_load(scr);
 }
 
-static void lock_action(void) {
-    printf("Lock/Unlock toggle\n");
-    // quick_lock_enable/disable logic
-}
+
+
+
 
 static void bluetooth_action(void) {
     printf("Bluetooth toggle\n");
@@ -269,3 +267,86 @@ static void settings_action(void) {
     printf("Settings\n");
     // quick_poweroff logic
 }
+
+
+
+
+
+
+
+
+
+
+///start lock action
+static lv_obj_t *lock_left = NULL;
+static lv_obj_t *lock_right = NULL;
+static lv_obj_t *lock_slide = NULL;
+static lv_obj_t *slider = NULL;
+
+static void slider_pressing_cb(lv_event_t *e);
+static void create_lock_default();
+static void slider_released_cb(lv_event_t * e);
+
+static void slider_pressing_cb(lv_event_t *e) {
+    lv_obj_set_style_opa(slider, LV_OPA_100, LV_PART_MAIN);
+    lv_obj_set_style_bg_opa(slider, LV_OPA_0, LV_PART_MAIN);
+    lv_obj_set_style_bg_opa(slider, LV_OPA_0, LV_PART_KNOB);
+    lv_obj_set_style_bg_opa(slider, LV_OPA_0, LV_PART_INDICATOR);
+    lv_image_set_src(lock_right, &Sliding_unlock);
+    lv_obj_add_flag(lock_slide, LV_OBJ_FLAG_HIDDEN);
+    lv_obj_add_flag(lock_left, LV_OBJ_FLAG_HIDDEN);
+}
+
+static void create_lock_default() {
+    lv_slider_set_value(slider, 12, LV_ANIM_OFF);
+    lv_image_set_src(lock_left, &Sliding);
+    lv_image_set_src(lock_right, &Lock_Normal);
+    lv_image_set_src(lock_slide, &Sliding_unlock_BG);
+    lv_obj_remove_flag(lock_slide, LV_OBJ_FLAG_HIDDEN);
+    lv_obj_remove_flag(lock_left, LV_OBJ_FLAG_HIDDEN);
+    lv_obj_set_style_opa(slider, LV_OPA_0, LV_PART_MAIN);
+}
+
+static void slider_released_cb(lv_event_t * e){
+    if (lv_slider_get_value(slider) >= 95) {
+        open_scr_home_cb();
+    } else {
+        create_lock_default();
+    }
+}
+
+static void lock_action(void) {
+    //draw default view
+    lv_obj_t *scr = lv_obj_create(NULL);
+    lv_obj_set_style_bg_color(scr, BG_COLOR_DARK_GREY, LV_PART_MAIN);
+
+    lock_left = lv_image_create(scr);
+    lv_obj_align(lock_left, LV_ALIGN_CENTER, lv_pct(-30), 0);
+
+    lock_right = lv_image_create(scr);
+    lv_obj_align(lock_right, LV_ALIGN_CENTER, lv_pct(30), 0);
+
+    lock_slide = lv_image_create(scr);
+    lv_obj_center(lock_slide);
+
+    //draw slider
+    slider = lv_slider_create(scr);
+    lv_obj_set_size(slider, 535, 120);
+    lv_obj_center(slider);
+    lv_obj_align(slider, LV_ALIGN_CENTER, -30, 0);
+    lv_slider_set_range(slider, 00, 100);
+    lv_slider_set_value(slider, 12, LV_ANIM_OFF);
+
+    lv_obj_set_style_bg_image_src(slider, &Sliding_touch, LV_PART_KNOB);
+    lv_obj_set_style_bg_image_opa(slider, LV_OPA_COVER, LV_PART_KNOB);
+
+     lv_obj_add_flag(slider, LV_OBJ_FLAG_ADV_HITTEST);
+    lv_obj_add_event_cb(slider, slider_pressing_cb, LV_EVENT_PRESSED, NULL);
+    lv_obj_add_event_cb(slider, slider_pressing_cb, LV_EVENT_VALUE_CHANGED, NULL);
+    lv_obj_add_event_cb(slider, slider_released_cb, LV_EVENT_RELEASED, NULL);
+
+    create_lock_default();
+    lv_screen_load(scr);
+}
+
+///end lock action
