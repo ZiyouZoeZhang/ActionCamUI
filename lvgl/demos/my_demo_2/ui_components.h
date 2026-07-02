@@ -11,6 +11,7 @@ void create_pic_lib_icon(lv_obj_t *parent);
 void create_cam_mode_icon(lv_obj_t * parent, int mode);
 void create_exit_icon(lv_obj_t * parent);
 void create_buttons(lv_obj_t * parent);
+void create_resolution_icon(lv_obj_t * parent, int cur_res);
 
 /**updates**/
 void update_battery_icon(bool charging, int level);

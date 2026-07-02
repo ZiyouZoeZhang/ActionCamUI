@@ -11,8 +11,31 @@ static lv_obj_t * label_sd = NULL;
 static lv_obj_t * img_pic_lib = NULL;
 static lv_obj_t * img_cam_mode = NULL;
 static lv_obj_t * img_exit = NULL;
+static lv_obj_t * img_res = NULL;
 
 /**creations**/
+
+void create_resolution_icon(lv_obj_t * parent, int cur_res){
+    img_res = lv_image_create(parent);
+    lv_obj_align(img_res, LV_ALIGN_BOTTOM_MID, 0, -20);
+    lv_obj_add_flag(img_res, LV_OBJ_FLAG_CLICKABLE);
+
+    if (sizeof(cam_resolution_table[cur_res])<=8){
+        lv_image_set_src(img_res, &main_Res_short);
+    } else if  (sizeof(cam_resolution_table[cur_res])<=9){
+         lv_image_set_src(img_res, &main_Res_mid);
+    } else {
+         lv_image_set_src(img_res, &main_Res_bg);
+    }
+
+    lv_obj_t * label = lv_label_create(img_res);
+    lv_obj_center(label);
+    lv_label_set_text(label, cam_resolution_table[cur_res]);
+    lv_obj_set_style_text_color(label, lv_color_white(), LV_PART_MAIN);
+
+
+    lv_obj_add_event_cb(img_res, open_scr_resolution_cb, LV_EVENT_CLICKED, NULL);
+}
 
 void create_sd_icon(lv_obj_t *parent, int status, float storage){
     img_sd = lv_image_create(parent);
@@ -44,7 +67,7 @@ void create_pic_lib_icon(lv_obj_t *parent){
 
 void create_cam_mode_icon(lv_obj_t * parent, int mode){
     img_cam_mode = lv_image_create(parent);
-    lv_obj_align(img_cam_mode, LV_ALIGN_BOTTOM_LEFT, 0, 0);
+    lv_obj_align(img_cam_mode, LV_ALIGN_BOTTOM_LEFT, 10, -20);
     lv_obj_set_user_data(img_cam_mode, (void*)(intptr_t)mode);
 
     update_cam_mode_icon(mode);
@@ -127,6 +150,7 @@ void open_scr_cam_modes_cb(lv_event_t * e){
 
 void open_scr_home_cb(){
     cur_cam_mode = get_selected_mode_from_roller();
+    cur_cam_resolution = get_selected_resolution_from_roller();
     create_scr_home();
     lv_screen_load(scr_home);
 }

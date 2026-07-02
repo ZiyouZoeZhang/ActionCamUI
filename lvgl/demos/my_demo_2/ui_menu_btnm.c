@@ -255,9 +255,6 @@ void poweroff_action(void) {
 }
 
 
-
-
-
 static void bluetooth_action(void) {
     printf("Bluetooth toggle\n");
     // quick_bt_enable/disable logic
@@ -267,15 +264,6 @@ static void settings_action(void) {
     printf("Settings\n");
     // quick_poweroff logic
 }
-
-
-
-
-
-
-
-
-
 
 ///start lock action
 static lv_obj_t *lock_left = NULL;
@@ -340,7 +328,7 @@ static void lock_action(void) {
     lv_obj_set_style_bg_image_src(slider, &Sliding_touch, LV_PART_KNOB);
     lv_obj_set_style_bg_image_opa(slider, LV_OPA_COVER, LV_PART_KNOB);
 
-     lv_obj_add_flag(slider, LV_OBJ_FLAG_ADV_HITTEST);
+    lv_obj_add_flag(slider, LV_OBJ_FLAG_ADV_HITTEST);
     lv_obj_add_event_cb(slider, slider_pressing_cb, LV_EVENT_PRESSED, NULL);
     lv_obj_add_event_cb(slider, slider_pressing_cb, LV_EVENT_VALUE_CHANGED, NULL);
     lv_obj_add_event_cb(slider, slider_released_cb, LV_EVENT_RELEASED, NULL);

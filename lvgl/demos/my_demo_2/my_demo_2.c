@@ -6,6 +6,7 @@ bool battery_charging = false;
 int sd_status = 1; //0 = none, 1 = available, -1 = error
 float sd_storage = 30.9;
 int cur_cam_mode = 8;
+int cur_cam_resolution = 0;
 bool wifi_active = false;
 
 //global
@@ -89,6 +90,7 @@ void create_scr_home(){
     create_sd_icon(scr_home, sd_status, sd_storage);
     create_pic_lib_icon(scr_home);
     create_cam_mode_icon(scr_home, cur_cam_mode);
+    create_resolution_icon(scr_home, cur_cam_resolution);
 
     /**CB**/
     lv_obj_add_event_cb(scr_home, swipe_scr_main_cb, LV_EVENT_GESTURE, NULL);
@@ -150,6 +152,10 @@ void my_demo_2_create() {
 
     /**driver code**/
     lv_screen_load(scr_home);
+
+    ///TEST
+    //open_scr_resolution();
+
 }
 
 

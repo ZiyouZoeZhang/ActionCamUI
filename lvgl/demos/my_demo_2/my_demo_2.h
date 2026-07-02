@@ -8,6 +8,7 @@
 #include "ui_components.h"
 #include "ui_roller.h"
 #include "ui_menu_btnm.h"
+#include "scr_resolution.h"
 
 /**variables for INPUT**/
 extern int battery_level;
@@ -15,6 +16,7 @@ extern bool battery_charging;
 extern int sd_status; //0 = none, 1 = available, -1 = error
 extern float sd_storage;
 extern int cur_cam_mode;
+extern int cur_cam_resolution;
 extern bool wifi_active;
 extern lv_obj_t *scr_home;
 

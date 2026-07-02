@@ -8527,15 +8527,16 @@
 	"lvgl.h"
 	"pic_converted_transparent/image_declares.h"
 
-1782893908 source:c:\users\gku\desktop\lv_port_win_codeblocks\lvgl\demos\my_demo_2\my_demo_2.c
+1782974625 source:c:\users\gku\desktop\lv_port_win_codeblocks\lvgl\demos\my_demo_2\my_demo_2.c
 	"my_demo_2.h"
 
-1782893695 c:\users\gku\desktop\lv_port_win_codeblocks\lvgl\demos\my_demo_2\my_demo_2.h
+1782974664 c:\users\gku\desktop\lv_port_win_codeblocks\lvgl\demos\my_demo_2\my_demo_2.h
 	"lvgl.h"
 	"camera_modes.h"
 	"ui_components.h"
 	"ui_roller.h"
 	"ui_menu_btnm.h"
+	"scr_resolution.h"
 
 1782455178 source:c:\users\gku\desktop\lv_port_win_codeblocks\lvgl\pic_converted_transparent\common\busy_process.c
 	"lvgl.h"
@@ -12981,11 +12982,11 @@
 	<stdio.h>
 	"camera_modes.h"
 
-1782802858 c:\users\gku\desktop\lv_port_win_codeblocks\lvgl\demos\my_demo_2\ui_components.h
+1782973809 c:\users\gku\desktop\lv_port_win_codeblocks\lvgl\demos\my_demo_2\ui_components.h
 	"lvgl.h"
 	"camera_modes.h"
 
-1782893921 source:c:\users\gku\desktop\lv_port_win_codeblocks\lvgl\demos\my_demo_2\ui_components.c
+1782974993 source:c:\users\gku\desktop\lv_port_win_codeblocks\lvgl\demos\my_demo_2\ui_components.c
 	<string.h>
 	<stdio.h>
 	"ui_components.h"
@@ -13006,7 +13007,7 @@
 1782886421 c:\users\gku\desktop\lv_port_win_codeblocks\lvgl\demos\my_demo_2\ui_menu_btnm.h
 	"lvgl.h"
 
-1782960185 source:c:\users\gku\desktop\lv_port_win_codeblocks\lvgl\demos\my_demo_2\ui_menu_btnm.c
+1782963360 source:c:\users\gku\desktop\lv_port_win_codeblocks\lvgl\demos\my_demo_2\ui_menu_btnm.c
 	<string.h>
 	<stdio.h>
 	"lvgl.h"
@@ -13015,4 +13016,11 @@
 	"my_demo_2.h"
 	"ui_menu_btnm.h"
 	"pic_converted_transparent/image_declares.h"
+
+1782974808 c:\users\gku\desktop\lv_port_win_codeblocks\lvgl\demos\my_demo_2\scr_resolution.h
+
+1782974925 source:c:\users\gku\desktop\lv_port_win_codeblocks\lvgl\demos\my_demo_2\scr_resolution.c
+	"my_demo_2.h"
+	"ui_components.h"
+	"scr_resolution.h"
 
