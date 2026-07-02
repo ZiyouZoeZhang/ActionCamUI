@@ -9,6 +9,7 @@
 #include "ui_roller.h"
 #include "ui_menu_btnm.h"
 #include "scr_resolution.h"
+#include "scr_zoom.h"
 
 /**variables for INPUT**/
 extern int battery_level;
@@ -17,6 +18,7 @@ extern int sd_status; //0 = none, 1 = available, -1 = error
 extern float sd_storage;
 extern int cur_cam_mode;
 extern int cur_cam_resolution;
+extern int cur_cam_zoom;
 extern bool wifi_active;
 extern lv_obj_t *scr_home;
 

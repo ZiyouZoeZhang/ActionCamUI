@@ -7,6 +7,7 @@ int sd_status = 1; //0 = none, 1 = available, -1 = error
 float sd_storage = 30.9;
 int cur_cam_mode = 8;
 int cur_cam_resolution = 0;
+int cur_cam_zoom = 0;
 bool wifi_active = false;
 
 //global
@@ -85,15 +86,21 @@ void create_scr_home(){
     scr_home = lv_obj_create(NULL);
     lv_obj_set_style_bg_color(scr_home,BG_COLOR_DARK_GREY, LV_PART_MAIN);
 
+    lv_obj_remove_flag(scr_home, LV_OBJ_FLAG_SCROLLABLE);
+
     /**create icons**/
     create_battery_icon(scr_home, battery_charging, battery_level);
     create_sd_icon(scr_home, sd_status, sd_storage);
     create_pic_lib_icon(scr_home);
     create_cam_mode_icon(scr_home, cur_cam_mode);
     create_resolution_icon(scr_home, cur_cam_resolution);
+    create_zoom_icon(scr_home, cur_cam_zoom);
+    create_grid(scr_home);
+    create_spot_metering(scr_home);
 
     /**CB**/
     lv_obj_add_event_cb(scr_home, swipe_scr_main_cb, LV_EVENT_GESTURE, NULL);
+    lv_obj_add_event_cb(scr_home, update_spot_metering_cb, LV_EVENT_CLICKED, NULL);
 
     /**load screen**/
     lv_scr_load(scr_home);
@@ -148,13 +155,13 @@ void create_scr_menu(){
 }
 
 void my_demo_2_create() {
-    create_scr_home();
+   create_scr_home();
 
     /**driver code**/
     lv_screen_load(scr_home);
 
     ///TEST
-    //open_scr_resolution();
+    //open_scr_menu_cb();
 
 }
 

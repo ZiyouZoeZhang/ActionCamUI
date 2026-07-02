@@ -5,7 +5,7 @@
 #define CAM_RES_COUNT 7
 
 lv_obj_t *scr_resolution = NULL;
-lv_obj_t * roller = NULL;
+static lv_obj_t * roller = NULL;
 
 static void create_scr_resolution();
 
@@ -22,7 +22,6 @@ const char* cam_resolution_table[] = {
 int get_selected_resolution_from_roller(void){
     if(roller){
         return lv_roller_get_selected(roller);
-
     }
     return 0;
 }

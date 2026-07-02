@@ -12,11 +12,15 @@ void create_cam_mode_icon(lv_obj_t * parent, int mode);
 void create_exit_icon(lv_obj_t * parent);
 void create_buttons(lv_obj_t * parent);
 void create_resolution_icon(lv_obj_t * parent, int cur_res);
+void create_zoom_icon(lv_obj_t * parent, int cur_zoom);
+void create_grid(lv_obj_t * parent);
+void create_spot_metering(lv_obj_t * parent);
 
 /**updates**/
 void update_battery_icon(bool charging, int level);
 void update_sd_icon(int status, float storage);
 void update_cam_mode_icon(int mode);
+void update_spot_metering_cb(lv_event_t * e);
 
 /**CB**/
 void open_scr_cam_modes_cb(lv_event_t * e);

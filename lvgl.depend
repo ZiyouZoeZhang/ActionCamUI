@@ -8527,16 +8527,17 @@
 	"lvgl.h"
 	"pic_converted_transparent/image_declares.h"
 
-1782974625 source:c:\users\gku\desktop\lv_port_win_codeblocks\lvgl\demos\my_demo_2\my_demo_2.c
+1782984237 source:c:\users\gku\desktop\lv_port_win_codeblocks\lvgl\demos\my_demo_2\my_demo_2.c
 	"my_demo_2.h"
 
-1782974664 c:\users\gku\desktop\lv_port_win_codeblocks\lvgl\demos\my_demo_2\my_demo_2.h
+1782984265 c:\users\gku\desktop\lv_port_win_codeblocks\lvgl\demos\my_demo_2\my_demo_2.h
 	"lvgl.h"
 	"camera_modes.h"
 	"ui_components.h"
 	"ui_roller.h"
 	"ui_menu_btnm.h"
 	"scr_resolution.h"
+	"scr_zoom.h"
 
 1782455178 source:c:\users\gku\desktop\lv_port_win_codeblocks\lvgl\pic_converted_transparent\common\busy_process.c
 	"lvgl.h"
@@ -12922,7 +12923,7 @@
 	"../../core/lv_obj_class_private.h"
 	"../../lvgl.h"
 
-1782735160 source:c:\users\gku\desktop\lv_port_win_codeblocks\main.c
+1782981138 source:c:\users\gku\desktop\lv_port_win_codeblocks\main.c
 	<stdlib.h>
 	<unistd.h>
 	<stdio.h>
@@ -12982,11 +12983,11 @@
 	<stdio.h>
 	"camera_modes.h"
 
-1782973809 c:\users\gku\desktop\lv_port_win_codeblocks\lvgl\demos\my_demo_2\ui_components.h
+1782984546 c:\users\gku\desktop\lv_port_win_codeblocks\lvgl\demos\my_demo_2\ui_components.h
 	"lvgl.h"
 	"camera_modes.h"
 
-1782974993 source:c:\users\gku\desktop\lv_port_win_codeblocks\lvgl\demos\my_demo_2\ui_components.c
+1782984744 source:c:\users\gku\desktop\lv_port_win_codeblocks\lvgl\demos\my_demo_2\ui_components.c
 	<string.h>
 	<stdio.h>
 	"ui_components.h"
@@ -13019,8 +13020,15 @@
 
 1782974808 c:\users\gku\desktop\lv_port_win_codeblocks\lvgl\demos\my_demo_2\scr_resolution.h
 
-1782974925 source:c:\users\gku\desktop\lv_port_win_codeblocks\lvgl\demos\my_demo_2\scr_resolution.c
+1782981289 source:c:\users\gku\desktop\lv_port_win_codeblocks\lvgl\demos\my_demo_2\scr_resolution.c
 	"my_demo_2.h"
 	"ui_components.h"
 	"scr_resolution.h"
+
+1782975510 c:\users\gku\desktop\lv_port_win_codeblocks\lvgl\demos\my_demo_2\scr_zoom.h
+
+1782984629 source:c:\users\gku\desktop\lv_port_win_codeblocks\lvgl\demos\my_demo_2\scr_zoom.c
+	"my_demo_2.h"
+	"ui_components.h"
+	"scr_zoom.h"
 

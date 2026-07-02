@@ -8,6 +8,7 @@
 
 static const wchar_t * title = L"this is a demo"; //must be wide - long
 
+
 int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR szCmdLine, int nCmdShow)
 {
     lv_init();
