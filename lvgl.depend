@@ -13023,7 +13023,7 @@
 
 1782974808 c:\users\gku\desktop\lv_port_win_codeblocks\lvgl\demos\my_demo_2\scr_resolution.h
 
-1783058289 source:c:\users\gku\desktop\lv_port_win_codeblocks\lvgl\demos\my_demo_2\scr_resolution.c
+1783081502 source:c:\users\gku\desktop\lv_port_win_codeblocks\lvgl\demos\my_demo_2\scr_resolution.c
 	"my_demo_2.h"
 	"ui_components.h"
 	"scr_resolution.h"
@@ -13076,7 +13076,7 @@
 1783065215 c:\users\gku\desktop\lv_port_win_codeblocks\lvgl\demos\my_demo_2\scr_media_settings.h
 	"lvgl.h"
 
-1783075417 source:c:\users\gku\desktop\lv_port_win_codeblocks\lvgl\demos\my_demo_2\scr_media_settings.c
+1783081458 source:c:\users\gku\desktop\lv_port_win_codeblocks\lvgl\demos\my_demo_2\scr_media_settings.c
 	"scr_media_settings.h"
 	"my_demo_2.h"
 	"ui_components.h"

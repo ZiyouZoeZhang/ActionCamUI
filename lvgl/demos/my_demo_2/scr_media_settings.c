@@ -96,8 +96,8 @@ static void create_scr_media_settings(){
 static void create_cont_grid(lv_obj_t * parent){
     /**create cont for grid**/
     cont_grid = lv_obj_create(parent);
-    lv_obj_set_size(cont_grid, lv_pct(65), lv_pct(70));
-    lv_obj_align(cont_grid, LV_ALIGN_RIGHT_MID, 0, lv_pct(15));
+    lv_obj_set_size(cont_grid, lv_pct(65), lv_pct(75));
+    lv_obj_align(cont_grid, LV_ALIGN_RIGHT_MID, 0, lv_pct(10));
     lv_obj_set_style_bg_opa(cont_grid, LV_OPA_0, LV_PART_MAIN);
     lv_obj_set_style_border_width(cont_grid, 0, LV_PART_MAIN);
 
@@ -158,7 +158,6 @@ static void roller_value_changed_cb(lv_event_t *e) {
     btn->cur_state = selected;
 }
 
-
 static void create_media_selection(media_set_btn_info_t * btn){
      /**create screen**/
     scr_media_settings_select = lv_obj_create(NULL);
@@ -184,21 +183,28 @@ static void create_media_selection(media_set_btn_info_t * btn){
         }
     }
 
+    lv_obj_t * label = lv_label_create(scr_media_settings_select);
+    lv_obj_add_style(label, &style_font_default_24, LV_PART_MAIN);
+    lv_label_set_text(label, btn->name);
+    lv_obj_align(label, LV_ALIGN_TOP_LEFT, 15, 15);
+
     //create roller
     roller = lv_roller_create(co);
-    lv_obj_align(roller, LV_ALIGN_RIGHT_MID, -60, 0);
+    lv_obj_set_size(roller, 150, 250);
+    lv_obj_align(roller, LV_ALIGN_RIGHT_MID, -40, 0);
 
     lv_roller_set_options(roller, options, LV_ROLLER_MODE_NORMAL);
-    lv_roller_set_visible_row_count(roller, 5);
+ //   lv_roller_set_visible_row_count(roller, 5);
     lv_roller_set_selected(roller, 0, LV_ANIM_OFF);
 
     lv_obj_set_style_bg_opa(roller, LV_OPA_0,  LV_PART_MAIN);
     lv_obj_set_style_bg_opa(roller, LV_OPA_0,  LV_PART_SELECTED);
 
-    lv_obj_add_style(roller, &style_font_default_36, LV_PART_MAIN);
+    lv_obj_add_style(roller, &style_font_default_24, LV_PART_MAIN);
     lv_obj_set_style_text_color(roller, lv_palette_main(LV_PALETTE_BLUE), LV_PART_SELECTED);
     lv_obj_set_style_border_width(roller, 0, LV_PART_MAIN);
     lv_obj_add_flag(roller, LV_OBJ_FLAG_CLICKABLE);
+    lv_obj_set_style_text_line_space(roller, 50, LV_PART_MAIN);
 
    lv_obj_add_event_cb(roller, roller_value_changed_cb, LV_EVENT_VALUE_CHANGED, btn);
 
