@@ -15,7 +15,7 @@ void create_cam_mode_roller(lv_obj_t * parent, int cur_mode){
     /*
     lv_obj_t * tv = lv_tileview_create(lv_screen_active());
     lv_obj_set_size(tv, 300, 200);
-    lv_obj_set_style_bg_color(tv,BG_COLOR_DARK_GREY, LV_PART_MAIN);
+    lv_obj_set_style_bg_color(tv,BG_COLOR_DARK_BLUE_GREY, LV_PART_MAIN);
     lv_obj_center(tv);
 
 
@@ -44,7 +44,7 @@ void create_cam_mode_roller(lv_obj_t * parent, int cur_mode){
     }
 
     cam_modes_roller = lv_roller_create(parent);
-    lv_obj_set_size(cam_modes_roller, 600, 250);
+    lv_obj_set_size(cam_modes_roller, 350, 250);
     lv_obj_center(cam_modes_roller);
 
     lv_roller_set_options(cam_modes_roller, options, LV_ROLLER_MODE_INFINITE);

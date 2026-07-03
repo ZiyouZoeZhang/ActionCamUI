@@ -77,7 +77,7 @@ static void create_menu_grid() {
         lv_obj_t *btn = lv_btn_create(cont);
         lv_obj_set_grid_cell(btn, LV_GRID_ALIGN_STRETCH, i % 4, 1, LV_GRID_ALIGN_STRETCH, i / 4, 1);
         lv_obj_set_style_shadow_width(btn, 0, LV_PART_MAIN);
-        lv_obj_set_style_bg_color(btn, BG_COLOR_DARK_GREY, LV_PART_MAIN);
+        lv_obj_set_style_bg_color(btn, BG_COLOR_DARK_BLUE_GREY, LV_PART_MAIN);
 
         lv_obj_t *img = lv_image_create(btn);
         if (menu_buttons[i].state == BTN_STATE_ON){
@@ -87,13 +87,15 @@ static void create_menu_grid() {
         }
 
         lv_obj_align(img, LV_ALIGN_TOP_MID, 0, -10);
-        lv_obj_set_style_bg_color(img, BG_COLOR_DARK_GREY, LV_PART_MAIN);
+        lv_obj_set_style_bg_color(img, BG_COLOR_DARK_BLUE_GREY, LV_PART_MAIN);
         lv_obj_set_style_bg_opa(img, LV_OPA_COVER, LV_PART_MAIN);
 
         lv_obj_set_user_data(btn, (void*)(intptr_t)i);
 
         lv_obj_set_style_shadow_width(btn, 0, LV_PART_MAIN);
         lv_obj_add_event_cb(btn, menu_btn_toggle_state_cb, LV_EVENT_CLICKED, NULL);
+        lv_obj_add_flag(btn, LV_OBJ_FLAG_ADV_HITTEST);
+        //lv_obj_add_event_cb(btn, menu_btn_toggle_state_cb, LV_EVENT_PRESSED | LV_EVENT_RELEASED, NULL);
     }
 }
 
@@ -104,9 +106,12 @@ void create_menu_btnm(lv_obj_t * parent){
     /**create grid layout**/
     cont = lv_obj_create(parent);
     lv_obj_set_size(cont, 780, 365);
-    lv_obj_align(cont, LV_ALIGN_BOTTOM_MID, 0, 0);
-    lv_obj_set_style_bg_color(cont, BG_COLOR_DARK_GREY, LV_PART_MAIN);
+    lv_obj_align(cont, LV_ALIGN_BOTTOM_MID, 0, -25);
+    lv_obj_set_style_bg_color(cont, BG_COLOR_DARK_BLUE_GREY, LV_PART_MAIN);
     lv_obj_set_style_border_width(cont, 0, LV_PART_MAIN);
+    lv_obj_remove_flag(cont, LV_OBJ_FLAG_SCROLLABLE);
+
+    lv_obj_add_event_cb(cont, swipe_scr_menu_cb, LV_EVENT_RELEASED, NULL);
 
     static const int width = 147;
     static lv_coord_t col_dsc[] = {width, width, width, width, LV_GRID_TEMPLATE_LAST};
@@ -116,7 +121,10 @@ void create_menu_btnm(lv_obj_t * parent){
     lv_obj_set_style_pad_row(cont, 10, LV_PART_MAIN);
     lv_obj_set_style_pad_column(cont, 40, LV_PART_MAIN);
 
-    lv_obj_remove_flag(cont, LV_OBJ_FLAG_SCROLLABLE);
+    lv_obj_t * swipe_icon = lv_obj_create(parent);
+    lv_obj_add_style(swipe_icon, &style_swipe_icon, LV_PART_MAIN);
+    lv_obj_remove_flag(swipe_icon, LV_OBJ_FLAG_SCROLLABLE);
+    lv_obj_align(swipe_icon, LV_ALIGN_BOTTOM_MID, 0, -15);
 
     /**create ui components**/
      create_menu_grid();
@@ -136,7 +144,7 @@ static void hide_btn_timer_cb(lv_timer_t * t){
 static void create_pop_up_btn(lv_obj_t * parent){
     pop_up_btn = lv_button_create(parent);
     lv_obj_set_style_bg_color(pop_up_btn, lv_palette_main(LV_PALETTE_BLUE), LV_PART_MAIN);
-    lv_obj_set_size(pop_up_btn, lv_pct(100), lv_pct(20));
+    lv_obj_set_size(pop_up_btn, lv_pct(100), lv_pct(17));
     lv_obj_set_style_radius(pop_up_btn, 20, LV_PART_MAIN );
 
     pop_up_btn_label = lv_label_create(pop_up_btn);
@@ -190,7 +198,7 @@ static void grid_action(void) {
 
 static void wifi_action(void) {
     lv_obj_t * scr = lv_obj_create(NULL);
-    lv_obj_set_style_bg_color(scr, BG_COLOR_DARK_GREY,LV_PART_MAIN);
+    lv_obj_set_style_bg_color(scr, BG_COLOR_DARK_BLUE_GREY,LV_PART_MAIN);
 
     lv_obj_t * qr = lv_image_create(scr);
     lv_image_set_src(qr, &xtugo_qrcode);
@@ -217,7 +225,7 @@ static void wifi_action(void) {
 
 void poweroff_action(void) {
     lv_obj_t * scr = lv_obj_create(NULL);
-    lv_obj_set_style_bg_color(scr, BG_COLOR_DARK_GREY,LV_PART_MAIN);
+    lv_obj_set_style_bg_color(scr, BG_COLOR_DARK_BLUE_GREY,LV_PART_MAIN);
 
     /**btn back**/
     lv_obj_t * btn_back  = lv_button_create(scr);
@@ -305,7 +313,7 @@ static void slider_released_cb(lv_event_t * e){
 static void lock_action(void) {
     //draw default view
     lv_obj_t *scr = lv_obj_create(NULL);
-    lv_obj_set_style_bg_color(scr, BG_COLOR_DARK_GREY, LV_PART_MAIN);
+    lv_obj_set_style_bg_color(scr, BG_COLOR_DARK_BLUE_GREY, LV_PART_MAIN);
 
     lock_left = lv_image_create(scr);
     lv_obj_align(lock_left, LV_ALIGN_CENTER, lv_pct(-30), 0);

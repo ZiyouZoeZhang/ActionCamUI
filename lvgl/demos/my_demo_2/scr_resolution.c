@@ -41,7 +41,7 @@ static void on_press_cb(){
 
 static void create_scr_resolution(){
     scr_resolution = lv_obj_create(NULL);
-    lv_obj_set_style_bg_color(scr_resolution, BG_COLOR_DARK_GREY, LV_PART_MAIN);
+    lv_obj_set_style_bg_color(scr_resolution, BG_COLOR_DARK_BLUE_GREY, LV_PART_MAIN);
 
     create_exit_icon(scr_resolution);
 

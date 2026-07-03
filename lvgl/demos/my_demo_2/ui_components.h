@@ -10,6 +10,7 @@ void create_battery_icon(lv_obj_t *parent, bool charging, int level);
 void create_pic_lib_icon(lv_obj_t *parent);
 void create_cam_mode_icon(lv_obj_t * parent, int mode);
 void create_exit_icon(lv_obj_t * parent);
+void create_media_set_icon(lv_obj_t * parent);
 void create_buttons(lv_obj_t * parent);
 void create_resolution_icon(lv_obj_t * parent, int cur_res);
 void create_zoom_icon(lv_obj_t * parent, int cur_zoom);

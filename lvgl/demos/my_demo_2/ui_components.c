@@ -3,6 +3,7 @@
 #include "ui_components.h"
 #include "camera_modes.h"
 #include "pic_converted_transparent/image_declares.h"
+#include "scr_media_settings.h"
 #include "my_demo_2.h"
 
 static lv_obj_t * img_battery = NULL;
@@ -14,8 +15,18 @@ static lv_obj_t * img_exit = NULL;
 static lv_obj_t * img_res = NULL;
 static lv_obj_t * img_zoom = NULL;
 static lv_obj_t * img_spot_met = NULL;
+static lv_obj_t * img_media_set = NULL;
 
 /**creations**/
+
+void create_media_set_icon(lv_obj_t * parent){
+    img_media_set = lv_image_create(parent);
+    lv_image_set_src(img_media_set, &main_Media_set);
+    lv_obj_align(img_media_set, LV_ALIGN_RIGHT_MID, 10, 0);
+    lv_obj_add_flag(img_media_set, LV_OBJ_FLAG_CLICKABLE);
+
+    lv_obj_add_event_cb(img_media_set, open_scr_media_settings_cb, LV_EVENT_CLICKED, NULL);
+}
 
 void create_resolution_icon(lv_obj_t * parent, int cur_res){
     img_res = lv_image_create(parent);
@@ -39,7 +50,7 @@ void create_resolution_icon(lv_obj_t * parent, int cur_res){
 
 void create_zoom_icon(lv_obj_t * parent, int cur_zoom){
     img_zoom = lv_image_create(parent);
-    lv_obj_align(img_zoom, LV_ALIGN_BOTTOM_RIGHT, -10, -15);
+    lv_obj_align(img_zoom, LV_ALIGN_BOTTOM_RIGHT, -15, -20);
     lv_obj_add_flag(img_zoom, LV_OBJ_FLAG_CLICKABLE);
     lv_image_set_src(img_zoom, &main_Zoom_bg);
 
@@ -72,10 +83,6 @@ void create_grid(lv_obj_t * parent){
     if (menu_buttons[CAM_MENU_GRID_VIEW].state == BTN_STATE_OFF){
         return;
     }
-
-    int x = 200;
-
-    int y = 200;
 
     static lv_point_precise_t line_points[][2] = {
         {{260, 0}, {260, 480}},

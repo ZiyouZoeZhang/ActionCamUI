@@ -1,6 +1,7 @@
 #ifndef MY_DEMO_2_H
 #define MY_DEMO_2_H
 
+#define BG_COLOR_DARK_BLUE_GREY  lv_color_hex(0x1F3B4D)
 #define BG_COLOR_DARK_GREY  lv_color_hex(0x333333)
 
 #include "lvgl.h"
@@ -10,6 +11,7 @@
 #include "ui_menu_btnm.h"
 #include "scr_resolution.h"
 #include "scr_zoom.h"
+#include "scr_media_settings.h"
 #include "font/font_declares.h"
 
 
@@ -24,6 +26,7 @@ extern int cur_cam_zoom;
 extern bool wifi_active;
 extern lv_obj_t *scr_home;
 extern lv_style_t style_font_default_36;
+extern lv_style_t style_swipe_icon;
 
 /**main**/
 void my_demo_2_create();
@@ -46,7 +49,7 @@ void swipe_scr_main_cb(lv_event_t *e);
 void swipe_scr_menu_cb(lv_event_t *e);
 void swipe_scr_mode_selection_cb(lv_event_t *e);
 
-///some how need to be global as well
+///somehow need to be global as well
 void create_cam_mode_roller(lv_obj_t *parent, int cur_mode);
 int get_selected_mode_from_roller(void);
 
