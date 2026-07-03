@@ -10,8 +10,8 @@
 static lv_obj_t * pop_up_btn;
 static lv_obj_t * pop_up_btn_label;
 
-lv_obj_t *cont = NULL;
-lv_timer_t * timer = NULL;
+static lv_obj_t *cont = NULL;
+static lv_timer_t * timer = NULL;
 
 /**access**/
 void create_menu_btnm(lv_obj_t * parent);

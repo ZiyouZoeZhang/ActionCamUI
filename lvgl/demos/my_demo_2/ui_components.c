@@ -17,6 +17,7 @@ static lv_obj_t * img_zoom = NULL;
 static lv_obj_t * img_spot_met = NULL;
 static lv_obj_t * img_media_set = NULL;
 
+
 /**creations**/
 
 void create_media_set_icon(lv_obj_t * parent){

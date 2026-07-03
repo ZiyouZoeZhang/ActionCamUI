@@ -4,10 +4,29 @@
 #include "lvgl.h"
 
 extern lv_obj_t *scr_media_settings;
-
 void open_scr_media_settings_cb();
 
-///A TABLE
-//extern const char* cam_resolution_table[];
+typedef enum {
+    CAM_MEDIA_LDC,
+    CAM_MEDIA_METER_MODE,
+    CAM_MEDIA_EXPOSURE,
+    CAM_MEDIA_SHUTTER,
+    CAM_MEDIA_ISO,
+    CAM_MEDIA_COUNT
+} media_set_t;
+
+typedef struct {
+    media_set_t btn;
+    const char *name;
+    bool active;
+    bool pro;
+    int cur_state;
+    const char **states;
+    int state_count;
+} media_set_btn_info_t;
+
+
+extern media_set_btn_info_t media_buttons[];
+
 
 #endif // SCR_MEDIA_SETTINGS_H_INCLUDED
