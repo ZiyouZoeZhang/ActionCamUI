@@ -46,9 +46,9 @@ static void create_scr_zoom(){
     create_exit_icon(scr_zoom);
 
     lv_obj_t * heading = lv_label_create(scr_zoom);
-    lv_obj_align(heading, LV_ALIGN_TOP_LEFT, 95, 35);
     lv_label_set_text(heading, "ZOOM");
-     lv_obj_set_style_text_color(heading, lv_color_white(), LV_PART_MAIN);
+    lv_obj_add_style(heading, &style_font_default_36, LV_PART_MAIN);
+    lv_obj_align(heading, LV_ALIGN_TOP_LEFT, 95, 20);
 
     char options[300] = ""; //format:  name\nname\nname\n etc
     for (int i = 0; i < CAM_ZOOM_COUNT; i++) {
@@ -68,7 +68,8 @@ static void create_scr_zoom(){
 
     lv_obj_set_style_bg_opa(roller, LV_OPA_0,  LV_PART_MAIN);
     lv_obj_set_style_bg_opa(roller, LV_OPA_0,  LV_PART_SELECTED);
-    lv_obj_set_style_text_color(roller, lv_color_white(), LV_PART_MAIN);
+
+    lv_obj_add_style(roller, &style_font_default_36, LV_PART_MAIN);
     lv_obj_set_style_text_color(roller, lv_palette_main(LV_PALETTE_BLUE), LV_PART_SELECTED);
     lv_obj_set_style_border_width(roller, 0, LV_PART_MAIN);
 

@@ -22,19 +22,17 @@ void create_resolution_icon(lv_obj_t * parent, int cur_res){
     lv_obj_align(img_res, LV_ALIGN_BOTTOM_MID, 0, -20);
     lv_obj_add_flag(img_res, LV_OBJ_FLAG_CLICKABLE);
 
-    if (sizeof(cam_resolution_table[cur_res])<=8){
+    if (strlen(cam_resolution_table[cur_res])<=7){
         lv_image_set_src(img_res, &main_Res_short);
-    } else if  (sizeof(cam_resolution_table[cur_res])<=9){
+    } else if  (strlen(cam_resolution_table[cur_res])<=9){
          lv_image_set_src(img_res, &main_Res_mid);
     } else {
          lv_image_set_src(img_res, &main_Res_bg);
     }
 
     lv_obj_t * label = lv_label_create(img_res);
-    lv_obj_center(label);
     lv_label_set_text(label, cam_resolution_table[cur_res]);
-    lv_obj_set_style_text_color(label, lv_color_white(), LV_PART_MAIN);
-
+    lv_obj_add_style(label, &style_font_default_36, LV_PART_MAIN);
 
     lv_obj_add_event_cb(img_res, open_scr_resolution_cb, LV_EVENT_CLICKED, NULL);
 }
@@ -43,13 +41,11 @@ void create_zoom_icon(lv_obj_t * parent, int cur_zoom){
     img_zoom = lv_image_create(parent);
     lv_obj_align(img_zoom, LV_ALIGN_BOTTOM_RIGHT, -10, -15);
     lv_obj_add_flag(img_zoom, LV_OBJ_FLAG_CLICKABLE);
-
     lv_image_set_src(img_zoom, &main_Zoom_bg);
 
     lv_obj_t * label = lv_label_create(img_zoom);
-    lv_obj_center(label);
     lv_label_set_text(label, cam_zoom_table[cur_zoom]);
-    lv_obj_set_style_text_color(label, lv_color_white(), LV_PART_MAIN);
+    lv_obj_add_style(label, &style_font_default_36, LV_PART_MAIN);
 
     lv_obj_add_event_cb(img_zoom, open_scr_zoom_cb, LV_EVENT_CLICKED, NULL);
 }
@@ -59,8 +55,8 @@ void create_sd_icon(lv_obj_t *parent, int status, float storage){
     lv_obj_align(img_sd, LV_ALIGN_TOP_LEFT, 10, 10);
 
     label_sd = lv_label_create(parent);
-    lv_obj_align(label_sd, LV_ALIGN_TOP_LEFT, 60, 30);
-    lv_obj_set_style_text_color(label_sd, lv_color_white(), LV_PART_MAIN);
+    lv_obj_add_style(label_sd, &style_font_default_36, LV_PART_MAIN);
+    lv_obj_align(label_sd, LV_ALIGN_TOP_LEFT, 65, 15);
 
     update_sd_icon(status, storage);
 }
@@ -137,13 +133,11 @@ void create_spot_metering(lv_obj_t * parent){
 
 
 /**updates**/
-
 void update_sd_icon(int status, float storage) {
     switch (status){
         case -1:
             lv_image_set_src(img_sd, &SD_error);
             lv_label_set_text(label_sd, "");
-            printf("correct \n");
             break;
         case 0:
              lv_image_set_src(img_sd, &SD_none);

@@ -44,15 +44,19 @@ void create_cam_mode_roller(lv_obj_t * parent, int cur_mode){
     }
 
     cam_modes_roller = lv_roller_create(parent);
-    lv_obj_set_size(cam_modes_roller, 600, 150);
+    lv_obj_set_size(cam_modes_roller, 600, 250);
     lv_obj_center(cam_modes_roller);
 
     lv_roller_set_options(cam_modes_roller, options, LV_ROLLER_MODE_INFINITE);
-    lv_roller_set_visible_row_count(cam_modes_roller, 3);
     lv_roller_set_selected(cam_modes_roller, cur_mode, LV_ANIM_OFF);
 
-    lv_obj_set_style_bg_color(cam_modes_roller, BG_COLOR_DARK_GREY, LV_PART_MAIN);
-    lv_obj_set_style_text_color(cam_modes_roller, lv_color_white(), LV_PART_MAIN);
+    lv_obj_set_style_bg_opa(cam_modes_roller, LV_OPA_0,  LV_PART_MAIN);
+    lv_obj_set_style_bg_opa(cam_modes_roller, LV_OPA_0,  LV_PART_SELECTED);
+    lv_obj_set_style_border_width(cam_modes_roller, 0, LV_PART_MAIN);
+
+    lv_obj_add_style(cam_modes_roller, &style_font_default_36, LV_PART_MAIN);
+    lv_obj_set_style_text_color(cam_modes_roller, lv_palette_main(LV_PALETTE_BLUE), LV_PART_SELECTED);
+    lv_obj_set_style_text_line_space(cam_modes_roller, 50, LV_PART_MAIN);
 }
 
 int get_selected_mode_from_roller(void) {

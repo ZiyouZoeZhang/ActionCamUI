@@ -113,8 +113,8 @@ void create_menu_btnm(lv_obj_t * parent){
     static lv_coord_t row_dsc[] = {width, width, LV_GRID_TEMPLATE_LAST};
     lv_obj_set_grid_dsc_array(cont, col_dsc, row_dsc);
     lv_obj_set_style_pad_all(cont, 35, LV_PART_MAIN);
-    lv_obj_set_style_pad_row(cont, 10, LV_PART_MAIN); //行间距
-    lv_obj_set_style_pad_column(cont, 40, LV_PART_MAIN); //列间距
+    lv_obj_set_style_pad_row(cont, 10, LV_PART_MAIN);
+    lv_obj_set_style_pad_column(cont, 40, LV_PART_MAIN);
 
     lv_obj_remove_flag(cont, LV_OBJ_FLAG_SCROLLABLE);
 
@@ -129,7 +129,6 @@ static void hide_btn_cb(lv_event_t *e) {
 }
 
 static void hide_btn_timer_cb(lv_timer_t * t){
-    printf("Called\n");
     lv_obj_add_flag(pop_up_btn, LV_OBJ_FLAG_HIDDEN);
     lv_timer_pause(timer);
 }
@@ -138,10 +137,10 @@ static void create_pop_up_btn(lv_obj_t * parent){
     pop_up_btn = lv_button_create(parent);
     lv_obj_set_style_bg_color(pop_up_btn, lv_palette_main(LV_PALETTE_BLUE), LV_PART_MAIN);
     lv_obj_set_size(pop_up_btn, lv_pct(100), lv_pct(20));
-    lv_obj_set_style_radius(pop_up_btn, 40, LV_PART_MAIN );
+    lv_obj_set_style_radius(pop_up_btn, 20, LV_PART_MAIN );
 
     pop_up_btn_label = lv_label_create(pop_up_btn);
-    lv_obj_center(pop_up_btn_label);
+    lv_obj_add_style(pop_up_btn_label, &style_font_default_36, LV_PART_MAIN);
 
     /**hide btn**/
     lv_obj_add_flag(pop_up_btn, LV_OBJ_FLAG_HIDDEN);
@@ -205,13 +204,13 @@ static void wifi_action(void) {
     lv_obj_add_event_cb(btn, open_scr_menu_cb, LV_EVENT_CLICKED, NULL);
 
     lv_obj_t * txt = lv_label_create(scr);
-    lv_label_set_text(txt, "TQWERTYUIOPASDFGHJ \n\n asdfghjkzxcvbnm \n\n qwertyhbncxfg");
-    lv_obj_set_style_text_color(txt, lv_color_white(), LV_PART_MAIN);
-    lv_obj_align(txt, LV_ALIGN_RIGHT_MID, lv_pct(-30), lv_pct(-15));
+    lv_label_set_text(txt, "TQWERTYUIOHJ \nasdfghjkzxcvbnm \nqwertyhbncxfg");
+    lv_obj_add_style(txt, &style_font_default_36, LV_PART_MAIN);
+    lv_obj_align(txt, LV_ALIGN_CENTER, lv_pct(18), lv_pct(-15));
 
     lv_obj_t * label = lv_label_create(btn);
     lv_label_set_text(label, "CANCLE");
-    lv_obj_center(label);
+    lv_obj_add_style(label, &style_font_default_36, LV_PART_MAIN);
 
     lv_screen_load(scr);
 }
@@ -223,28 +222,28 @@ void poweroff_action(void) {
     /**btn back**/
     lv_obj_t * btn_back  = lv_button_create(scr);
     lv_obj_set_style_bg_color(btn_back, lv_palette_main(LV_PALETTE_GREY), LV_PART_MAIN);
-    lv_obj_set_size(btn_back, lv_pct(25), lv_pct(20));
+    lv_obj_set_size(btn_back, lv_pct(35), lv_pct(20));
     lv_obj_align(btn_back, LV_ALIGN_BOTTOM_MID, lv_pct(-20), lv_pct(-25));
     lv_obj_add_event_cb(btn_back, open_scr_menu_cb, LV_EVENT_CLICKED, NULL);
 
     lv_obj_t * label_back = lv_label_create(btn_back);
     lv_label_set_text(label_back, "CANCLE");
-    lv_obj_center(label_back);
+    lv_obj_add_style(label_back, &style_font_default_36, LV_PART_MAIN);
 
     /**btn continue**/
     lv_obj_t * btn_continue  = lv_button_create(scr);
     lv_obj_set_style_bg_color(btn_continue, lv_palette_main(LV_PALETTE_BLUE), LV_PART_MAIN);
-    lv_obj_set_size(btn_continue, lv_pct(25), lv_pct(20));
+    lv_obj_set_size(btn_continue, lv_pct(35), lv_pct(20));
     lv_obj_align(btn_continue, LV_ALIGN_BOTTOM_MID, lv_pct(20), lv_pct(-25));
     lv_obj_add_event_cb(btn_continue, open_scr_poweroff_cb, LV_EVENT_CLICKED, NULL);
 
     lv_obj_t * label_continue = lv_label_create(btn_continue);
     lv_label_set_text(label_continue, "CONTINUE");
-    lv_obj_center(label_continue);
+    lv_obj_add_style(label_continue, &style_font_default_36, LV_PART_MAIN);
 
     lv_obj_t * txt = lv_label_create(scr);
     lv_label_set_text(txt, "POWEROFF");
-    lv_obj_set_style_text_color(txt, lv_color_white(), LV_PART_MAIN);
+    lv_obj_add_style(txt, &style_font_default_36, LV_PART_MAIN);
     lv_obj_align(txt, LV_ALIGN_CENTER, 0, lv_pct(-15));
 
     /**OTHER UI COMPONENTS**/

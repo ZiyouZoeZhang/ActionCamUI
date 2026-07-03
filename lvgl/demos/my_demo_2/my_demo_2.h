@@ -10,6 +10,8 @@
 #include "ui_menu_btnm.h"
 #include "scr_resolution.h"
 #include "scr_zoom.h"
+#include "font/font_declares.h"
+
 
 /**variables for INPUT**/
 extern int battery_level;
@@ -21,6 +23,7 @@ extern int cur_cam_resolution;
 extern int cur_cam_zoom;
 extern bool wifi_active;
 extern lv_obj_t *scr_home;
+extern lv_style_t style_font_default_36;
 
 /**main**/
 void my_demo_2_create();

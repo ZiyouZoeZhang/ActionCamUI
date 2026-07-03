@@ -46,9 +46,9 @@ static void create_scr_resolution(){
     create_exit_icon(scr_resolution);
 
     lv_obj_t * heading = lv_label_create(scr_resolution);
-    lv_obj_align(heading, LV_ALIGN_CENTER, 0, -80);
-    lv_label_set_text(heading, "RESOLUTION");
-     lv_obj_set_style_text_color(heading, lv_color_white(), LV_PART_MAIN);
+    lv_label_set_text(heading, "Resolution");
+    lv_obj_add_style(heading, &style_font_default_36, LV_PART_MAIN);
+    lv_obj_align(heading, LV_ALIGN_CENTER, 0, -120);
 
     char options[300] = ""; //format:  name\nname\nname\n etc
     for (int i = 0; i < CAM_RES_COUNT; i++) {
@@ -60,19 +60,21 @@ static void create_scr_resolution(){
 
     //create roller
     roller = lv_roller_create(scr_resolution);
-    lv_obj_set_size(roller, 600, 150);
-    lv_obj_center(roller);
+    lv_obj_set_size(roller, 600, 250);
+    lv_obj_align(roller, LV_ALIGN_CENTER, 0, 50);
 
-    lv_roller_set_options(roller, options, LV_ROLLER_MODE_INFINITE);
-    lv_roller_set_visible_row_count(roller, 3);
+    lv_roller_set_options(roller, options, LV_ROLLER_MODE_NORMAL);
     lv_roller_set_selected(roller, 0, LV_ANIM_OFF);
 
     lv_obj_set_style_bg_opa(roller, LV_OPA_0,  LV_PART_MAIN);
     lv_obj_set_style_bg_opa(roller, LV_OPA_0,  LV_PART_SELECTED);
-    lv_obj_set_style_text_color(roller, lv_color_white(), LV_PART_MAIN);
-    lv_obj_set_style_text_color(roller, lv_palette_main(LV_PALETTE_BLUE), LV_PART_SELECTED);
     lv_obj_set_style_border_width(roller, 0, LV_PART_MAIN);
 
+    lv_obj_add_style(roller, &style_font_default_36, LV_PART_MAIN);
+    lv_obj_set_style_text_color(roller, lv_palette_main(LV_PALETTE_BLUE), LV_PART_SELECTED);
+    lv_obj_set_style_text_line_space(roller, 50, LV_PART_MAIN);
+
+    //roller cb
     lv_obj_add_event_cb(roller, on_release_cb, LV_EVENT_VALUE_CHANGED, NULL);
     lv_obj_add_event_cb(roller, on_press_cb, LV_EVENT_PRESSED, NULL);
 }

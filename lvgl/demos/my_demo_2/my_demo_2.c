@@ -12,6 +12,7 @@ bool wifi_active = false;
 
 //global
 lv_obj_t *scr_home = NULL;
+lv_style_t style_font_default_36;
 
 /**static SCREENS**/
 static lv_obj_t * scr_poweroff = NULL;
@@ -141,6 +142,7 @@ void create_scr_pic_library(){
 }
 
 void create_scr_menu(){
+
     /**background**/
     scr_menu = lv_obj_create(NULL);
     lv_obj_set_style_bg_color(scr_menu, BG_COLOR_DARK_GREY, LV_PART_MAIN);
@@ -156,7 +158,17 @@ void create_scr_menu(){
     lv_screen_load(scr_menu);
 }
 
+
+/**initialize**/
+
+void initializ_styles(){
+    lv_style_init(&style_font_default_36);
+    lv_style_set_text_font(&style_font_default_36, &font_36);
+    lv_style_set_text_color(&style_font_default_36, lv_color_white());
+    lv_style_set_align(&style_font_default_36, LV_ALIGN_CENTER);
+}
 void my_demo_2_create() {
+    initializ_styles();
    create_scr_home();
 
     /**driver code**/
