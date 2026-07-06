@@ -5,7 +5,6 @@
 #include "pic_converted_transparent/image_declares.h"
 #include "scr_media_settings.h"
 #include "my_demo_2.h"
-
 static lv_obj_t * img_battery = NULL;
 static lv_obj_t * img_sd = NULL;
 static lv_obj_t * label_sd = NULL;
@@ -16,7 +15,7 @@ static lv_obj_t * img_res = NULL;
 static lv_obj_t * img_zoom = NULL;
 static lv_obj_t * img_spot_met = NULL;
 static lv_obj_t * img_media_set = NULL;
-
+static lv_obj_t * img_pic_select = NULL;
 
 /**creations**/
 
@@ -79,7 +78,6 @@ void create_battery_icon(lv_obj_t *parent, bool charging, int level){
     update_battery_icon(charging, level);
 }
 
-
 void create_grid(lv_obj_t * parent){
     if (menu_buttons[CAM_MENU_GRID_VIEW].state == BTN_STATE_OFF){
         return;
@@ -139,6 +137,11 @@ void create_spot_metering(lv_obj_t * parent){
     lv_image_set_src(img_spot_met, &spot_metering);
 }
 
+void create_pic_select_icon(lv_obj_t * parent){
+    img_pic_select = lv_image_create(parent);
+    lv_obj_align(img_pic_select, LV_ALIGN_TOP_RIGHT, 0, 0);
+    lv_image_set_src(img_pic_select, &filelist_multiselect);
+}
 
 /**updates**/
 void update_sd_icon(int status, float storage) {
@@ -205,13 +208,11 @@ void open_scr_cam_modes_by_mode(int mode){
     create_scr_mode_selection(mode);
 }
 
-
 void open_scr_cam_modes_cb(lv_event_t * e){
     lv_obj_t *img = lv_event_get_target(e);
     camera_mode_t mode = (camera_mode_t)(intptr_t)lv_obj_get_user_data(img);
     open_scr_cam_modes_by_mode(mode);
 }
-
 
 void open_scr_home_cb(){
     cur_cam_mode = get_selected_mode_from_roller();

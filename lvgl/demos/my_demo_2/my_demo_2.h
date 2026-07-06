@@ -13,6 +13,7 @@
 #include "scr_zoom.h"
 #include "scr_media_settings.h"
 #include "font/font_declares.h"
+#include "image_storage.h"
 
 
 /**variables for INPUT**/

@@ -1,23 +1,23 @@
 #include "camera_modes.h"
 
-static const camera_mode_info_t mode_table[] = {
-    {CAM_MODE_RAW,            "Raw",     &mode_rawphoto_normal},
-    {CAM_MODE_LONG_EXPOSURE,  "Long Exposure",  &mode_longexposurephoto_normal},
-    {CAM_MODE_CONTINUOUS,     "Continuous",    &mode_burstphoto_normal},
-    {CAM_MODE_TIMER,          "Timer",    &mode_delayphoto_normal},
-    {CAM_MODE_TIMELAPSE,      "Timelapse",    &mode_lapsephoto_normal},
-    {CAM_MODE_PHOTO,          "Photo",    &mode_normphoto_normal},
+const camera_mode_info_t mode_table[] = {
+    {CAM_MODE_RAW,            "Raw",     &mode_rawphoto_normal, &filelist_rawphoto},
+    {CAM_MODE_LONG_EXPOSURE,  "Long Exposure",  &mode_longexposurephoto_normal, &filelist_longexposurephoto},
+    {CAM_MODE_CONTINUOUS,     "Continuous",    &mode_burstphoto_normal, &filelist_burstphoto},
+    {CAM_MODE_TIMER,          "Timer",    &mode_delayphoto_normal, &filelist_delayphoto},
+    {CAM_MODE_TIMELAPSE,      "Timelapse",    &mode_lapsephoto_normal, &filelist_lapsephoto},
+    {CAM_MODE_PHOTO,          "Photo",    &mode_normphoto_normal, &filelist_normphoto},
 
-    {CAM_MODE_VIDEO,          "Record",    &mode_normrec_normal},
-    {CAM_MODE_TIMELAPSE_VIDEO,          "Timelapse Video",    &mode_lapserec_normal},
+    {CAM_MODE_VIDEO,          "Record",    &mode_normrec_normal, &filelist_normrec},
+    {CAM_MODE_TIMELAPSE_VIDEO,          "Timelapse Video",    &mode_lapserec_normal, &filelist_lapserec},
 
-    {CAM_MODE_SLOW_MOTION,    "Slow Motion", &mode_slowrec_normal},
-    {CAM_MODE_SHORT_VIDEO,    "Short Video",  &mode_shortrec_normal},
+    {CAM_MODE_SLOW_MOTION,    "Slow Motion", &mode_slowrec_normal, &filelist_slowrec},
+    {CAM_MODE_SHORT_VIDEO,    "Short Video",  &mode_shortrec_normal, &filelist_shortrec},
 
-    {CAM_MODE_UNDERWATER,     "Underwater",    &mode_underwaterrec_normal},
-    {CAM_MODE_CAR_LOOP,       "Car loop",    &mode_looprec_normal},
-    {CAM_MODE_VIDEO_PHOTO,    "Video photo", &mode_recsnap_normal},
-    {CAM_MODE_NIGHT,          "Night",    &mode_nightrec_normal}
+    {CAM_MODE_UNDERWATER,     "Underwater",    &mode_underwaterrec_normal, &filelist_underwaterrec},
+    {CAM_MODE_CAR_LOOP,       "Car loop",    &mode_looprec_normal, &filelist_looprec},
+    {CAM_MODE_VIDEO_PHOTO,    "Video photo", &mode_recsnap_normal, &filelist_recsnap},
+    {CAM_MODE_NIGHT,          "Night",    &mode_nightrec_normal, &filelist_nightrec}
 };
 
 // GET All mode and return table

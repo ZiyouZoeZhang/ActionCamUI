@@ -185,11 +185,10 @@ static void create_settings_buttons_container(lv_obj_t * parent){
     static lv_coord_t col_dsc[] = {LV_GRID_FR(1), LV_GRID_FR(1), LV_GRID_TEMPLATE_LAST};
     lv_obj_set_grid_dsc_array(cont_buttons, col_dsc, row_dsc);
 
-    lv_obj_set_style_pad_top(cont_buttons, 0, LV_PART_MAIN);     // …œ±ﬂæ‡
+    lv_obj_set_style_pad_top(cont_buttons, 0, LV_PART_MAIN);
     lv_obj_set_style_pad_bottom(cont_buttons, 50, LV_PART_MAIN);
-    lv_obj_set_style_pad_hor(cont_buttons, 30, LV_PART_MAIN);     // ◊Û”“±ﬂæ‡
+    lv_obj_set_style_pad_hor(cont_buttons, 30, LV_PART_MAIN);
 
- //   lv_obj_set_style_pad_all(cont_buttons, 40, LV_PART_MAIN);
    lv_obj_set_style_pad_column(cont_buttons, 25, LV_PART_MAIN);
    lv_obj_set_style_pad_row(cont_buttons, 25, LV_PART_MAIN);
 

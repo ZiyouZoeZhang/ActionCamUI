@@ -35,7 +35,10 @@ typedef struct {
     camera_mode_t mode;
     const char *name;
     const void *icon_src;
+    const void *filelist_icon_src;
 } camera_mode_info_t;
+
+extern const camera_mode_info_t mode_table[];
 
 const camera_mode_info_t* get_all_modes(void);
 int get_mode_count(void);

@@ -32,8 +32,6 @@ typedef struct {
     int state_count;
 } media_set_btn_info_t;
 
-
 extern media_set_btn_info_t media_buttons[];
-
 
 #endif // SCR_MEDIA_SETTINGS_H_INCLUDED

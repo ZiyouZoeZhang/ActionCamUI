@@ -63,7 +63,7 @@ static void create_scr_zoom(){
     lv_obj_align(roller, LV_ALIGN_RIGHT_MID, -60, 0);
 
     lv_roller_set_options(roller, options, LV_ROLLER_MODE_NORMAL);
-    lv_roller_set_visible_row_count(roller, 5);
+    lv_roller_set_visible_row_count(roller, 9);
     lv_roller_set_selected(roller, 0, LV_ANIM_OFF);
 
     lv_obj_set_style_bg_opa(roller, LV_OPA_0,  LV_PART_MAIN);

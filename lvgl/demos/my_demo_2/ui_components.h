@@ -16,6 +16,7 @@ void create_resolution_icon(lv_obj_t * parent, int cur_res);
 void create_zoom_icon(lv_obj_t * parent, int cur_zoom);
 void create_grid(lv_obj_t * parent);
 void create_spot_metering(lv_obj_t * parent);
+void create_pic_select_icon(lv_obj_t * parent);
 //void create_pro_scroll(lv_obj_t * parent);
 
 /**updates**/
