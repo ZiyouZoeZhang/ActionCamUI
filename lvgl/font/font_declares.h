@@ -12,5 +12,4 @@ LV_FONT_DECLARE(font_36);
 //LV_FONT_DECLARE(font_60);
 
 
-
 #endif // FONT_DECLARES_H_INCLUDED

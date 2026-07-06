@@ -7,14 +7,12 @@
 #include "lvgl.h"
 #include "camera_modes.h"
 #include "ui_components.h"
-#include "ui_roller.h"
 #include "ui_menu_btnm.h"
 #include "scr_resolution.h"
 #include "scr_zoom.h"
 #include "scr_media_settings.h"
 #include "font/font_declares.h"
 #include "image_storage.h"
-
 
 /**variables for INPUT**/
 extern int battery_level;
@@ -25,21 +23,19 @@ extern int cur_cam_mode;
 extern int cur_cam_resolution;
 extern int cur_cam_zoom;
 extern bool wifi_active;
+
 extern lv_obj_t *scr_home;
 extern lv_style_t style_font_default_36;
 extern lv_style_t style_font_default_30;
 extern lv_style_t style_font_default_24;
 extern lv_style_t style_swipe_icon;
+extern lv_style_t style_scrollbar;
 
 /**main**/
 void my_demo_2_create();
 
 /**create scr**/
 void create_scr_home();
-void create_scr_poweroff();
-void create_scr_mode_selection(int mode);
-void create_scr_pic_library();
-void create_scr_menu();
 
 /**open scr**/
 void open_scr_cam_modes_by_mode(int mode);
@@ -47,13 +43,10 @@ void open_scr_pic_lib_cb();
 void open_scr_menu_cb();
 void open_scr_poweroff_cb();
 
-/**CB**/
-void swipe_scr_main_cb(lv_event_t *e);
-void swipe_scr_menu_cb(lv_event_t *e);
-void swipe_scr_mode_selection_cb(lv_event_t *e);
-
-///somehow need to be global as well
-void create_cam_mode_roller(lv_obj_t *parent, int cur_mode);
+/**others**/
 int get_selected_mode_from_roller(void);
+
+/**CB**/
+void swipe_scr_menu_cb(lv_event_t *e);
 
 #endif /* MY_DEMO_2_H */

@@ -29,8 +29,8 @@ typedef struct {
     void (*action)(); ///
 } menu_btn_info_t;
 
-extern menu_btn_info_t menu_buttons[];
+void open_scr_menu_cb();
 
-void create_menu_btnm(lv_obj_t *parent);
+extern menu_btn_info_t menu_buttons[];
 
 #endif // UI_MENU_BTNM_H_INCLUDED

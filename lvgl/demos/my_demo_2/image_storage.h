@@ -4,8 +4,6 @@
 #include "lvgl.h"
 #include "camera_modes.h"
 
-
-
 typedef struct {
     //const void *img_src;
     //const char *name;

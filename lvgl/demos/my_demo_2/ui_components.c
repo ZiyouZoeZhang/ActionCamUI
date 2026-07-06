@@ -5,6 +5,7 @@
 #include "pic_converted_transparent/image_declares.h"
 #include "scr_media_settings.h"
 #include "my_demo_2.h"
+
 static lv_obj_t * img_battery = NULL;
 static lv_obj_t * img_sd = NULL;
 static lv_obj_t * label_sd = NULL;
@@ -204,10 +205,6 @@ void update_spot_metering_cb(lv_event_t *e) {
 
 /**CB**/
 
-void open_scr_cam_modes_by_mode(int mode){
-    create_scr_mode_selection(mode);
-}
-
 void open_scr_cam_modes_cb(lv_event_t * e){
     lv_obj_t *img = lv_event_get_target(e);
     camera_mode_t mode = (camera_mode_t)(intptr_t)lv_obj_get_user_data(img);
@@ -220,8 +217,4 @@ void open_scr_home_cb(){
     cur_cam_zoom = get_selected_zoom_from_roller();
     create_scr_home();
     lv_screen_load(scr_home);
-}
-
-void open_scr_pic_lib_cb(){
-    create_scr_pic_library();
 }
