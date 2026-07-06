@@ -57,7 +57,7 @@ static void menu_btn_toggle_state_cb(lv_event_t *e){
 
     /**toggle state**/
     if (index == CAM_MENU_WIFI){
-        if (wifi_active) menu_buttons[index].state == BTN_STATE_ON;
+        if (wifi_active) menu_buttons[index].state = BTN_STATE_ON;
         else menu_buttons[index].state = BTN_STATE_OFF;
     } else if (menu_buttons[index].state == BTN_STATE_ON) {
         menu_buttons[index].state = BTN_STATE_OFF;

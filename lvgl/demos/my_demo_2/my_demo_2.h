@@ -26,6 +26,7 @@ extern int cur_cam_zoom;
 extern bool wifi_active;
 extern lv_obj_t *scr_home;
 extern lv_style_t style_font_default_36;
+extern lv_style_t style_font_default_30;
 extern lv_style_t style_font_default_24;
 extern lv_style_t style_swipe_icon;
 

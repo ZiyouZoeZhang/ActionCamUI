@@ -13,6 +13,7 @@ bool wifi_active = false;
 //global
 lv_obj_t *scr_home = NULL;
 lv_style_t style_font_default_36;
+lv_style_t style_font_default_30;
 lv_style_t style_font_default_24;
 lv_style_t style_swipe_icon;
 
@@ -42,7 +43,7 @@ void swipe_scr_main_cb(lv_event_t * e){
    // if (code == LV_EVENT_GESTURE) {
         switch(lv_indev_get_gesture_dir(lv_indev_active())) {
             case LV_DIR_LEFT:
-                open_scr_media_settings_cb();
+                open_scr_media_settings_cb(false);
                 //printf("SWIPE -> enter screen PRO selection");
                 break;
             case LV_DIR_RIGHT:
@@ -174,6 +175,12 @@ void initializ_styles(){
     lv_style_set_text_color(&style_font_default_36, lv_color_white());
     lv_style_set_align(&style_font_default_36, LV_ALIGN_CENTER);
     lv_style_set_text_opa(&style_font_default_36, LV_OPA_100);
+
+    lv_style_init(&style_font_default_30);
+    lv_style_set_text_font(&style_font_default_30, &font_30);
+    lv_style_set_text_color(&style_font_default_30, lv_color_white());
+    lv_style_set_align(&style_font_default_30, LV_ALIGN_CENTER);
+    lv_style_set_text_opa(&style_font_default_30, LV_OPA_100);
 
 
     lv_style_init(&style_font_default_24);
