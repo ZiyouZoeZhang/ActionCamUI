@@ -122,7 +122,7 @@ void create_cam_mode_icon(lv_obj_t * parent, int mode){
     lv_obj_add_event_cb(img_cam_mode, open_scr_cam_modes_cb, LV_EVENT_CLICKED, NULL);
 }
 
-void create_exit_icon(lv_obj_t * parent){
+lv_obj_t* create_exit_icon(lv_obj_t * parent){
     img_exit = lv_image_create(parent);
     lv_obj_align(img_exit, LV_ALIGN_TOP_LEFT, 0, 0);
     lv_image_set_src(img_exit, &common_return);
@@ -130,6 +130,8 @@ void create_exit_icon(lv_obj_t * parent){
     /*CB*/
     lv_obj_add_flag(img_exit, LV_OBJ_FLAG_CLICKABLE);
     lv_obj_add_event_cb(img_exit, open_scr_home_cb, LV_EVENT_CLICKED, NULL);
+
+    return img_exit;
 }
 
 void create_spot_metering(lv_obj_t * parent){

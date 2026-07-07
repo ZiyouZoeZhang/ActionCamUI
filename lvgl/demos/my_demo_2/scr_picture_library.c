@@ -1,34 +1,57 @@
 #include "my_demo_2.h"
 #define PICTURE_H 183
 #define PICTURE_W 244
-
 static lv_obj_t * scr_pic_library = NULL;
 static bool select_mode = false;
 static int selected_pic_number = 0;
-
+static void open_pic_large_cb(int index);
 static lv_obj_t * icon_top_right = NULL;
 
-static void image_toggle_state_cb(lv_event_t * e);
 static void image_clicked_cb(lv_event_t * e);
+static void delete_images_cb();
+static void create_scr_pic_library();
+
+static void reset_image_select_icon(int index, bool hide){
+    if (hide){
+        lv_obj_add_flag(storage_images[index].select_icon, LV_OBJ_FLAG_HIDDEN);
+    } else {
+        lv_obj_remove_flag(storage_images[index].select_icon, LV_OBJ_FLAG_HIDDEN);
+    }
+    if (storage_images[index].selected) {
+        lv_image_set_src(storage_images[index].select_icon,&filelist_selected);
+    } else {
+        lv_image_set_src(storage_images[index].select_icon,&filelist_selecting);
+    }
+}
 
 static void top_right_icon_toggled_cb(){
     select_mode = !select_mode;
-    if (select_mode){ //now starting to select pictuures
+    if (select_mode){ //now starting to select pictures
+        lv_image_set_src(icon_top_right, &filelist_multiselect);
         for(int i = 0; i<get_storage_image_count(); i++){
             storage_images[i].selected = false;
-            lv_obj_remove_flag(storage_images[i].select_icon, LV_OBJ_FLAG_HIDDEN);
+            reset_image_select_icon(i, false);
         }
         selected_pic_number = 0;
-    } else { //
-        if (selected_pic_number > 0) {
-            //delete these picture
-            printf("DELETING PICS...");
-        } else {
-            for(int i = 0; i<get_storage_image_count(); i++){
-                lv_obj_add_flag(storage_images[i].select_icon, LV_OBJ_FLAG_HIDDEN);
-            }
+        return;
+    }
+
+    if (!select_mode) { //delete mode
+        if (selected_pic_number > 0) { //delete these picture
+            delete_images_cb();
+            return;
+        }
+        for (int i = 0; i<get_storage_image_count(); i++){ //switch select to off
+            reset_image_select_icon(i, true);
         }
     }
+    return;
+}
+
+static void delete_images_cb(){
+    printf("deleting\n");
+    lv_obj_clean(scr_pic_library);
+    open_scr_pic_lib_cb();
 }
 
 static void create_scr_pic_library(){
@@ -50,7 +73,6 @@ static void create_scr_pic_library(){
     lv_obj_align(cont_pics, LV_ALIGN_BOTTOM_MID, 0, 0);
     lv_obj_set_style_bg_opa(cont_pics, 0, LV_PART_MAIN);
     lv_obj_set_style_border_width(cont_pics, 0, LV_PART_MAIN);
-
     lv_obj_add_style(cont_pics, &style_scrollbar, LV_PART_SCROLLBAR);
 
     //create row & columns
@@ -71,7 +93,6 @@ static void create_scr_pic_library(){
    }
 }
 
-
 void create_image_btn(lv_obj_t * parent, int index){
     image_info_t *image_obj = &storage_images[index];
 
@@ -86,13 +107,7 @@ void create_image_btn(lv_obj_t * parent, int index){
     image_obj->select_icon = lv_image_create(image_obj->btn);
     lv_obj_align(image_obj->select_icon, LV_ALIGN_TOP_LEFT, -3, -5);
     lv_obj_add_flag(image_obj->select_icon, LV_OBJ_FLAG_CLICKABLE);
-    lv_obj_add_flag(image_obj->select_icon, LV_OBJ_FLAG_HIDDEN);
-
-    if (storage_images[index].selected) {
-        lv_image_set_src(image_obj->select_icon,&filelist_selected);
-    } else {
-        lv_image_set_src(image_obj->select_icon,&filelist_selecting);
-    }
+    reset_image_select_icon(index, true);
 
     //mode icon
     image_obj->mode_icon = lv_image_create(image_obj->btn);
@@ -102,36 +117,28 @@ void create_image_btn(lv_obj_t * parent, int index){
     return;
 }
 
-
 static void image_clicked_cb(lv_event_t * e) {
     int index = (int)(intptr_t)lv_event_get_user_data(e);
-
     if (!select_mode) {
-        printf("ENTER PIC LARGE");
+        open_pic_large_cb(index);
     }
 
     if (select_mode) {
         storage_images[index].selected = !storage_images[index].selected;
-
-        //update select icon
-        lv_obj_t *btn = lv_event_get_target(e);
-        lv_obj_t *select_icon = lv_obj_get_child(btn, 0);
-        if (storage_images[index].selected) {
-            lv_image_set_src(select_icon, &filelist_selected);
-        } else {
-            lv_image_set_src(select_icon, &filelist_selecting);
-        }
-
+        reset_image_select_icon(index, false);
         //update icon top right & number of selected pics
         if (storage_images[index].selected){
             ++selected_pic_number;
             if (selected_pic_number > 0) lv_image_set_src(icon_top_right, &playback_filemanager);
-
         } else {
             --selected_pic_number;
             if (selected_pic_number == 0) lv_image_set_src(icon_top_right, &filelist_multiselect);
         }
     }
+}
+
+static void open_pic_large_cb(int index){
+    printf("ENTER PIC LARGE");
 }
 
 void open_scr_pic_lib_cb(){
