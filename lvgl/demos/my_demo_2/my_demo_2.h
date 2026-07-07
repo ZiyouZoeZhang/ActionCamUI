@@ -48,8 +48,8 @@ void open_scr_pic_lib_cb(void);
 void open_scr_media_settings_cb(void);
 void open_scr_mode_selection_cb(void);*/
 
-lv_obj_t* create_scr_poweroff();
-lv_obj_t* create_scr_home();
+void create_scr_poweroff();
+void create_scr_home();
 /*
 lv_obj_t* create_scr_menu(void);
 lv_obj_t* create_scr_pic_library(void);

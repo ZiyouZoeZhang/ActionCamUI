@@ -48,31 +48,31 @@ static void swipe_scr_main_cb(lv_event_t * e){
         }
 }
 
-lv_obj_t* create_scr_home(){
+void create_scr_home(){
     /**background**/
-    lv_obj_t * screen = lv_obj_create(NULL);
-    lv_obj_set_style_bg_color(screen,BG_COLOR_DARK_BLUE_GREY, LV_PART_MAIN);
-    lv_obj_remove_flag(screen, LV_OBJ_FLAG_SCROLLABLE);
+    scr_home = lv_obj_create(NULL);
+    lv_obj_set_style_bg_color(scr_home,BG_COLOR_DARK_BLUE_GREY, LV_PART_MAIN);
+    lv_obj_remove_flag(scr_home, LV_OBJ_FLAG_SCROLLABLE);
 
     /**create icons**/
-    grid_container = create_grid(screen);
-    create_battery_icon(screen, battery_charging, battery_level);
-    create_sd_icon(screen, sd_status, sd_storage);
-    create_pic_lib_icon(screen);
-    img_cam_mode = create_cam_mode_icon(screen, cur_cam_mode);
-    img_res = create_resolution_icon(screen, cur_cam_resolution);
+    grid_container = create_grid(scr_home);
+    create_battery_icon(scr_home, battery_charging, battery_level);
+    create_sd_icon(scr_home, sd_status, sd_storage);
+    create_pic_lib_icon(scr_home);
+    img_cam_mode = create_cam_mode_icon(scr_home, cur_cam_mode);
+    img_res = create_resolution_icon(scr_home, cur_cam_resolution);
     label_res =lv_obj_get_child(img_res, 0);
-    label_zoom = create_zoom_icon(screen, cur_cam_zoom);
-    create_media_set_icon(screen);
-    create_spot_metering(screen);
+    label_zoom = create_zoom_icon(scr_home, cur_cam_zoom);
+    create_media_set_icon(scr_home);
+    create_spot_metering(scr_home);
 
     /**CB**/
-    lv_obj_add_event_cb(screen, swipe_scr_main_cb, LV_EVENT_RELEASED, NULL);
+    lv_obj_add_event_cb(scr_home, swipe_scr_main_cb, LV_EVENT_RELEASED, NULL);
     lv_obj_add_event_cb(grid_container, swipe_scr_main_cb, LV_EVENT_RELEASED, NULL);
     lv_obj_add_event_cb(grid_container, update_spot_metering_cb, LV_EVENT_CLICKED, NULL);
-    lv_obj_add_event_cb(screen, update_spot_metering_cb, LV_EVENT_CLICKED, NULL);
+    lv_obj_add_event_cb(scr_home, update_spot_metering_cb, LV_EVENT_CLICKED, NULL);
 
-    return screen;
+    return;
 }
 
 void open_scr_home_cb(){

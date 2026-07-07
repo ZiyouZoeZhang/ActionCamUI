@@ -13,11 +13,6 @@ bool wifi_active = false;
 //global
 lv_obj_t *scr_home = NULL;
 lv_obj_t *scr_poweroff = NULL;
-/*
-lv_obj_t *scr_menu = NULL;
-lv_obj_t *scr_pic_library = NULL;
-lv_obj_t *scr_media_settings = NULL;
-lv_obj_t *scr_mode_selection = NULL;*/
 
 lv_style_t style_font_default_36;
 lv_style_t style_font_default_30;
@@ -46,13 +41,12 @@ void open_scr_poweroff_cb(){
 }
 
 /**SCREENS**/
-lv_obj_t* create_scr_poweroff(){
-    lv_obj_t * screen = lv_obj_create(NULL);
-    screen = lv_image_create(screen);
-    lv_image_set_src(screen, &xtu_poweroff);
-    lv_obj_remove_flag(screen, LV_OBJ_FLAG_SCROLLABLE);
+void create_scr_poweroff(){
+    scr_poweroff = lv_obj_create(NULL);
+    lv_obj_t * img_xtu_poweroff = lv_image_create(scr_poweroff);
+    lv_image_set_src(img_xtu_poweroff, &xtu_poweroff);
 
-    return screen;
+    lv_obj_remove_flag(scr_poweroff, LV_OBJ_FLAG_SCROLLABLE);
 }
 
 
@@ -90,8 +84,8 @@ static void initializ_styles(){
 }
 
 static void initialize_screens(){
-    scr_home = create_scr_home();
-    scr_poweroff = create_scr_poweroff();
+    create_scr_home();
+    create_scr_poweroff();
 }
 
 void my_demo_2_create() {
