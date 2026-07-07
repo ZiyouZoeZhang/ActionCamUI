@@ -24,18 +24,40 @@ extern int cur_cam_resolution;
 extern int cur_cam_zoom;
 extern bool wifi_active;
 
-extern lv_obj_t *scr_home;
 extern lv_style_t style_font_default_36;
 extern lv_style_t style_font_default_30;
 extern lv_style_t style_font_default_24;
 extern lv_style_t style_swipe_icon;
 extern lv_style_t style_scrollbar;
 
+/** screen**/
+extern lv_obj_t *scr_home;
+extern lv_obj_t * scr_poweroff;
+/*
+extern lv_obj_t *scr_menu;
+extern lv_obj_t *scr_pic_library;
+extern lv_obj_t *scr_media_settings;
+extern lv_obj_t *scr_mode_selection;*/
+
+
+void open_scr_home_cb();
+void open_scr_poweroff_cb();
+/*
+void open_scr_menu_cb(void);
+void open_scr_pic_lib_cb(void);
+void open_scr_media_settings_cb(void);
+void open_scr_mode_selection_cb(void);*/
+
+lv_obj_t* create_scr_poweroff();
+lv_obj_t* create_scr_home();
+/*
+lv_obj_t* create_scr_menu(void);
+lv_obj_t* create_scr_pic_library(void);
+lv_obj_t* create_scr_media_settings(void);
+lv_obj_t* create_scr_mode_selection(void);*/
+
 /**main**/
 void my_demo_2_create();
-
-/**create scr**/
-void create_scr_home();
 
 /**open scr**/
 void open_scr_cam_modes_by_mode(int mode);
@@ -43,7 +65,7 @@ void open_scr_pic_lib_cb();
 void open_scr_menu_cb();
 void open_scr_poweroff_cb();
 
-/**others**/
+/**others -> to be changed!!**/
 int get_selected_mode_from_roller(void);
 
 /**CB**/

@@ -89,7 +89,6 @@ void swipe_scr_menu_cb(lv_event_t *e){
 }
 
 static void create_scr_menu(){
-
     /**background**/
     scr_menu = lv_obj_create(NULL);
     lv_obj_set_style_bg_color(scr_menu, BG_COLOR_DARK_BLUE_GREY, LV_PART_MAIN);
