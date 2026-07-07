@@ -1,7 +1,7 @@
 #include "scr_media_settings.h"
 #include "my_demo_2.h"
 #include "ui_components.h"
-#include "ui_menu_btnm.h"
+#include "camera_menu.h"
 
 lv_obj_t * scr_media_settings = NULL;
 lv_obj_t * scr_media_settings_select = NULL;
@@ -229,6 +229,8 @@ static void swipe_scr_media_settings_cb(lv_event_t *e){
         case LV_DIR_RIGHT:
             open_scr_home_cb();
             break;
+        default:
+            break;
     }
 }
 
@@ -237,6 +239,8 @@ static void swipe_scr_media_settings_select_cb(lv_event_t *e){
     switch(dir) {
         case LV_DIR_RIGHT:
             open_scr_media_settings_cb();
+            break;
+        default:
             break;
     }
 }

@@ -138,10 +138,12 @@ void create_spot_metering(lv_obj_t * parent){
     lv_image_set_src(img_spot_met, &spot_metering);
 }
 
-void create_pic_select_icon(lv_obj_t * parent){
+lv_obj_t *create_pic_select_icon(lv_obj_t * parent){
     img_pic_select = lv_image_create(parent);
     lv_obj_align(img_pic_select, LV_ALIGN_TOP_RIGHT, 0, 0);
     lv_image_set_src(img_pic_select, &filelist_multiselect);
+    lv_obj_add_flag(img_pic_select, LV_OBJ_FLAG_CLICKABLE);
+    return img_pic_select;
 }
 
 /**updates**/

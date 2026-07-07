@@ -7,7 +7,7 @@
 #include "lvgl.h"
 #include "camera_modes.h"
 #include "ui_components.h"
-#include "ui_menu_btnm.h"
+#include "camera_menu.h"
 #include "scr_resolution.h"
 #include "scr_zoom.h"
 #include "scr_media_settings.h"

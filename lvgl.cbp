@@ -71,14 +71,29 @@
 		<Unit filename="lvgl/demos/my_demo/user_defined.c">
 			<Option compilerVar="CC" />
 		</Unit>
+		<Unit filename="lvgl/demos/my_demo_2/camera_menu.h" />
 		<Unit filename="lvgl/demos/my_demo_2/camera_modes.c">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="lvgl/demos/my_demo_2/camera_modes.h" />
+		<Unit filename="lvgl/demos/my_demo_2/image_storage.h" />
 		<Unit filename="lvgl/demos/my_demo_2/my_demo_2.c">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="lvgl/demos/my_demo_2/my_demo_2.h" />
+		<Unit filename="lvgl/demos/my_demo_2/scr_media_settings.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="lvgl/demos/my_demo_2/scr_media_settings.h" />
+		<Unit filename="lvgl/demos/my_demo_2/scr_menu.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="lvgl/demos/my_demo_2/scr_mode_selection.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="lvgl/demos/my_demo_2/scr_picture_library.c">
+			<Option compilerVar="CC" />
+		</Unit>
 		<Unit filename="lvgl/demos/my_demo_2/scr_resolution.c">
 			<Option compilerVar="CC" />
 		</Unit>
@@ -86,44 +101,24 @@
 		<Unit filename="lvgl/demos/my_demo_2/scr_zoom.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="lvgl/demos/my_demo_2/scr_zoom.h">
-			<Option target="&lt;{~None~}&gt;" />
-		</Unit>
+		<Unit filename="lvgl/demos/my_demo_2/scr_zoom.h" />
 		<Unit filename="lvgl/demos/my_demo_2/ui_components.c">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="lvgl/demos/my_demo_2/ui_components.h" />
-		<Unit filename="lvgl/demos/my_demo_2/ui_menu_btnm.c">
-			<Option compilerVar="CC" />
-		</Unit>
-		<Unit filename="lvgl/demos/my_demo_2/ui_menu_btnm.h" />
-		<Unit filename="lvgl/demos/my_demo_2/ui_roller.c">
-			<Option compilerVar="CC" />
-		</Unit>
-		<Unit filename="lvgl/demos/my_demo_2/ui_roller.h" />
 		<Unit filename="lvgl/font/font.c">
-			<Option compilerVar="CC" />
-		</Unit>
-		<Unit filename="lvgl/font/font_12.c">
-			<Option compilerVar="CC" />
-		</Unit>
-		<Unit filename="lvgl/font/font_18.c">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="lvgl/font/font_24.c">
 			<Option compilerVar="CC" />
 		</Unit>
+		<Unit filename="lvgl/font/font_30.c">
+			<Option compilerVar="CC" />
+		</Unit>
 		<Unit filename="lvgl/font/font_36.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="lvgl/font/font_48.c">
-			<Option compilerVar="CC" />
-		</Unit>
-		<Unit filename="lvgl/font/font_60.c">
-			<Option compilerVar="CC" />
-		</Unit>
 		<Unit filename="lvgl/font/font_declares.h" />
-		<Unit filename="lvgl/lv_conf_template.h" />
 		<Unit filename="lvgl/lv_version.h" />
 		<Unit filename="lvgl/lvgl.h" />
 		<Unit filename="lvgl/pic_converted_transparent/common/Pattern_Return.c">

@@ -1,5 +1,5 @@
-#ifndef UI_MENU_BTNM_H_INCLUDED
-#define UI_MENU_BTNM_H_INCLUDED
+#ifndef CAMERA_MENU_H_INCLUDED
+#define CAMERA_MENU_H_INCLUDED
 
 #include "lvgl.h"
 
@@ -33,4 +33,4 @@ void open_scr_menu_cb();
 
 extern menu_btn_info_t menu_buttons[];
 
-#endif // UI_MENU_BTNM_H_INCLUDED
+#endif

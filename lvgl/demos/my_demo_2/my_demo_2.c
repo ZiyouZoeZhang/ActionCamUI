@@ -51,6 +51,8 @@ static void swipe_scr_main_cb(lv_event_t * e){
             case LV_DIR_BOTTOM:
                 open_scr_menu_cb();
                 break;
+            default:
+                break;
         }
 }
 

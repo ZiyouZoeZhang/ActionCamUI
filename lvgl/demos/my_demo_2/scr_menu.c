@@ -3,7 +3,7 @@
 #include "lvgl.h"
 #include "camera_modes.h"
 #include "my_demo_2.h"
-#include "ui_menu_btnm.h"
+#include "camera_menu.h"
 #include "pic_converted_transparent/image_declares.h"
 
 static lv_obj_t * pop_up_btn;
@@ -82,6 +82,8 @@ void swipe_scr_menu_cb(lv_event_t *e){
     switch(dir) {
         case LV_DIR_TOP:
             open_scr_home_cb();
+            break;
+        default:
             break;
     }
 }

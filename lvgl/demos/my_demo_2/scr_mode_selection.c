@@ -101,6 +101,8 @@ static void swipe_scr_mode_selection_cb(lv_event_t *e){
         case LV_DIR_BOTTOM:
             open_scr_home_cb();
             break;
+        default:
+            break;
     }
 }
 
