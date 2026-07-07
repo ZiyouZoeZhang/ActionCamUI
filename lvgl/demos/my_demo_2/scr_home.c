@@ -6,10 +6,13 @@ static lv_obj_t * img_res = NULL;
 static lv_obj_t * label_res = NULL;
 static lv_obj_t * grid_container = NULL;
 
-void update_scr_home(){
-    //update sd
-    //update battery
+lv_obj_t *scr_home = NULL;
+lv_obj_t *scr_poweroff = NULL;
 
+/**SCREENS**/
+void update_scr_home(){
+    update_sd_icon(sd_status, sd_storage);
+    update_battery_icon(battery_charging, battery_level);
     reset_spot_metering();
 
     if (menu_buttons[CAM_MENU_GRID_VIEW].state == BTN_STATE_ON){
@@ -17,6 +20,7 @@ void update_scr_home(){
     } else {
          lv_obj_add_flag(grid_container, LV_OBJ_FLAG_HIDDEN);
     }
+
     cur_cam_mode = get_selected_mode_from_roller();
     lv_image_set_src(img_cam_mode, get_mode_icon(cur_cam_mode));
 
@@ -48,6 +52,14 @@ static void swipe_scr_main_cb(lv_event_t * e){
         }
 }
 
+void create_scr_poweroff(){
+    scr_poweroff = lv_obj_create(NULL);
+    lv_obj_t * img_xtu_poweroff = lv_image_create(scr_poweroff);
+    lv_image_set_src(img_xtu_poweroff, &xtu_poweroff);
+
+    lv_obj_remove_flag(scr_poweroff, LV_OBJ_FLAG_SCROLLABLE);
+}
+
 void create_scr_home(){
     /**background**/
     scr_home = lv_obj_create(NULL);
@@ -73,6 +85,11 @@ void create_scr_home(){
     lv_obj_add_event_cb(scr_home, update_spot_metering_cb, LV_EVENT_CLICKED, NULL);
 
     return;
+}
+
+/**Access of Screens**/
+void open_scr_poweroff_cb(){
+    lv_screen_load(scr_poweroff);
 }
 
 void open_scr_home_cb(){

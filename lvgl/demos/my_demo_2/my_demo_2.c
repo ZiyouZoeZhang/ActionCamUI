@@ -11,18 +11,14 @@ int cur_cam_zoom = 0;
 bool wifi_active = false;
 
 //global
-lv_obj_t *scr_home = NULL;
-lv_obj_t *scr_poweroff = NULL;
+
 
 lv_style_t style_font_default_36;
 lv_style_t style_font_default_30;
 lv_style_t style_font_default_24;
-
 lv_style_t style_swipe_icon;
 lv_style_t style_scrollbar;
 
-/**static SCREENS**/
-static void swipe_scr_main_cb(lv_event_t *e);
 
 /**TEST**/
  void test_error_check(); //UNUSED
@@ -30,23 +26,6 @@ static void swipe_scr_main_cb(lv_event_t *e);
 /**TEST**/
 void  test_error_check(){
     printf("\nERROR\n");
-}
-
-/**CB functions**/
-
-
-/**Access of Screens**/
-void open_scr_poweroff_cb(){
-    lv_screen_load(scr_poweroff);
-}
-
-/**SCREENS**/
-void create_scr_poweroff(){
-    scr_poweroff = lv_obj_create(NULL);
-    lv_obj_t * img_xtu_poweroff = lv_image_create(scr_poweroff);
-    lv_image_set_src(img_xtu_poweroff, &xtu_poweroff);
-
-    lv_obj_remove_flag(scr_poweroff, LV_OBJ_FLAG_SCROLLABLE);
 }
 
 
@@ -94,8 +73,4 @@ void my_demo_2_create() {
 
     /**driver code**/
     open_scr_home_cb();
-
-    ///TEST
-    //open_scr_menu_cb();
-
 }
