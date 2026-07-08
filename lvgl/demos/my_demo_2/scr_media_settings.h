@@ -3,8 +3,7 @@
 
 #include "lvgl.h"
 
-extern lv_obj_t *scr_media_settings;
-void open_scr_media_settings_cb();
+
 
 typedef enum {
     CAM_MEDIA_NUMBER,
@@ -32,6 +31,10 @@ typedef struct {
     int state_count;
 } media_set_btn_info_t;
 
+extern lv_obj_t *scr_media_settings;
 extern media_set_btn_info_t media_buttons[];
+void open_scr_media_settings_cb();
+void create_scr_media_settings();
+void create_scr_media_selection();
 
 #endif // SCR_MEDIA_SETTINGS_H_INCLUDED

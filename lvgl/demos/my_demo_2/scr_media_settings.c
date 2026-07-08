@@ -6,14 +6,25 @@
 lv_obj_t * scr_media_settings = NULL;
 lv_obj_t * scr_media_settings_select = NULL;
 
-static bool media_set_pro = false;
-static lv_style_t style_btn;
-static int active_media_btn_count = 0;
+static lv_coord_t col_dsc[] = {LV_GRID_FR(1), LV_GRID_FR(1), LV_GRID_TEMPLATE_LAST};
+static lv_coord_t row_dsc[10];
+int rows = 0;
 
-void open_scr_media_settings_cb();
+static bool media_set_pro = false;
+static int active_media_btn_count = 0;
+static lv_obj_t * media_select_label;
+static lv_obj_t * cont_buttons;
+static lv_obj_t * media_select_roller;
+
+static lv_style_t style_btn;
+
+static void update_scr_media_settings();
+static void update_scr_media_selection(media_set_btn_info_t * btn);
+
 static void open_scr_media_selection_cb(lv_event_t * e);
-static void create_scr_media_settings();
-static void create_scr_media_selection(media_set_btn_info_t * btn);
+void open_scr_media_settings_cb();
+void create_scr_media_selection();
+
 static void create_settings_buttons_container(lv_obj_t * parent);
 static void create_settings_buttons_grid(lv_obj_t * parent);
 static void swipe_scr_media_settings_cb(lv_event_t *e);
@@ -48,25 +59,52 @@ media_set_btn_info_t media_buttons[] = {
     {CAM_MEDIA_FILTER,      "Filter",        true,  true,  0, filter_states,      6},
 };
 
-
 void open_scr_media_settings_cb(){
-    create_scr_media_settings();
+    //create_scr_media_settings();
+    update_scr_media_settings();
     lv_screen_load(scr_media_settings);
 }
 
 static void open_scr_media_selection_cb(lv_event_t * e){
     int btn_index = (int)(intptr_t)lv_event_get_user_data(e);
-
     media_set_btn_info_t *btn = &media_buttons[btn_index];
 
-    printf("Button: %s\n", btn->name);
-    printf("Current state: %s\n", btn->states[btn->cur_state]);
+    //printf("Button: %s\n", btn->name);
+    //printf("Current state: %s\n", btn->states[btn->cur_state]);
 
-    create_scr_media_selection(btn);
+    update_scr_media_selection(btn);
     lv_screen_load(scr_media_settings_select);
 }
 
-static void create_scr_media_settings(){
+static void update_scr_media_selection(media_set_btn_info_t * btn){///TBD
+    char options[300] = ""; //format:  name\nname\nname\n etc
+    for (int i = 0; i < btn->state_count; i++) {
+        strcat(options, btn->states[i]);
+        if (i < btn->state_count-1 ) {
+            strcat(options, "\n");
+        }
+    }
+    lv_label_set_text(media_select_label, btn->name);
+    lv_roller_set_options(media_select_roller, options, LV_ROLLER_MODE_NORMAL);
+    lv_roller_set_selected(media_select_roller, btn->cur_state, LV_ANIM_OFF);
+    lv_obj_remove_event_cb(media_select_roller, roller_value_changed_cb);
+    lv_obj_add_event_cb(media_select_roller, roller_value_changed_cb, LV_EVENT_VALUE_CHANGED, btn);
+}
+
+static void update_scr_media_settings(){
+    ///create row & columns
+    active_media_btn_count = count_active_media_btn();
+    rows = (active_media_btn_count + 1) / 2;
+    for (int i = 0; i < rows; i++)  {
+            row_dsc[i] = 75;
+    }
+    row_dsc[rows] = LV_GRID_TEMPLATE_LAST;
+    lv_obj_set_grid_dsc_array(cont_buttons, col_dsc, row_dsc);
+
+   create_settings_buttons_grid(cont_buttons);
+}
+
+void create_scr_media_settings(){
     /**pre process**/
     //set style
     lv_style_init(&style_btn);
@@ -111,7 +149,7 @@ static void create_scr_media_settings(){
     lv_obj_add_event_cb(scr_media_settings, open_scr_home_cb, LV_EVENT_CLICKED, NULL);
 }
 
-static void create_scr_media_selection(media_set_btn_info_t * btn){
+void create_scr_media_selection(){
      /**create screen**/
     scr_media_settings_select = lv_obj_create(NULL);
     lv_obj_set_style_bg_color(scr_media_settings_select, BG_COLOR_DARK_BLUE_GREY, LV_PART_MAIN);
@@ -128,33 +166,21 @@ static void create_scr_media_selection(media_set_btn_info_t * btn){
     lv_obj_add_event_cb(scr_media_settings_select, swipe_scr_media_settings_select_cb, LV_EVENT_RELEASED, NULL);
     lv_obj_add_event_cb(scr_media_settings_select, open_scr_media_settings_cb, LV_EVENT_CLICKED, NULL);
 
-    char options[300] = ""; //format:  name\nname\nname\n etc
-    for (int i = 0; i < btn->state_count; i++) {
-        strcat(options, btn->states[i]);
-        if (i < btn->state_count-1 ) {
-            strcat(options, "\n");
-        }
-    }
-
-    lv_obj_t * label = lv_label_create(scr_media_settings_select);
-    lv_obj_add_style(label, &style_font_default_24, LV_PART_MAIN);
-    lv_label_set_text(label, btn->name);
-    lv_obj_align(label, LV_ALIGN_TOP_LEFT, 15, 15);
+    media_select_label = lv_label_create(scr_media_settings_select);
+    lv_obj_add_style(media_select_label, &style_font_default_24, LV_PART_MAIN);
+    lv_obj_align(media_select_label, LV_ALIGN_TOP_LEFT, 15, 15);
 
     //create roller
-    lv_obj_t * roller = lv_roller_create(cont);
-    lv_obj_set_size(roller, 150, 250);
-    lv_obj_align(roller, LV_ALIGN_RIGHT_MID, -40, 0);
-    lv_roller_set_options(roller, options, LV_ROLLER_MODE_NORMAL);
-    lv_roller_set_selected(roller, btn->cur_state, LV_ANIM_OFF);
-    lv_obj_set_style_bg_opa(roller, LV_OPA_0,  LV_PART_MAIN);
-    lv_obj_set_style_bg_opa(roller, LV_OPA_0,  LV_PART_SELECTED);
-    lv_obj_add_style(roller, &style_font_default_24, LV_PART_MAIN);
-    lv_obj_set_style_text_color(roller, lv_palette_main(LV_PALETTE_BLUE), LV_PART_SELECTED);
-    lv_obj_set_style_border_width(roller, 0, LV_PART_MAIN);
-    lv_obj_add_flag(roller, LV_OBJ_FLAG_CLICKABLE);
-    lv_obj_set_style_text_line_space(roller, 50, LV_PART_MAIN);
-    lv_obj_add_event_cb(roller, roller_value_changed_cb, LV_EVENT_VALUE_CHANGED, btn);
+    media_select_roller = lv_roller_create(cont);
+    lv_obj_set_size(media_select_roller, 150, 250);
+    lv_obj_align(media_select_roller, LV_ALIGN_RIGHT_MID, -40, 0);
+    lv_obj_set_style_bg_opa(media_select_roller, LV_OPA_0,  LV_PART_MAIN);
+    lv_obj_set_style_bg_opa(media_select_roller, LV_OPA_0,  LV_PART_SELECTED);
+    lv_obj_add_style(media_select_roller, &style_font_default_24, LV_PART_MAIN);
+    lv_obj_set_style_text_color(media_select_roller, lv_palette_main(LV_PALETTE_BLUE), LV_PART_SELECTED);
+    lv_obj_set_style_border_width(media_select_roller, 0, LV_PART_MAIN);
+    lv_obj_add_flag(media_select_roller, LV_OBJ_FLAG_CLICKABLE);
+    lv_obj_set_style_text_line_space(media_select_roller, 50, LV_PART_MAIN);
 
     //create roller indicator
     lv_obj_t * ind = lv_image_create(cont);
@@ -163,45 +189,28 @@ static void create_scr_media_selection(media_set_btn_info_t * btn){
 }
 
 static void create_settings_buttons_container(lv_obj_t * parent){
-    /**pre process**/
-    //count active btn;
-    active_media_btn_count = count_active_media_btn();
-
     /**create cont for grid**/
-    lv_obj_t * cont_buttons = lv_obj_create(parent);
+    cont_buttons = lv_obj_create(parent);
     lv_obj_set_size(cont_buttons, lv_pct(75), lv_pct(85));
     lv_obj_align(cont_buttons, LV_ALIGN_RIGHT_MID, 0, lv_pct(15));
     lv_obj_set_style_bg_opa(cont_buttons, 5, LV_PART_MAIN);
     lv_obj_set_style_border_width(cont_buttons, 0, LV_PART_MAIN);
 
-    ///create row & columns
-    static lv_coord_t row_dsc[10];
-    int rows = (active_media_btn_count + 1) / 2;
-    for (int i = 0; i < rows; i++)  {
-            row_dsc[i] = 75;
-    }
-    row_dsc[rows] = LV_GRID_TEMPLATE_LAST;
-
-    static lv_coord_t col_dsc[] = {LV_GRID_FR(1), LV_GRID_FR(1), LV_GRID_TEMPLATE_LAST};
-    lv_obj_set_grid_dsc_array(cont_buttons, col_dsc, row_dsc);
-
     lv_obj_set_style_pad_top(cont_buttons, 0, LV_PART_MAIN);
     lv_obj_set_style_pad_bottom(cont_buttons, 50, LV_PART_MAIN);
     lv_obj_set_style_pad_hor(cont_buttons, 30, LV_PART_MAIN);
-
    lv_obj_set_style_pad_column(cont_buttons, 25, LV_PART_MAIN);
    lv_obj_set_style_pad_row(cont_buttons, 25, LV_PART_MAIN);
-
-   create_settings_buttons_grid(cont_buttons);
 }
 
 static void create_settings_buttons_grid(lv_obj_t * parent) {
+    lv_obj_clean(parent);
     int cur_grid = 0;
     for (int i = 0; i < CAM_MEDIA_COUNT; i++) {
         if (!media_buttons[i].active) continue;
         if (!media_set_pro && media_buttons[i].pro) continue;
 
-        lv_obj_t *btn = lv_btn_create(parent);
+        lv_obj_t * btn = lv_btn_create(parent);
         lv_obj_set_grid_cell(btn, LV_GRID_ALIGN_STRETCH, cur_grid % 2, 1, LV_GRID_ALIGN_STRETCH, cur_grid / 2, 1);
         lv_obj_add_style(btn, &style_btn, LV_PART_MAIN);
         lv_obj_add_event_cb(btn, open_scr_media_selection_cb, LV_EVENT_CLICKED, (void*)(intptr_t)i);

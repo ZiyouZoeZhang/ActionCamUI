@@ -66,6 +66,8 @@ static void initialize_screens(){
     create_scr_menu();
     create_scr_pic_library();
     create_scr_resolution();
+    create_scr_media_settings();
+    create_scr_media_selection();
 
     create_scr_home();
 }
