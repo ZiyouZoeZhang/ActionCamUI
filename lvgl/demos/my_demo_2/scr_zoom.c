@@ -7,8 +7,6 @@
 lv_obj_t *scr_zoom = NULL;
 static lv_obj_t * roller = NULL;
 
-static void create_scr_zoom();
-
 const char* cam_zoom_table[] = {
     "1.0X",
     "1.5X",
@@ -27,7 +25,6 @@ int get_selected_zoom_from_roller(void){
 }
 
 void open_scr_zoom_cb(){
-    create_scr_zoom();
     lv_screen_load(scr_zoom);
 }
 
@@ -39,7 +36,7 @@ static void on_press_cb(){
      lv_obj_set_style_text_color(roller, lv_color_white(), LV_PART_SELECTED);
 }
 
-static void create_scr_zoom(){
+ void create_scr_zoom(){
     scr_zoom = lv_obj_create(NULL);
     lv_obj_set_style_bg_color(scr_zoom, BG_COLOR_DARK_BLUE_GREY, LV_PART_MAIN);
 

@@ -62,6 +62,7 @@ static void initializ_styles(){
 
 static void initialize_screens(){
     create_scr_poweroff();
+    create_scr_zoom();
     create_scr_pic_library();
     create_scr_resolution();
 
