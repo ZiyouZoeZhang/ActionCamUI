@@ -65,6 +65,7 @@ static void initializ_styles(){
 static void initialize_screens(){
     create_scr_home();
     create_scr_poweroff();
+    create_scr_pic_library();
 }
 
 void my_demo_2_create() {

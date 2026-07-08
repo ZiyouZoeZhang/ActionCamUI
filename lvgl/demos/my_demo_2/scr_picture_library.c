@@ -4,12 +4,12 @@
 static lv_obj_t * scr_pic_library = NULL;
 static bool select_mode = false;
 static int selected_pic_number = 0;
-static void open_pic_large_cb(int index);
 static lv_obj_t * icon_top_right = NULL;
+static lv_obj_t * cont_pics = NULL;
 
 static void image_clicked_cb(lv_event_t * e);
 static void delete_images_cb();
-static void create_scr_pic_library();
+static void create_image_btn(lv_obj_t * parent);
 
 static void reset_image_select_icon(int index, bool hide){
     if (hide){
@@ -50,11 +50,19 @@ static void top_right_icon_toggled_cb(){
 
 static void delete_images_cb(){
     printf("deleting\n");
-    lv_obj_clean(scr_pic_library);
-    open_scr_pic_lib_cb();
+    //lv_obj_clean(scr_pic_library);
+     for (int index = 0; index <  get_storage_image_count() ; index++) {
+            if (storage_images[index].selected) {
+                    ///delete image from storage_images
+            }
+            storage_images[index].selected = false;
+            reset_image_select_icon(index, true);
+     }
+      ///create_image_btn
+     lv_image_set_src(icon_top_right, &filelist_multiselect);
 }
 
-static void create_scr_pic_library(){
+void create_scr_pic_library(){
     /**preset**/
     select_mode = false;
     selected_pic_number = 0;
@@ -68,7 +76,7 @@ static void create_scr_pic_library(){
     lv_obj_add_event_cb(icon_top_right, top_right_icon_toggled_cb, LV_EVENT_CLICKED, NULL);
 
     /**container **/
-    lv_obj_t * cont_pics = lv_obj_create(scr_pic_library);
+    cont_pics = lv_obj_create(scr_pic_library);
     lv_obj_set_size(cont_pics, lv_pct(100), lv_pct(80));
     lv_obj_align(cont_pics, LV_ALIGN_BOTTOM_MID, 0, 0);
     lv_obj_set_style_bg_opa(cont_pics, 0, LV_PART_MAIN);
@@ -88,33 +96,33 @@ static void create_scr_pic_library(){
    lv_obj_set_style_pad_row(cont_pics, 10, LV_PART_MAIN);
 
    //individual pictures
-   for (int i = 0; i <  get_storage_image_count() ; i++) {
-       create_image_btn(cont_pics, i);
-   }
+   create_image_btn(cont_pics);
 }
 
-void create_image_btn(lv_obj_t * parent, int index){
-    image_info_t *image_obj = &storage_images[index];
+static void create_image_btn(lv_obj_t * parent){
+        for (int index = 0; index <  get_storage_image_count() ; index++) {
+            image_info_t *image_obj = &storage_images[index];
 
-    //image
-    image_obj->btn = lv_btn_create(parent);
-    lv_obj_set_style_bg_color(image_obj->btn, BG_COLOR_DARK_GREY, LV_PART_MAIN);
-    lv_obj_set_style_shadow_width(image_obj->btn, 0, LV_PART_MAIN);
-    lv_obj_set_grid_cell(image_obj->btn, LV_GRID_ALIGN_STRETCH, index % 3, 1, LV_GRID_ALIGN_STRETCH, index / 3, 1);
-    lv_obj_add_event_cb(image_obj->btn, image_clicked_cb, LV_EVENT_CLICKED,  (void*)(intptr_t)index);
+            //image
+            image_obj->btn = lv_btn_create(parent);
+            lv_obj_set_style_bg_color(image_obj->btn, BG_COLOR_DARK_GREY, LV_PART_MAIN);
+            lv_obj_set_style_shadow_width(image_obj->btn, 0, LV_PART_MAIN);
+            lv_obj_set_grid_cell(image_obj->btn, LV_GRID_ALIGN_STRETCH, index % 3, 1, LV_GRID_ALIGN_STRETCH, index / 3, 1);
+            lv_obj_add_event_cb(image_obj->btn, image_clicked_cb, LV_EVENT_CLICKED,  (void*)(intptr_t)index);
 
-    //select icon
-    image_obj->select_icon = lv_image_create(image_obj->btn);
-    lv_obj_align(image_obj->select_icon, LV_ALIGN_TOP_LEFT, -3, -5);
-    lv_obj_add_flag(image_obj->select_icon, LV_OBJ_FLAG_CLICKABLE);
-    reset_image_select_icon(index, true);
+            //select icon
+            image_obj->select_icon = lv_image_create(image_obj->btn);
+            lv_obj_align(image_obj->select_icon, LV_ALIGN_TOP_LEFT, -3, -5);
+            lv_obj_add_flag(image_obj->select_icon, LV_OBJ_FLAG_CLICKABLE);
+            reset_image_select_icon(index, true);
 
-    //mode icon
-    image_obj->mode_icon = lv_image_create(image_obj->btn);
-    lv_image_set_src(image_obj->mode_icon, mode_table[storage_images[index].mode].filelist_icon_src);
-    lv_obj_align(image_obj->mode_icon, LV_ALIGN_BOTTOM_LEFT, 0, 0);
+            //mode icon
+            image_obj->mode_icon = lv_image_create(image_obj->btn);
+            lv_image_set_src(image_obj->mode_icon, mode_table[storage_images[index].mode].filelist_icon_src);
+            lv_obj_align(image_obj->mode_icon, LV_ALIGN_BOTTOM_LEFT, 0, 0);
 
-    return;
+        }
+        return;
 }
 
 static void image_clicked_cb(lv_event_t * e) {
@@ -137,12 +145,11 @@ static void image_clicked_cb(lv_event_t * e) {
     }
 }
 
-static void open_pic_large_cb(int index){
-    printf("ENTER PIC LARGE");
+void open_pic_large_cb(int index){
+    printf("ENTER PIC LARGE\n");
 }
 
 void open_scr_pic_lib_cb(){
-    create_scr_pic_library();
     lv_screen_load(scr_pic_library);
 }
 
