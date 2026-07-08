@@ -7,8 +7,6 @@
 lv_obj_t *scr_resolution = NULL;
 static lv_obj_t * roller = NULL;
 
-static void create_scr_resolution();
-
 const char* cam_resolution_table[] = {
     "48MP(4:3)",
     "20MP(4:3)",
@@ -27,7 +25,7 @@ int get_selected_resolution_from_roller(void){
 }
 
 void open_scr_resolution_cb(){
-    create_scr_resolution();
+    //create_scr_resolution();
     lv_screen_load(scr_resolution);
 }
 
@@ -39,7 +37,7 @@ static void on_press_cb(){
      lv_obj_set_style_text_color(roller, lv_color_white(), LV_PART_SELECTED);
 }
 
-static void create_scr_resolution(){
+void create_scr_resolution(){
     scr_resolution = lv_obj_create(NULL);
     lv_obj_set_style_bg_color(scr_resolution, BG_COLOR_DARK_BLUE_GREY, LV_PART_MAIN);
 

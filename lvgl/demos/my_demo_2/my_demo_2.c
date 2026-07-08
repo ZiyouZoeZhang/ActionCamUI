@@ -11,8 +11,6 @@ int cur_cam_zoom = 0;
 bool wifi_active = false;
 
 //global
-
-
 lv_style_t style_font_default_36;
 lv_style_t style_font_default_30;
 lv_style_t style_font_default_24;
@@ -63,9 +61,11 @@ static void initializ_styles(){
 }
 
 static void initialize_screens(){
-    create_scr_home();
     create_scr_poweroff();
     create_scr_pic_library();
+    create_scr_resolution();
+
+    create_scr_home();
 }
 
 void my_demo_2_create() {
