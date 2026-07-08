@@ -17,7 +17,6 @@ static void create_menu_btnm(lv_obj_t *parent);
 void swipe_scr_menu_cb(lv_event_t *e);
 
 /**create**/
-static void create_scr_menu();
 static void create_menu_grid();
 static void create_pop_up_btn(lv_obj_t * parent);
 ///use create scr setting
@@ -73,7 +72,6 @@ static void menu_btn_toggle_state_cb(lv_event_t *e){
 }
 
 void open_scr_menu_cb(){
-    create_scr_menu();
     lv_screen_load(scr_menu);
 }
 
@@ -88,7 +86,7 @@ void swipe_scr_menu_cb(lv_event_t *e){
     }
 }
 
-static void create_scr_menu(){
+void create_scr_menu(){
     /**background**/
     scr_menu = lv_obj_create(NULL);
     lv_obj_set_style_bg_color(scr_menu, BG_COLOR_DARK_BLUE_GREY, LV_PART_MAIN);

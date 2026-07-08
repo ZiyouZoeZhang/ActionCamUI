@@ -30,6 +30,7 @@ typedef struct {
 } menu_btn_info_t;
 
 void open_scr_menu_cb();
+void create_scr_menu();
 
 extern menu_btn_info_t menu_buttons[];
 
