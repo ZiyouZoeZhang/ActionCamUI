@@ -30,12 +30,12 @@ static void hide_btn_timer_cb(lv_timer_t * t);
 //void open_scr_poweroff_cb(lv_event_t *e);
 
 /**actions**/
-static void wifi_action(void);
+void wifi_action(void);
 static void rotation_action(void);
 static void lock_action(void);
-static void settings_action(void);
+void settings_action(void);
 static void voice_action(void);
-static void bluetooth_action(void);
+void bluetooth_action(void);
 static void poweroff_action(void);
 static void grid_action(void);
 
@@ -57,6 +57,9 @@ static void menu_btn_toggle_state_cb(lv_event_t *e){
     /**toggle state**/
     if (index == CAM_MENU_WIFI){
         if (wifi_active) menu_buttons[index].state = BTN_STATE_ON;
+        else menu_buttons[index].state = BTN_STATE_OFF;
+    } else if (index == CAM_MENU_BLUETOOTH) {
+         if (bluetooth_active) menu_buttons[index].state = BTN_STATE_ON;
         else menu_buttons[index].state = BTN_STATE_OFF;
     } else if (menu_buttons[index].state == BTN_STATE_ON) {
         menu_buttons[index].state = BTN_STATE_OFF;
@@ -97,10 +100,10 @@ void create_scr_menu(){
 
     /**CB**/
     lv_obj_add_event_cb(scr_menu, swipe_scr_menu_cb, LV_EVENT_RELEASED, NULL);
-
 }
 
 static void create_menu_grid() {
+    lv_obj_clean(cont);
     for (int i = 0; i < 8; i++) {
         lv_obj_t *btn = lv_btn_create(cont);
         lv_obj_set_grid_cell(btn, LV_GRID_ALIGN_STRETCH, i % 4, 1, LV_GRID_ALIGN_STRETCH, i / 4, 1);
@@ -123,7 +126,6 @@ static void create_menu_grid() {
         lv_obj_set_style_shadow_width(btn, 0, LV_PART_MAIN);
         lv_obj_add_event_cb(btn, menu_btn_toggle_state_cb, LV_EVENT_CLICKED, NULL);
         lv_obj_add_flag(btn, LV_OBJ_FLAG_ADV_HITTEST);
-        //lv_obj_add_event_cb(btn, menu_btn_toggle_state_cb, LV_EVENT_PRESSED | LV_EVENT_RELEASED, NULL);
     }
 }
 
@@ -212,7 +214,6 @@ static void voice_action(void) {
 }
 
 static void grid_action(void) {
-
     if (menu_buttons[CAM_MENU_GRID_VIEW].state == BTN_STATE_ON){
         lv_label_set_text(pop_up_btn_label,"GRID VIEW: ON");
     } else {
@@ -224,7 +225,7 @@ static void grid_action(void) {
     lv_timer_resume(timer);
 }
 
-static void wifi_action(void) {
+void wifi_action(void) {
     lv_obj_t * scr = lv_obj_create(NULL);
     lv_obj_set_style_bg_color(scr, BG_COLOR_DARK_BLUE_GREY,LV_PART_MAIN);
 
@@ -289,7 +290,7 @@ static void poweroff_action(void) {
     lv_screen_load(scr);
 }
 
-
+/*
 static void bluetooth_action(void) {
     printf("Bluetooth toggle\n");
     // quick_bt_enable/disable logic
@@ -298,7 +299,7 @@ static void bluetooth_action(void) {
 static void settings_action(void) {
     printf("Settings\n");
     // quick_poweroff logic
-}
+}*/
 
 ///start lock action
 static lv_obj_t *lock_left = NULL;

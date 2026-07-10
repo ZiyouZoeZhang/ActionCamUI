@@ -15,11 +15,13 @@ lv_obj_t * create_cam_mode_icon(lv_obj_t * parent, int mode);
 lv_obj_t * create_exit_icon(lv_obj_t * parent);
 void create_buttons(lv_obj_t * parent); //£¿
 void set_resolution_icon_bg(lv_obj_t *img, int res);
+lv_obj_t *  create_search_icon(lv_obj_t * parent);
 lv_obj_t * create_resolution_icon(lv_obj_t * parent, int cur_res);
 lv_obj_t * create_zoom_icon(lv_obj_t * parent, int cur_zoom);
 lv_obj_t * create_grid(lv_obj_t * parent); //£¿
 void create_spot_metering(lv_obj_t * parent);
 lv_obj_t *create_pic_select_icon(lv_obj_t * parent);
+lv_obj_t * create_label_top_center(lv_obj_t * parent, char str[]);
 
 /**updates**/
 void update_battery_icon(bool charging, int level);

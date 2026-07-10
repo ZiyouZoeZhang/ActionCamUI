@@ -9,6 +9,7 @@ int cur_cam_mode = 0;
 int cur_cam_resolution = 0;
 int cur_cam_zoom = 0;
 bool wifi_active = false;
+bool bluetooth_active = false;
 
 //global
 lv_style_t style_font_default_36;
@@ -69,6 +70,9 @@ static void initialize_screens(){
     create_scr_media_settings();
     create_scr_media_selection();
 
+    create_scr_menu_settings();
+    create_scr_menu_bluetooth();
+
     create_scr_home();
 }
 
@@ -77,5 +81,7 @@ void my_demo_2_create() {
     initialize_screens();
 
     /**driver code**/
-    open_scr_home_cb();
+    //open_scr_home_cb();
+
+    settings_action();
 }

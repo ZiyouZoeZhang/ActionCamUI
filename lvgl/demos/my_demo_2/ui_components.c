@@ -13,6 +13,7 @@ static lv_obj_t * img_pic_lib = NULL;
 static lv_obj_t * img_spot_met = NULL;
 static lv_obj_t * img_media_set = NULL;
 static lv_obj_t * img_pic_select = NULL;
+static lv_obj_t * img_search = NULL;
 
 /**creations**/
 
@@ -119,6 +120,22 @@ void create_pic_lib_icon(lv_obj_t *parent){
     lv_obj_add_flag(img_pic_lib, LV_OBJ_FLAG_CLICKABLE);
     lv_obj_add_event_cb(img_pic_lib, open_scr_pic_lib_cb, LV_EVENT_CLICKED, NULL);
 
+}
+
+lv_obj_t *  create_search_icon(lv_obj_t * parent){
+    img_search = lv_image_create(parent);
+    lv_obj_align(img_search, LV_ALIGN_TOP_RIGHT, 0, 0);
+    lv_image_set_src(img_search, &Pattern_Search);
+    lv_obj_add_flag(img_search, LV_OBJ_FLAG_CLICKABLE);
+    return img_search;
+}
+
+lv_obj_t * create_label_top_center(lv_obj_t * parent, char str[]){
+    lv_obj_t * label = lv_label_create(parent);
+    lv_label_set_text(label, str);
+    lv_obj_add_style(label, &style_font_default_36, LV_PART_MAIN);
+    lv_obj_align(label, LV_ALIGN_TOP_MID, 0, 22);
+    return label;
 }
 
 lv_obj_t * create_cam_mode_icon(lv_obj_t * parent, int mode){

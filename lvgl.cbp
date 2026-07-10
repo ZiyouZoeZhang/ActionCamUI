@@ -81,6 +81,10 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="lvgl/demos/my_demo_2/my_demo_2.h" />
+		<Unit filename="lvgl/demos/my_demo_2/scr_home.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="lvgl/demos/my_demo_2/scr_home.h" />
 		<Unit filename="lvgl/demos/my_demo_2/scr_media_settings.c">
 			<Option compilerVar="CC" />
 		</Unit>
@@ -98,6 +102,9 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="lvgl/demos/my_demo_2/scr_resolution.h" />
+		<Unit filename="lvgl/demos/my_demo_2/scr_settings.c">
+			<Option compilerVar="CC" />
+		</Unit>
 		<Unit filename="lvgl/demos/my_demo_2/scr_zoom.c">
 			<Option compilerVar="CC" />
 		</Unit>
