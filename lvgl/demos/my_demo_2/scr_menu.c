@@ -11,10 +11,12 @@ static lv_obj_t * pop_up_btn_label;
 static lv_obj_t *cont = NULL;
 static lv_timer_t * timer = NULL;
 static lv_obj_t * scr_menu = NULL;
+static lv_obj_t * btn_grid;
 
 /**access**/
 static void create_menu_btnm(lv_obj_t *parent);
 void swipe_scr_menu_cb(lv_event_t *e);
+static void update_menu_grid(int i);
 
 /**create**/
 static void create_menu_grid();
@@ -75,6 +77,9 @@ static void menu_btn_toggle_state_cb(lv_event_t *e){
 }
 
 void open_scr_menu_cb(){
+    if (grid_active)  menu_buttons[CAM_MENU_GRID_VIEW].state = BTN_STATE_ON;
+    else  menu_buttons[CAM_MENU_GRID_VIEW].state = BTN_STATE_OFF;
+    create_menu_grid();
     lv_screen_load(scr_menu);
 }
 
@@ -105,7 +110,7 @@ void create_scr_menu(){
 static void create_menu_grid() {
     lv_obj_clean(cont);
     for (int i = 0; i < 8; i++) {
-        lv_obj_t *btn = lv_btn_create(cont);
+        lv_obj_t * btn = lv_btn_create(cont);
         lv_obj_set_grid_cell(btn, LV_GRID_ALIGN_STRETCH, i % 4, 1, LV_GRID_ALIGN_STRETCH, i / 4, 1);
         lv_obj_set_style_shadow_width(btn, 0, LV_PART_MAIN);
         lv_obj_set_style_bg_color(btn, BG_COLOR_DARK_BLUE_GREY, LV_PART_MAIN);
@@ -215,8 +220,10 @@ static void voice_action(void) {
 
 static void grid_action(void) {
     if (menu_buttons[CAM_MENU_GRID_VIEW].state == BTN_STATE_ON){
+        grid_active = true;
         lv_label_set_text(pop_up_btn_label,"GRID VIEW: ON");
     } else {
+        grid_active = false;
         lv_label_set_text(pop_up_btn_label, "GRID VIEW: OFF");
     }
     lv_obj_remove_flag(pop_up_btn, LV_OBJ_FLAG_HIDDEN);

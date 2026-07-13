@@ -24,6 +24,7 @@ extern int cur_cam_resolution;
 extern int cur_cam_zoom;
 extern bool wifi_active;
 extern bool bluetooth_active;
+extern bool grid_active;
 
 extern lv_style_t style_font_default_36;
 extern lv_style_t style_font_default_30;

@@ -10,6 +10,7 @@ int cur_cam_resolution = 0;
 int cur_cam_zoom = 0;
 bool wifi_active = false;
 bool bluetooth_active = false;
+bool grid_active = false;
 
 //global
 lv_style_t style_font_default_36;

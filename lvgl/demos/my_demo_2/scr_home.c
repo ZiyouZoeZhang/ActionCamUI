@@ -15,7 +15,7 @@ void update_scr_home(){
     update_battery_icon(battery_charging, battery_level);
     reset_spot_metering();
 
-    if (menu_buttons[CAM_MENU_GRID_VIEW].state == BTN_STATE_ON){
+    if (grid_active){
         lv_obj_remove_flag(grid_container, LV_OBJ_FLAG_HIDDEN);
     } else {
          lv_obj_add_flag(grid_container, LV_OBJ_FLAG_HIDDEN);

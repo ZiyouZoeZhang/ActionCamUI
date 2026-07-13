@@ -26,6 +26,13 @@
         lv_menu_set_load_page_event(menu, temp_page, page_var); \
     } while(0)
 
+typedef struct {
+    lv_obj_t* switch_obj;
+    lv_obj_t* cont_obj;
+    const char* name;
+    void (*toggle_cb)(bool state);
+} switch_item_t;
+
 
 static lv_obj_t* scr_menu_bluetooth;
 static lv_obj_t* scr_menu_settings;
@@ -34,6 +41,17 @@ static lv_obj_t* cur_page;
 static lv_obj_t* heading;
 static lv_style_t style_cont;
 
+static void switch_leds_toggle(bool state);
+static void switch_date_stamp_toggle(bool state);
+static void switch_stamp_toggle(bool state);
+static void switch_power_tone_toggle(bool state);
+static void switch_key_tone_toggle(bool state);
+static void switch_clap_tone_toggle(bool state);
+static void switch_grid_toggle(bool state);
+static void switch_quick_start_toggle(bool state);
+static void switch_voice_control_toggle(bool state);
+
+static lv_obj_t* grid_switch = NULL;
 
 static lv_obj_t* page_main;
 static lv_obj_t* page_sub_wifi;
@@ -56,7 +74,6 @@ static lv_obj_t* page_sub_voice_command;
 static lv_obj_t* page_sub_format_sd;
 static lv_obj_t* page_sub_factory_reset;
 static lv_obj_t* page_sub_information;
-
 
 static const char* list_wifi_frequency[] = { "Red", "Green", "Blue", "Yellow", "Purple", "Orange" };
 static const char* list_auto_poweroff[] = { "OFF", "1min", "3min", "5min" };
@@ -160,6 +177,36 @@ static void roller_value_changed_cb(lv_event_t* e) {
     }
 }
 
+static void switch_cont_click_cb(lv_event_t* e) {
+    lv_obj_t* cont = lv_event_get_target(e);
+    switch_item_t* item = (switch_item_t*)lv_event_get_user_data(e);
+
+    if (!item || !item->switch_obj) return;
+
+    bool current_state = lv_obj_has_state(item->switch_obj, LV_STATE_CHECKED);
+    if (current_state) {
+        lv_obj_remove_state(item->switch_obj, LV_STATE_CHECKED);
+    } else {
+        lv_obj_add_state(item->switch_obj, LV_STATE_CHECKED);
+    }
+
+    if (item->toggle_cb) {
+        item->toggle_cb(!current_state);
+    }
+}
+
+
+static void switch_value_changed_cb(lv_event_t* e) {
+    lv_obj_t* sw = lv_event_get_target(e);
+    switch_item_t* item = (switch_item_t*)lv_event_get_user_data(e);
+
+    if (!item || !item->toggle_cb) return;
+
+    bool state = lv_obj_has_state(sw, LV_STATE_CHECKED);
+    item->toggle_cb(state);
+}
+
+
 static void set_heading_cb(lv_event_t* e) {
     cur_page = lv_menu_get_cur_main_page(menu);
     if (page_map) {
@@ -192,6 +239,44 @@ static void load_styles(void) {
     lv_style_set_border_width(&style_cont, 0);
 }
 
+// Switch toggle callback implementations
+static void switch_leds_toggle(bool state) {
+    printf("LEDs: %s\n", state ? "ON" : "OFF");
+}
+
+static void switch_date_stamp_toggle(bool state) {
+    printf("Date Stamp: %s\n", state ? "ON" : "OFF");
+}
+
+static void switch_stamp_toggle(bool state) {
+    printf("Stamp: %s\n", state ? "ON" : "OFF");
+}
+
+static void switch_power_tone_toggle(bool state) {
+    printf("Power Tone: %s\n", state ? "ON" : "OFF");
+}
+
+static void switch_key_tone_toggle(bool state) {
+    printf("Key Tone: %s\n", state ? "ON" : "OFF");
+}
+
+static void switch_clap_tone_toggle(bool state) {
+    printf("Clap Tone: %s\n", state ? "ON" : "OFF");
+}
+
+static void switch_grid_toggle(bool state) {
+    printf("Grid: %s\n", state ? "ON" : "OFF");
+    grid_active = state;
+}
+
+static void switch_quick_start_toggle(bool state) {
+    printf("Quick-Start Switch: %s\n", state ? "ON" : "OFF");
+}
+
+static void switch_voice_control_toggle(bool state) {
+    printf("Voice Control: %s\n", state ? "ON" : "OFF");
+}
+
 /**creations**/
 static lv_obj_t* create_basics(lv_obj_t* parent, const char* txt) {
     lv_obj_t* overall_cont = lv_menu_cont_create(parent);
@@ -215,15 +300,34 @@ static lv_obj_t* create_text(lv_obj_t* parent, const char* txt) {
     lv_obj_t* cont = create_basics(parent, txt);
     lv_obj_t* img = lv_image_create(cont);
     lv_image_set_src(img, &set_have_sub_menu);
-    lv_obj_align(img, LV_ALIGN_RIGHT_MID, -20, 0);
+    lv_obj_align(img, LV_ALIGN_RIGHT_MID, -30, 0);
     return cont;
 }
 
-static lv_obj_t* create_switch(lv_obj_t* parent, const char* txt, bool chk) {
+static lv_obj_t* create_switch(lv_obj_t* parent, const char* txt, bool chk, void (*toggle_cb)(bool)) {
     lv_obj_t* cont = create_basics(parent, txt);
     lv_obj_t* sw = lv_switch_create(cont);
+    lv_obj_set_size(sw, 100, 50);
     lv_obj_add_state(sw, chk ? LV_STATE_CHECKED : 0);
-    lv_obj_align(sw, LV_ALIGN_RIGHT_MID, -30, 0);
+    lv_obj_align(sw, LV_ALIGN_RIGHT_MID, -40, 0);
+
+    switch_item_t* item = (switch_item_t*)lv_malloc(sizeof(switch_item_t));
+    if (item) {
+        item->switch_obj = sw;
+        item->cont_obj = cont;
+        item->name = txt;
+        item->toggle_cb = toggle_cb;
+    }
+
+    lv_obj_add_flag(cont, LV_OBJ_FLAG_CLICKABLE);
+    lv_obj_add_event_cb(cont, switch_cont_click_cb, LV_EVENT_CLICKED, item);
+
+    if (toggle_cb) {
+        lv_obj_add_event_cb(sw, switch_value_changed_cb, LV_EVENT_VALUE_CHANGED, item);
+    }
+
+    if (strcmp(txt, "Grid") == 0) grid_switch = sw;
+
     return cont;
 }
 
@@ -232,12 +336,12 @@ static lv_obj_t* create_scrollbar(lv_obj_t* parent, const char* txt, settings_ro
 
     target->state_label = lv_label_create(page);
     lv_obj_add_style(target->state_label, &style_font_default_36, LV_PART_MAIN);
-    lv_obj_align(target->state_label, LV_ALIGN_RIGHT_MID, -70, 0);
+    lv_obj_align(target->state_label, LV_ALIGN_RIGHT_MID, -80, 0);
     lv_label_set_text(target->state_label, target->states[0]);
 
     lv_obj_t* img = lv_image_create(page);
     lv_image_set_src(img, &set_have_sub_menu);
-    lv_obj_align(img, LV_ALIGN_RIGHT_MID, -20, 0);
+    lv_obj_align(img, LV_ALIGN_RIGHT_MID, -30, 0);
 
     return page;
 }
@@ -271,6 +375,7 @@ static lv_obj_t* create_scr_scrollbar(lv_obj_t* parent, settings_roller_t* targe
 void settings_action(void) {
     lv_menu_clear_history(menu);
     lv_menu_set_page(menu, page_main);
+    grid_active ?  lv_obj_add_state(grid_switch, LV_STATE_CHECKED) : lv_obj_remove_state(grid_switch, LV_STATE_CHECKED);
     lv_screen_load(scr_menu_settings);
 }
 
@@ -314,7 +419,7 @@ void create_scr_menu_settings(void) {
     lv_obj_set_scroll_dir(page_sub_wifi_connect, LV_DIR_VER);
     lv_obj_t* scr_wifi_connect_btn = lv_obj_create(page_sub_wifi_connect);
     lv_obj_set_style_bg_color(scr_wifi_connect_btn, BG_COLOR_DARK_BLUE_GREY, LV_PART_MAIN);
-    temp_page = create_switch(page_sub_wifi, "Wifi connect", false);
+    temp_page = create_switch(page_sub_wifi, "Wifi connect", false, NULL);
     lv_menu_set_load_page_event(menu, temp_page, page_sub_wifi_connect);
 
     CREATE_ROLLER_PAGE(page_sub_wifi, page_sub_wifi_frequency, &wifi_frequency, "Wifi frequency");
@@ -342,14 +447,14 @@ void create_scr_menu_settings(void) {
     CREATE_ROLLER_PAGE(page_main, page_sub_subscreen_play, &subscreen_play, "SubScreen Play");
 
     // switch pages
-    create_switch(page_main, "LEDs", false);
-    create_switch(page_main, "Date Stamp", false);
-    create_switch(page_main, "Stamp", false);
-    create_switch(page_main, "Power Tone", false);
-    create_switch(page_main, "Key Tone", false);
-    create_switch(page_main, "Clap Tone", false);
-    create_switch(page_main, "Grid", false);
-    create_switch(page_main, "Quick-Start Switch", false);
+    create_switch(page_main, "LEDs", false, switch_leds_toggle);
+    create_switch(page_main, "Date Stamp", false, switch_date_stamp_toggle);
+    create_switch(page_main, "Stamp", false, switch_stamp_toggle);
+    create_switch(page_main, "Power Tone", false, switch_power_tone_toggle);
+    create_switch(page_main, "Key Tone", false, switch_key_tone_toggle);
+    create_switch(page_main, "Clap Tone", false, switch_clap_tone_toggle);
+    create_switch(page_main, "Grid", false, switch_grid_toggle);
+    create_switch(page_main, "Quick-Start Switch", false, switch_quick_start_toggle);
 
     // date time pages
     CREATE_SIMPLE_PAGE(page_main, page_sub_date_time, "Date Time");
@@ -363,7 +468,7 @@ void create_scr_menu_settings(void) {
     temp_page = create_text(page_main, "Voice Control");
     lv_menu_set_load_page_event(menu, temp_page, page_sub_voice_control);
 
-    create_switch(page_sub_voice_control, "Voice Control", false);
+    create_switch(page_sub_voice_control, "Voice Control", false, switch_voice_control_toggle);
 
     page_sub_voice_command = lv_menu_page_create(menu, "");
     lv_obj_set_scroll_dir(page_sub_voice_command, LV_DIR_VER);
@@ -387,6 +492,7 @@ void create_scr_menu_settings(void) {
 
     /**headers**/
     lv_obj_t* back_btn = lv_menu_get_main_header_back_button(menu);
+
     lv_obj_t* back_icon = lv_obj_get_child(back_btn, 0);
     lv_image_set_src(back_icon, &Pattern_Return);
     lv_obj_align(lv_menu_get_main_header(menu), LV_ALIGN_LEFT_MID, 0, 0);
@@ -397,6 +503,7 @@ void create_scr_menu_settings(void) {
     lv_obj_set_style_bg_color(heading_cont, BG_COLOR_DARK_BLUE_GREY, LV_PART_MAIN);
     lv_obj_set_style_border_width(heading_cont, 0, LV_PART_MAIN);
     lv_obj_remove_flag(heading_cont, LV_OBJ_FLAG_SCROLLABLE);
+    lv_obj_remove_flag(lv_menu_get_main_header(menu), LV_OBJ_FLAG_SCROLLABLE);
 
     heading = lv_label_create(heading_cont);
     lv_obj_add_style(heading, &style_font_default_36, LV_PART_MAIN);
@@ -408,7 +515,6 @@ void create_scr_menu_settings(void) {
     lv_obj_align(exit_icon, LV_ALIGN_RIGHT_MID, 0, 0);
     lv_obj_add_flag(exit_icon, LV_OBJ_FLAG_CLICKABLE);
     lv_obj_add_event_cb(exit_icon, settings_quit_cb, LV_EVENT_CLICKED, NULL);
-
 
     lv_menu_set_mode_root_back_button(menu, LV_MENU_ROOT_BACK_BUTTON_ENABLED);
 }
