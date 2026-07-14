@@ -30,8 +30,7 @@ void update_spot_metering_cb(lv_event_t * e);
 void reset_spot_metering();
 
 /**CB**/
-void open_scr_cam_modes_cb(lv_event_t * e);
-void open_scr_cam_modes_by_mode(int mode);
+void open_scr_cam_modes();
 void open_scr_home_cb();
 void open_scr_pic_lib_cb();
 

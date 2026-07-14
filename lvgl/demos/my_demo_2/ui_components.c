@@ -145,7 +145,7 @@ lv_obj_t * create_cam_mode_icon(lv_obj_t * parent, int mode){
     lv_image_set_src(img_cam_mode, get_mode_icon(mode));
     /*CB*/
     lv_obj_add_flag(img_cam_mode, LV_OBJ_FLAG_CLICKABLE);
-    lv_obj_add_event_cb(img_cam_mode, open_scr_cam_modes_cb, LV_EVENT_CLICKED, NULL);
+    lv_obj_add_event_cb(img_cam_mode, open_scr_cam_modes, LV_EVENT_CLICKED, NULL);
     return img_cam_mode;
 }
 
@@ -235,12 +235,6 @@ void reset_spot_metering(){
 }
 
 /**CB**/
-
-void open_scr_cam_modes_cb(lv_event_t * e){
-    lv_obj_t *img = lv_event_get_target(e);
-    camera_mode_t mode = (camera_mode_t)(intptr_t)lv_obj_get_user_data(img);
-    open_scr_cam_modes_by_mode(mode);
-}
 
 void delete_parent_cb(lv_event_t *e) {
     lv_obj_t *current = lv_event_get_target(e);

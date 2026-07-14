@@ -39,7 +39,7 @@ static lv_obj_t* scr_menu_settings;
 static lv_obj_t* menu;
 static lv_obj_t* cur_page;
 static lv_obj_t* heading;
-static lv_style_t style_cont;
+lv_style_t style_cont;
 
 static void switch_leds_toggle(bool state);
 static void switch_date_stamp_toggle(bool state);
@@ -78,7 +78,7 @@ static lv_obj_t* page_sub_information;
 static const char* list_wifi_frequency[] = { "Red", "Green", "Blue", "Yellow", "Purple", "Orange" };
 static const char* list_auto_poweroff[] = { "OFF", "1min", "3min", "5min" };
 static const char* list_auto_dormant[] = { "OFF", "10Sec", "20Sec", "30Sec", "60Sec" };
-static const char* list_language[] = { "English", "Simplified Chinese", "Traditional Chinese", "30Sec", "60Sec" };
+static const char* list_language[] = { "English", "Simplified Chinese", "Traditional Chinese"};
 static const char* list_video_format[] = { "PAL", "NTSC" };
 static const char* list_frequency[] = { "50Hz", "60Hz" };
 static const char* list_voice_volume[] = { "Default", "High" };
@@ -178,9 +178,7 @@ static void roller_value_changed_cb(lv_event_t* e) {
 }
 
 static void switch_cont_click_cb(lv_event_t* e) {
-    lv_obj_t* cont = lv_event_get_target(e);
     switch_item_t* item = (switch_item_t*)lv_event_get_user_data(e);
-
     if (!item || !item->switch_obj) return;
 
     bool current_state = lv_obj_has_state(item->switch_obj, LV_STATE_CHECKED);
@@ -484,7 +482,17 @@ void create_scr_menu_settings(void) {
     // ---- other pags ----
     CREATE_SIMPLE_PAGE(page_main, page_sub_format_sd, "Format SD");
     CREATE_SIMPLE_PAGE(page_main, page_sub_factory_reset, "Factory Reset");
-    CREATE_SIMPLE_PAGE(page_main, page_sub_information, "Information");
+
+    page_sub_information = lv_menu_page_create(menu, "");
+    lv_obj_set_scroll_dir(page_sub_information, LV_DIR_VER);
+    label = lv_label_create(page_sub_information);
+    lv_obj_set_style_text_color(label, lv_color_white(), LV_PART_MAIN);
+    lv_label_set_long_mode(label, LV_LABEL_LONG_WRAP);
+    lv_label_set_text(label, "blablablabla\nblablabla");
+    lv_obj_align(label, LV_ALIGN_TOP_LEFT, 0, 0);
+    temp_page = create_text(page_main, "Information");
+   // CREATE_SIMPLE_PAGE(page_main, page_sub_information, "Information");
+    lv_menu_set_load_page_event(menu, temp_page,  page_sub_information);
 
     init_page_map();
 

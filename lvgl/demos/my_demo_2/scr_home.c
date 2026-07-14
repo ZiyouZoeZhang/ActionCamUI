@@ -21,7 +21,7 @@ void update_scr_home(){
          lv_obj_add_flag(grid_container, LV_OBJ_FLAG_HIDDEN);
     }
 
-    cur_cam_mode = get_selected_mode_from_roller();
+    cur_cam_mode = get_selected_mode_from_roller(cur_cam_mode);
     lv_image_set_src(img_cam_mode, get_mode_icon(cur_cam_mode));
 
     cur_cam_zoom = get_selected_zoom_from_roller();
@@ -42,7 +42,7 @@ static void swipe_scr_main_cb(lv_event_t * e){
                 open_scr_pic_lib_cb(); //MAYBE ERROR
                 break;
             case LV_DIR_TOP:
-                open_scr_cam_modes_by_mode(cur_cam_mode);
+                open_scr_cam_modes();
                 break;
             case LV_DIR_BOTTOM:
                 open_scr_menu_cb();

@@ -5,11 +5,12 @@
 
 static lv_obj_t * cam_modes_roller = NULL;
 static lv_obj_t * scr_mode_selection = NULL;
+static lv_obj_t * container;
 
 static void swipe_scr_mode_selection_cb(lv_event_t *e);
 static void create_cam_mode_roller(lv_obj_t * parent, int cur_mode);
 
-static void create_scr_mode_selection(int mode){
+ void create_scr_mode_selection(int mode){
      /**background**/
     scr_mode_selection = lv_obj_create(NULL);
     lv_obj_set_style_bg_color(scr_mode_selection,BG_COLOR_DARK_BLUE_GREY, LV_PART_MAIN);
@@ -30,70 +31,43 @@ static void create_scr_mode_selection(int mode){
     lv_screen_load(scr_mode_selection);
 }
 
-static void create_cam_mode_roller(lv_obj_t * parent, int cur_mode){
+static void create_cam_mode_roller(lv_obj_t * parent, int mode){
+    lv_obj_t * img = lv_image_create(parent);
+    lv_image_set_src(img, &mode_scrollview);
+    lv_obj_center(img);
 
     int count = get_mode_count();
     const camera_mode_info_t * cam_modes = get_all_modes();
 
-    /// using tileview
-    /*
-    lv_obj_t * tv = lv_tileview_create(lv_screen_active());
-    lv_obj_set_size(tv, 300, 200);
-    lv_obj_set_style_bg_color(tv,BG_COLOR_DARK_BLUE_GREY, LV_PART_MAIN);
-    lv_obj_center(tv);
+    container = lv_obj_create(parent);
+    lv_obj_set_size(container, lv_pct(90), lv_pct(50));
 
+    lv_obj_add_style(container, &style_cont_transparent, LV_PART_MAIN);
+   lv_obj_set_style_flex_track_place(container, LV_FLEX_ALIGN_CENTER, 0);
 
-    lv_obj_t * tile = lv_tileview_add_tile(tv, 0, 0,  LV_DIR_RIGHT);
-    lv_obj_t * img = lv_image_create(tile);
-    lv_obj_set_size(tile, 100, 200);
-    lv_obj_set_align(tile, LV_ALIGN_LEFT_MID);
-    lv_image_set_src(img, modes[0].icon_src);
-   // lv_obj_center(img);
+    lv_obj_set_flex_flow(container, LV_FLEX_FLOW_ROW);
+    lv_obj_set_style_pad_column(container, 60, 0);
+    lv_obj_set_scroll_snap_x(container, LV_SCROLL_SNAP_CENTER);
+    lv_obj_set_scrollbar_mode(container, LV_SCROLLBAR_MODE_OFF);
+    lv_obj_add_flag(container, LV_OBJ_FLAG_SCROLL_ELASTIC);
 
-
-    lv_obj_t * tile1= lv_tileview_add_tile(tv, 1, 0,  LV_DIR_LEFT | LV_DIR_RIGHT);
-    lv_obj_t * img1 = lv_image_create(tile1);
-    lv_obj_set_size(tile1, 100, 200);
-    lv_image_set_src(img1, modes[1].icon_src);
-    //lv_obj_center(img1);
-    */
-
-    ///using a roller
-    char options[300] = ""; //format:  name\nname\nname\n etc
-    for (int i = 0; i < count; i++) {
-        strcat(options, cam_modes[i].name);
-        if (i < count-1 ) {
-            strcat(options, "\n");
-        }
+    for (int i=0; i<count; i++){
+        img = lv_image_create(container);
+        lv_image_set_src(img, cam_modes[i].icon_src);
+        lv_obj_add_flag(img, LV_OBJ_FLAG_SNAPPABLE);
     }
 
-    cam_modes_roller = lv_roller_create(parent);
-    lv_obj_set_size(cam_modes_roller, 350, 250);
-    lv_obj_center(cam_modes_roller);
-
-    lv_roller_set_options(cam_modes_roller, options, LV_ROLLER_MODE_INFINITE);
-    lv_roller_set_selected(cam_modes_roller, cur_mode, LV_ANIM_OFF);
-
-    lv_obj_set_style_bg_opa(cam_modes_roller, LV_OPA_0,  LV_PART_MAIN);
-    lv_obj_set_style_bg_opa(cam_modes_roller, LV_OPA_0,  LV_PART_SELECTED);
-    lv_obj_set_style_border_width(cam_modes_roller, 0, LV_PART_MAIN);
-
-    lv_obj_add_style(cam_modes_roller, &style_font_default_36, LV_PART_MAIN);
-    lv_obj_set_style_text_color(cam_modes_roller, lv_palette_main(LV_PALETTE_BLUE), LV_PART_SELECTED);
-    lv_obj_set_style_text_line_space(cam_modes_roller, 50, LV_PART_MAIN);
+    lv_obj_scroll_by(container, 298, 0, LV_ANIM_OFF);
 }
 
-int get_selected_mode_from_roller(void) {
-    if (cam_modes_roller) {
-        return lv_roller_get_selected(cam_modes_roller);
-    }
-    return 0;
+int get_selected_mode_from_roller(int cur) {
+    int index = (lv_obj_get_scroll_x(container)+298)/141;
+    return index;
 }
 
-void open_scr_cam_modes_by_mode(int mode){
-    create_scr_mode_selection(mode);
+void open_scr_cam_modes(){
+    lv_screen_load(scr_mode_selection);
 }
-
 
 static void swipe_scr_mode_selection_cb(lv_event_t *e){
     lv_dir_t dir = lv_indev_get_gesture_dir(lv_indev_active());

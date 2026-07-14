@@ -31,6 +31,8 @@ extern lv_style_t style_font_default_30;
 extern lv_style_t style_font_default_24;
 extern lv_style_t style_swipe_icon;
 extern lv_style_t style_scrollbar;
+extern lv_style_t style_cont;
+extern lv_style_t style_cont_transparent;
 
 /** screen**/
 extern lv_obj_t *scr_home;
@@ -52,6 +54,7 @@ void open_scr_mode_selection_cb(void);*/
 
 void create_scr_poweroff();
 void create_scr_home();
+void create_scr_mode_selection(int mode);
 /*
 lv_obj_t* create_scr_menu(void);
 lv_obj_t* create_scr_pic_library(void);
@@ -62,13 +65,13 @@ lv_obj_t* create_scr_mode_selection(void);*/
 void my_demo_2_create();
 
 /**open scr**/
-void open_scr_cam_modes_by_mode(int mode);
+void open_scr_cam_modes();
 void open_scr_pic_lib_cb();
 void open_scr_menu_cb();
 void open_scr_poweroff_cb();
 
 /**others -> to be changed!!**/
-int get_selected_mode_from_roller(void);
+int get_selected_mode_from_roller(int cur);
 
 /**CB**/
 void swipe_scr_menu_cb(lv_event_t *e);

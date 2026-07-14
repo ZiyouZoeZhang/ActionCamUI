@@ -18,6 +18,7 @@ lv_style_t style_font_default_30;
 lv_style_t style_font_default_24;
 lv_style_t style_swipe_icon;
 lv_style_t style_scrollbar;
+lv_style_t style_cont_transparent;
 
 
 /**TEST**/
@@ -60,6 +61,15 @@ static void initializ_styles(){
     lv_style_set_bg_color(&style_scrollbar, lv_color_white());
     lv_style_set_width(&style_scrollbar, 8);
     lv_style_set_radius(&style_scrollbar, 0);
+
+
+    lv_style_init(&style_cont_transparent);
+   lv_style_set_bg_opa(&style_cont_transparent, LV_OPA_0);
+//   lv_style_set_opa(&style_cont_transparent, LV_OPA_0);
+ //   lv_obj_set_style_bg_opa(cont, LV_OPA_0, LV_PART_MAIN);
+    lv_style_set_align(&style_cont_transparent, LV_ALIGN_CENTER);
+    lv_style_set_border_width(&style_cont_transparent, 0);
+//    lv_style_set_bg_color(&style_cont_transparent, BG_COLOR_DARK_GREY);
 }
 
 static void initialize_screens(){
@@ -70,6 +80,7 @@ static void initialize_screens(){
     create_scr_resolution();
     create_scr_media_settings();
     create_scr_media_selection();
+    create_scr_mode_selection(0);
 
     create_scr_menu_settings();
     create_scr_menu_bluetooth();
@@ -82,7 +93,7 @@ void my_demo_2_create() {
     initialize_screens();
 
     /**driver code**/
-    //open_scr_home_cb();
+    open_scr_home_cb();
 
-    settings_action();
+    //settings_action();
 }
