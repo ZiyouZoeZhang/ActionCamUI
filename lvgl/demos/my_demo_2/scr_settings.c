@@ -318,6 +318,8 @@ static lv_obj_t* create_switch(lv_obj_t* parent, const char* txt, bool chk, void
     }
 
     lv_obj_add_flag(cont, LV_OBJ_FLAG_CLICKABLE);
+ //   lv_obj_remove_flag(cont, LV_OBJ_FLAG_SCROLL_ON_FOCUS);
+    lv_obj_remove_flag(sw, LV_OBJ_FLAG_SCROLL_ON_FOCUS);
     lv_obj_add_event_cb(cont, switch_cont_click_cb, LV_EVENT_CLICKED, item);
 
     if (toggle_cb) {
@@ -378,21 +380,8 @@ void aaaa(void){
 void settings_action(void) {
     lv_menu_clear_history(menu);
     lv_menu_set_page(menu, page_main);
-
     grid_active ?  lv_obj_add_state(grid_switch, LV_STATE_CHECKED) : lv_obj_remove_state(grid_switch, LV_STATE_CHECKED);
     lv_screen_load(scr_menu_settings);
-
-    lv_obj_scroll_to_y(page_main, 0, LV_ANIM_OFF);
-
-    int a = 3;
-
-    /*
-    lv_obj_t* main_page = lv_menu_get_cur_main_page(menu);
-    if (main_page) {
-        lv_obj_scroll_to_y(main_page, 0, LV_ANIM_OFF);
-        lv_obj_update_layout(main_page);
-        printf("Force reset in settings_action\n");
-    }*/
 }
 
 void settings_search_clicked_cb(lv_event_t* e) {
@@ -406,76 +395,6 @@ void bluetooth_action(void) {
 
 void bluetooth_search_clicked_cb(lv_event_t* e) {
     printf("searching bluetooth\n");
-}
-/*
-static void scroll_debug_cb(lv_event_t* e) {
-    lv_obj_t* target = lv_event_get_target(e);
-    lv_coord_t scroll_y = lv_obj_get_scroll_y(target);
-    lv_coord_t scroll_x = lv_obj_get_scroll_x(target);
-    printf("Scroll event: X=%d, Y=%d\n", scroll_x, scroll_y);
-}*/
-
-
-static void ready_cb(){
-printf("ready\n");
-}
-
-
-static void scroll_debug_cb(lv_event_t* e) {
-    lv_obj_t* target = lv_event_get_target(e);
-    lv_coord_t scroll_y = lv_obj_get_scroll_y(target);
-    lv_coord_t scroll_x = lv_obj_get_scroll_x(target);
-
-    // 获取坐标
-    lv_area_t area;
-    lv_obj_get_coords(target, &area);
-
-    // 简单类型判断 - 使用宏定义
-    const char* type = "unknown";
-
-    // 通过检查对象是否包含特定标志或样式来判断
-    // 或者直接打印对象指针
-/*
-    printf("\n=== Scroll Debug ===\n");
-    printf("Target: %p\n", target);
-    printf("Position: x1=%d, y1=%d, x2=%d, y2=%d\n",
-           area.x1, area.y1, area.x2, area.y2);
-    printf("Size: %d x %d\n",
-           lv_obj_get_width(target), lv_obj_get_height(target));
-    printf("Scroll: X=%d, Y=%d\n", scroll_x, scroll_y);
-*/
-    // 检查是否是特定对象
-    if (target == page_main) {
-        printf(">>> This is page_main!\n");
-    }
-
-    /*
-    if (target == menu) {
-        printf(">>> This is the main menu!\n");
-    }
-
-    // 检查父对象
-    lv_obj_t* parent = lv_obj_get_parent(target);
-    if (parent) {
-        printf("Parent: %p\n", parent);
-        if (parent == page_main) {
-            printf(">>> Parent is page_main!\n");
-        }
-        if (parent == menu) {
-            printf(">>> Parent is main menu!\n");
-        }
-    }
-
-    // 打印子对象数量
-    printf("Child count: %d\n", lv_obj_get_child_cnt(target));
-    printf("===================\n\n");
-    */
-}
-
-
-void page_loaded_cb(){
-    printf("AAAA");
- //   lv_obj_scroll_to_y(page_main, 0, LV_ANIM_OFF);
 }
 
 void create_scr_menu_settings(void) {
@@ -496,15 +415,6 @@ void create_scr_menu_settings(void) {
     page_main = lv_menu_page_create(menu, "");
     lv_obj_add_style(page_main, &style_scrollbar, LV_PART_SCROLLBAR);
     lv_obj_set_scroll_dir(page_main, LV_DIR_VER);
-//    lv_obj_remove_flag(page_main, LV_OBJ_FLAG_SCROLLABLE);
-
-    lv_obj_add_event_cb(page_main, scroll_debug_cb, LV_EVENT_SCROLL, NULL);
- //   lv_obj_add_event_cb(page_main, scroll_debug_cb, LV_EVENT_SCROLL_BEGIN, NULL);
-  //  lv_obj_add_event_cb(page_main, scroll_debug_cb, LV_EVENT_SCROLL_END, NULL);
-
-    lv_obj_add_event_cb(page_main, page_loaded_cb, LV_EVENT_LAYOUT_CHANGED, NULL);
-    lv_obj_add_event_cb(page_main, ready_cb, LV_EVENT_READY, NULL);
-  //  lv_obj_add_event_cb(page_main, page_loaded_cb, LV_EVENT_READY, NULL);
 
     // wifi page
     CREATE_SIMPLE_PAGE(page_main, page_sub_wifi, "WiFi");
@@ -623,11 +533,8 @@ void create_scr_menu_settings(void) {
 
     lv_menu_set_mode_root_back_button(menu, LV_MENU_ROOT_BACK_BUTTON_ENABLED);
 
+  //  lv_obj_remove_flag(page_main, LV_OBJ_FLAG_SCROLL_ON_FOCUS);
 
-   // lv_obj_update_layout(page_main);
-//    aaaa();
-//    lv_obj_add_flag(page_main, LV_OBJ_FLAG_SCROLLABLE);
-  //  aaaa();
 }
 
 /**BLUETOOT**/
