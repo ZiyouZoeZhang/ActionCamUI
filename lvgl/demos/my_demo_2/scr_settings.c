@@ -1,5 +1,4 @@
 #include "my_demo_2.h"
-#include "camera_menu.h"
 
 #define INIT_ROLLER(name, list_array) \
     static settings_roller_t name = { \
@@ -25,6 +24,7 @@
         temp_page = create_text(parent, title); \
         lv_menu_set_load_page_event(menu, temp_page, page_var); \
     } while(0)
+
 
 typedef struct {
     lv_obj_t* switch_obj;
@@ -75,6 +75,8 @@ static lv_obj_t* page_sub_format_sd;
 static lv_obj_t* page_sub_factory_reset;
 static lv_obj_t* page_sub_information;
 
+
+
 static const char* list_wifi_frequency[] = { "Red", "Green", "Blue", "Yellow", "Purple", "Orange" };
 static const char* list_auto_poweroff[] = { "OFF", "1min", "3min", "5min" };
 static const char* list_auto_dormant[] = { "OFF", "10Sec", "20Sec", "30Sec", "60Sec" };
@@ -82,6 +84,7 @@ static const char* list_language[] = { "English", "Simplified Chinese", "Traditi
 static const char* list_video_format[] = { "PAL", "NTSC" };
 static const char* list_frequency[] = { "50Hz", "60Hz" };
 static const char* list_voice_volume[] = { "Default", "High" };
+//static const char* list_voice_volume[] = {GET_LANG_STR(STRING_DEFAULT),  GET_LANG_STR(STRING_HIGH};
 static const char* list_subscreen_play[] = { "Default", "Full Display" };
 static const char* list_date_format[] = { "YYYY-MM-DD", "MM-DD-YYYY", "DD-MM-YYYY" };
 
@@ -318,7 +321,6 @@ static lv_obj_t* create_switch(lv_obj_t* parent, const char* txt, bool chk, void
     }
 
     lv_obj_add_flag(cont, LV_OBJ_FLAG_CLICKABLE);
- //   lv_obj_remove_flag(cont, LV_OBJ_FLAG_SCROLL_ON_FOCUS);
     lv_obj_remove_flag(sw, LV_OBJ_FLAG_SCROLL_ON_FOCUS);
     lv_obj_add_event_cb(cont, switch_cont_click_cb, LV_EVENT_CLICKED, item);
 
@@ -532,9 +534,6 @@ void create_scr_menu_settings(void) {
     lv_obj_add_event_cb(exit_icon, settings_quit_cb, LV_EVENT_CLICKED, NULL);
 
     lv_menu_set_mode_root_back_button(menu, LV_MENU_ROOT_BACK_BUTTON_ENABLED);
-
-  //  lv_obj_remove_flag(page_main, LV_OBJ_FLAG_SCROLL_ON_FOCUS);
-
 }
 
 /**BLUETOOT**/

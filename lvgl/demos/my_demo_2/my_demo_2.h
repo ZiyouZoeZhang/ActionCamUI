@@ -13,6 +13,7 @@
 #include "scr_media_settings.h"
 #include "font/font_declares.h"
 #include "image_storage.h"
+#include "lvgl_ex_language_string.h"
 
 /**variables for INPUT**/
 extern int battery_level;
@@ -25,6 +26,7 @@ extern int cur_cam_zoom;
 extern bool wifi_active;
 extern bool bluetooth_active;
 extern bool grid_active;
+extern uint8_t current_lang;
 
 extern lv_style_t style_font_default_36;
 extern lv_style_t style_font_default_30;
