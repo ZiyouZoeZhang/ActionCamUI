@@ -15,6 +15,8 @@
 #include "image_storage.h"
 #include "lvgl_ex_language_string.h"
 
+
+/**variables for INPUT**/
 /**variables for INPUT**/
 extern int battery_level;
 extern bool battery_charging;

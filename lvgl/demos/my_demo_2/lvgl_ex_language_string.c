@@ -106,6 +106,7 @@ const char * lv_lang_string[493][9] = {
 	[STRING_LED] = {"LEDs",	"指示ランプ",	"指示灯",	"指示燈",	"지시램프",	"Voyant",	"Luz indicadora",	"LEDs",	"Indicatore luminoso"},
 	[STRING_VIDEO_STANDARD] = {"Video Format",	"ビデオフォーマット",	"视频制式",	"視頻制式",	"동영상 포맷",	"Formatvidéo",	"Formato",	"Videoformat",	"Formato"},
 	[STRING_NTSC] = {"NTSC",	"NTSC",	"NTSC",	"NTSC",	"NTSC",	"NTSC",	"NTSC",	"NTSC",	"NTSC"},
+	[STRING_NTSC] = {"NTSC",	"NTSC",	"NTSC",	"NTSC",	"NTSC",	"NTSC",	"NTSC",	"NTSC",	"NTSC"},
 	[STRING_PAL] = {"PAL",	"PAL",	"PAL",	"PAL",	"PAL",	"PAL",	"PAL",	"PAL",	"PAL"},
 	[STRING_REMOTE_CONTROL] = {"Remote Control",	"リモコン操作",	"遥控控制",	"遙控控制",	"Remote Control",	"Remote Control",	"Remote Control",	"Remote Control",	"Remote Control"},
 	[STRING_INVERSE] = {"Inversion Mode",	"反転モード",	"倒置模式",	"倒置模式",	"반전모드",	"Mode d'inversion",	"Modo de inversión",	"Inversionsmodus",	"Modalità a inversione"},

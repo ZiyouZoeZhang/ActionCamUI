@@ -77,6 +77,10 @@
 		</Unit>
 		<Unit filename="lvgl/demos/my_demo_2/camera_modes.h" />
 		<Unit filename="lvgl/demos/my_demo_2/image_storage.h" />
+		<Unit filename="lvgl/demos/my_demo_2/lvgl_ex_language_string.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="lvgl/demos/my_demo_2/lvgl_ex_language_string.h" />
 		<Unit filename="lvgl/demos/my_demo_2/my_demo_2.c">
 			<Option compilerVar="CC" />
 		</Unit>

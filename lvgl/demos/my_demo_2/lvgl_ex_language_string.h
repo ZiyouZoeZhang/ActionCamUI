@@ -6,9 +6,10 @@
 #ifndef __LVGL_EX_LANGUAGE_STRING_H__
 #define __LVGL_EX_LANGUAGE_STRING_H__
 
-
+extern const char * lv_lang_string[493][9];
 
 #ifdef __cplusplus
+extern "C" {
 extern "C" {
 #endif
 

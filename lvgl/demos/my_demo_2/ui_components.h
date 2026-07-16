@@ -21,7 +21,7 @@ lv_obj_t * create_zoom_icon(lv_obj_t * parent, int cur_zoom);
 lv_obj_t * create_grid(lv_obj_t * parent); //£¿
 void create_spot_metering(lv_obj_t * parent);
 lv_obj_t *create_pic_select_icon(lv_obj_t * parent);
-lv_obj_t * create_label_top_center(lv_obj_t * parent, char str[]);
+lv_obj_t * create_label_top_center(lv_obj_t * parent, char * str);
 
 /**updates**/
 void update_battery_icon(bool charging, int level);

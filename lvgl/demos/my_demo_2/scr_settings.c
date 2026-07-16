@@ -1,8 +1,11 @@
 #include "my_demo_2.h"
 
+void refresh_all_rollers(void);
+#define _(id) lv_lang_string[id][current_lang]
+
 #define INIT_ROLLER(name, list_array) \
     static settings_roller_t name = { \
-        .states = list_array, \
+        .ids = list_array, \
         .states_count = sizeof(list_array) / sizeof(list_array[0]), \
         .roller = NULL, \
         .state_label = NULL \
@@ -16,6 +19,7 @@
         temp_page = create_scrollbar(parent, title, roller_ptr); \
         lv_menu_set_load_page_event(menu, temp_page, page_var); \
     } while(0)
+
 
 #define CREATE_SIMPLE_PAGE(parent, page_var, title) \
     do { \
@@ -33,6 +37,14 @@ typedef struct {
     void (*toggle_cb)(bool state);
 } switch_item_t;
 
+typedef struct {
+    const int* ids;
+    int states_count;
+    lv_obj_t* roller;
+    lv_obj_t* state_label;
+} settings_roller_t;
+
+//const char * language_id[9] = {"English", "日本語", "简体中文", "繁體中文", "한국어","Français","El español", "Deutsch","Italiano"}
 
 static lv_obj_t* scr_menu_bluetooth;
 static lv_obj_t* scr_menu_settings;
@@ -40,6 +52,7 @@ static lv_obj_t* menu;
 static lv_obj_t* cur_page;
 static lv_obj_t* heading;
 lv_style_t style_cont;
+
 
 static void switch_leds_toggle(bool state);
 static void switch_date_stamp_toggle(bool state);
@@ -50,6 +63,7 @@ static void switch_clap_tone_toggle(bool state);
 static void switch_grid_toggle(bool state);
 static void switch_quick_start_toggle(bool state);
 static void switch_voice_control_toggle(bool state);
+
 
 static lv_obj_t* grid_switch = NULL;
 
@@ -75,25 +89,64 @@ static lv_obj_t* page_sub_format_sd;
 static lv_obj_t* page_sub_factory_reset;
 static lv_obj_t* page_sub_information;
 
+static const int list_wifi_frequency[] = {
+    STRING_LOW,
+    STRING_MEDIUM,
+    STRING_HIGH
+};
 
+static const int list_auto_poweroff[] = {
+    STRING_OFF,
+    STRING_1MIN,
+    STRING_3MIN,
+    STRING_5MIN
+};
 
-static const char* list_wifi_frequency[] = { "Red", "Green", "Blue", "Yellow", "Purple", "Orange" };
-static const char* list_auto_poweroff[] = { "OFF", "1min", "3min", "5min" };
-static const char* list_auto_dormant[] = { "OFF", "10Sec", "20Sec", "30Sec", "60Sec" };
-static const char* list_language[] = { "English", "Simplified Chinese", "Traditional Chinese"};
-static const char* list_video_format[] = { "PAL", "NTSC" };
-static const char* list_frequency[] = { "50Hz", "60Hz" };
-static const char* list_voice_volume[] = { "Default", "High" };
-//static const char* list_voice_volume[] = {GET_LANG_STR(STRING_DEFAULT),  GET_LANG_STR(STRING_HIGH};
-static const char* list_subscreen_play[] = { "Default", "Full Display" };
-static const char* list_date_format[] = { "YYYY-MM-DD", "MM-DD-YYYY", "DD-MM-YYYY" };
+static const int list_auto_dormant[] = {
+    STRING_OFF,
+    STRING_10S,
+    STRING_15S,
+    STRING_30S,
+    STRING_60S
+};
 
+static const int list_language[] = {
+    STRING_ENGLISH,
+    STRING_ja,
+    STRING_CHINESE,
+    STRING_zh_HK,
+    STRING_KR,
+    STRING_fr,
+    STRING_es,
+    STRING_de,
+    STRING_it
+};
 
-typedef struct {
-    lv_obj_t* page;
-    const char* title;
-    void (*action_cb)(void);
-} page_map_t;
+static const int list_video_format[] = {
+    STRING_PAL,
+    STRING_NTSC
+};
+
+static const int list_frequency[] = {
+    STRING_50HZ,
+    STRING_60HZ
+};
+
+static const int list_voice_volume[] = {
+    STRING_DEFAULT,
+    STRING_HIGH
+};
+
+static const int list_subscreen_play[] = {
+    STRING_DEFAULT,
+    STRING_FULLDISPLAY
+};
+
+static const int list_date_format[] = {
+    STRING_YYYY_MM_DD,
+    STRING_MM_DD_YYYY,
+    STRING_DD_MM_YYYY
+};
 
 INIT_ROLLER(date_format, list_date_format);
 INIT_ROLLER(wifi_frequency, list_wifi_frequency);
@@ -105,80 +158,21 @@ INIT_ROLLER(auto_poweroff, list_auto_poweroff);
 INIT_ROLLER(video_format, list_video_format);
 INIT_ROLLER(language, list_language);
 
-static page_map_t* page_map = NULL;
-static int page_map_size = 0;
 
-static void init_page_map(void) {
-    static page_map_t map[] = {
-        {NULL, "Settings", NULL},
-        {NULL, "WiFi", NULL},
-        {NULL, "WiFi Frequency", NULL},
-        {NULL, "WiFi Connect", wifi_action},
-        {NULL, "Bluetooth Device", NULL},
-        {NULL, "Auto Dormant", NULL},
-        {NULL, "Auto Power Off", NULL},
-        {NULL, "Language", NULL},
-        {NULL, "Video Format", NULL},
-        {NULL, "Frequency", NULL},
-        {NULL, "Voice Volume", NULL},
-        {NULL, "Subscreen Play", NULL},
-        {NULL, "Date Time", NULL},
-        {NULL, "Date", NULL},
-        {NULL, "Time", NULL},
-        {NULL, "Date Format", NULL},
-        {NULL, "Voice Control", NULL},
-        {NULL, "Command List", NULL},
-        {NULL, "Format SD", NULL},
-        {NULL, "Factory Reset", NULL},
-        {NULL, "Information", NULL},
-    };
-
-    map[0].page = page_main;
-    map[1].page = page_sub_wifi;
-    map[2].page = page_sub_wifi_frequency;
-    map[3].page = page_sub_wifi_connect;
-    map[4].page = page_sub_bluetooth;
-    map[5].page = page_sub_auto_dormant;
-    map[6].page = page_sub_auto_poweroff;
-    map[7].page = page_sub_language;
-    map[8].page = page_sub_video_format;
-    map[9].page = page_sub_frequency;
-    map[10].page = page_sub_voice_volume;
-    map[11].page = page_sub_subscreen_play;
-    map[12].page = page_sub_date_time;
-    map[13].page = page_sub_date_time_date;
-    map[14].page = page_sub_date_time_time;
-    map[15].page = page_sub_date_time_date_format;
-    map[16].page = page_sub_voice_control;
-    map[17].page = page_sub_voice_command;
-    map[18].page = page_sub_format_sd;
-    map[19].page = page_sub_factory_reset;
-    map[20].page = page_sub_information;
-
-    page_map = map;
-    page_map_size = sizeof(map) / sizeof(map[0]);
-}
-
-static const char* get_current_settings_state(settings_roller_t* target) {
-    if (!target || !target->roller || !target->states) return NULL;
-    int selected = lv_roller_get_selected(target->roller);
-    if (selected < 0 || selected >= target->states_count) return NULL;
-    return target->states[selected];
-}
-
-/**CB**/
 static void roller_value_changed_cb(lv_event_t* e) {
     lv_obj_t* roller = lv_event_get_target(e);
     settings_roller_t* target = (settings_roller_t*)lv_event_get_user_data(e);
     if (!target) return;
-
     int selected = lv_roller_get_selected(roller);
-    if (selected < 0 || selected >= target->states_count) return;
 
     if (target->state_label) {
-        lv_label_set_text(target->state_label, target->states[selected]);
+        const char* text = lv_lang_string[target->ids[selected]][current_lang];
+        lv_label_set_text(target->state_label, text);
     }
+
+    cur_page = lv_menu_get_cur_main_page(menu);
 }
+
 
 static void switch_cont_click_cb(lv_event_t* e) {
     switch_item_t* item = (switch_item_t*)lv_event_get_user_data(e);
@@ -196,7 +190,6 @@ static void switch_cont_click_cb(lv_event_t* e) {
     }
 }
 
-
 static void switch_value_changed_cb(lv_event_t* e) {
     lv_obj_t* sw = lv_event_get_target(e);
     switch_item_t* item = (switch_item_t*)lv_event_get_user_data(e);
@@ -208,39 +201,6 @@ static void switch_value_changed_cb(lv_event_t* e) {
 }
 
 
-static void set_heading_cb(lv_event_t* e) {
-    cur_page = lv_menu_get_cur_main_page(menu);
-    if (page_map) {
-        for (int i = 0; i < page_map_size; i++) {
-            if (cur_page == page_map[i].page) {
-                lv_label_set_text(heading, page_map[i].title);
-                if (page_map[i].action_cb) {
-                    page_map[i].action_cb();
-                }
-                return;
-            }
-        }
-    }
-    printf("page_else\n");
-}
-
-static void settings_back_cb(lv_event_t* e) {
-    if (lv_menu_back_button_is_root(menu, lv_event_get_target(e))) {
-        open_scr_menu_cb();
-    }
-}
-
-static void settings_quit_cb(lv_event_t* e) {
-    open_scr_home_cb();
-}
-
-static void load_styles(void) {
-    lv_style_init(&style_cont);
-    lv_style_set_bg_color(&style_cont, BG_COLOR_DARK_GREY);
-    lv_style_set_border_width(&style_cont, 0);
-}
-
-// Switch toggle callback implementations
 static void switch_leds_toggle(bool state) {
     printf("LEDs: %s\n", state ? "ON" : "OFF");
 }
@@ -278,7 +238,86 @@ static void switch_voice_control_toggle(bool state) {
     printf("Voice Control: %s\n", state ? "ON" : "OFF");
 }
 
-/**creations**/
+void switch_language(uint8_t new_lang);
+
+static void roller_language(){
+    current_lang = lv_roller_get_selected(language.roller);
+
+    lv_obj_clean(scr_menu_settings);
+    create_scr_menu_settings();
+    settings_action();
+}
+
+static void set_heading_cb(lv_event_t* e) {
+    //use "cur_page" as "last_page"
+    if (cur_page && cur_page == page_sub_language) roller_language();
+
+    //update cur page & headings accordingly
+    cur_page = lv_menu_get_cur_main_page(menu);
+
+    if (cur_page == page_main) {
+        lv_label_set_text(heading, _(STRING_SET_INFO));
+    } else if (cur_page == page_sub_wifi) {
+        lv_label_set_text(heading, _(STRING_WIFI));
+    } else if (cur_page == page_sub_wifi_frequency) {
+        lv_label_set_text(heading, _(STRING_WIFI_FREQUENCY));
+    } else if (cur_page == page_sub_wifi_connect) {
+        lv_label_set_text(heading, _(STRING_WIFI_INFO));
+    } else if (cur_page == page_sub_bluetooth) {
+        lv_label_set_text(heading, _(STRING_BT_DEVICE));
+    } else if (cur_page == page_sub_auto_dormant) {
+        lv_label_set_text(heading, _(STRING_Auto_Dormant));
+    } else if (cur_page == page_sub_auto_poweroff) {
+        lv_label_set_text(heading, _(STRING_AUTO_OFF));
+    } else if (cur_page == page_sub_language) {
+        lv_label_set_text(heading, _(STRING_LANGUAGE));
+    } else if (cur_page == page_sub_video_format) {
+        lv_label_set_text(heading, _(STRING_VIDEO_STANDARD));
+    } else if (cur_page == page_sub_frequency) {
+        lv_label_set_text(heading, _(STRING_FREQ));
+    } else if (cur_page == page_sub_voice_volume) {
+        lv_label_set_text(heading, _(STRING_MIC_VOLUME));
+    } else if (cur_page == page_sub_subscreen_play) {
+        lv_label_set_text(heading, _(STRING_SUBDISPLAY));
+    } else if (cur_page == page_sub_date_time) {
+        lv_label_set_text(heading, _(STRING_DATE_TIME));
+    } else if (cur_page == page_sub_date_time_date) {
+        lv_label_set_text(heading, _(STRING_DATE_FORMAT));
+    } else if (cur_page == page_sub_date_time_time) {
+        lv_label_set_text(heading, _(STRING_TIME));
+    } else if (cur_page == page_sub_date_time_date_format) {
+        lv_label_set_text(heading, _(STRING_DATE_FORMAT));
+    } else if (cur_page == page_sub_voice_control) {
+        lv_label_set_text(heading, _(STRING_VOICE_CTR));
+    } else if (cur_page == page_sub_voice_command) {
+        lv_label_set_text(heading, _(STRING_VOICE_INFO));
+    } else if (cur_page == page_sub_format_sd) {
+        lv_label_set_text(heading, _(STRING_FORMAT_SD));
+    } else if (cur_page == page_sub_factory_reset) {
+        lv_label_set_text(heading, _(STRING_DEFAULT_SET));
+    } else if (cur_page == page_sub_information) {
+        lv_label_set_text(heading, _(STRING_INFO));
+    } else {
+        printf("page_else\n");
+    }
+}
+
+static void settings_back_cb(lv_event_t* e) {
+    if (lv_menu_back_button_is_root(menu, lv_event_get_target(e))) {
+        open_scr_menu_cb();
+    }
+}
+
+static void settings_quit_cb(lv_event_t* e) {
+    open_scr_home_cb();
+}
+
+static void load_styles(void) {
+    lv_style_init(&style_cont);
+    lv_style_set_bg_color(&style_cont, BG_COLOR_DARK_GREY);
+    lv_style_set_border_width(&style_cont, 0);
+}
+
 static lv_obj_t* create_basics(lv_obj_t* parent, const char* txt) {
     lv_obj_t* overall_cont = lv_menu_cont_create(parent);
     lv_obj_remove_flag(overall_cont, LV_OBJ_FLAG_SCROLLABLE);
@@ -328,7 +367,7 @@ static lv_obj_t* create_switch(lv_obj_t* parent, const char* txt, bool chk, void
         lv_obj_add_event_cb(sw, switch_value_changed_cb, LV_EVENT_VALUE_CHANGED, item);
     }
 
-    if (strcmp(txt, "Grid") == 0) grid_switch = sw;
+    if (toggle_cb == switch_grid_toggle) grid_switch = sw;
 
     return cont;
 }
@@ -339,7 +378,11 @@ static lv_obj_t* create_scrollbar(lv_obj_t* parent, const char* txt, settings_ro
     target->state_label = lv_label_create(page);
     lv_obj_add_style(target->state_label, &style_font_default_36, LV_PART_MAIN);
     lv_obj_align(target->state_label, LV_ALIGN_RIGHT_MID, -80, 0);
-    lv_label_set_text(target->state_label, target->states[0]);
+
+    if (target->ids && target->states_count > 0) {
+        const char* text = lv_lang_string[target->ids[0]][current_lang];
+        lv_label_set_text(target->state_label, text);
+    }
 
     lv_obj_t* img = lv_image_create(page);
     lv_image_set_src(img, &set_have_sub_menu);
@@ -350,8 +393,9 @@ static lv_obj_t* create_scrollbar(lv_obj_t* parent, const char* txt, settings_ro
 
 static lv_obj_t* create_scr_scrollbar(lv_obj_t* parent, settings_roller_t* target) {
     char options[300] = "";
+
     for (int i = 0; i < target->states_count; i++) {
-        strcat(options, target->states[i]);
+        strcat(options, lv_lang_string[target->ids[i]][current_lang]);
         if (i < (target->states_count - 1)) {
             strcat(options, "\n");
         }
@@ -374,15 +418,12 @@ static lv_obj_t* create_scr_scrollbar(lv_obj_t* parent, settings_roller_t* targe
     return parent;
 }
 
-void aaaa(void){
-    lv_coord_t current_y = lv_obj_get_scroll_y(lv_menu_get_cur_main_page(menu));
-    printf("Current scroll Y: %d\n", current_y);
-}
-
 void settings_action(void) {
     lv_menu_clear_history(menu);
     lv_menu_set_page(menu, page_main);
-    grid_active ?  lv_obj_add_state(grid_switch, LV_STATE_CHECKED) : lv_obj_remove_state(grid_switch, LV_STATE_CHECKED);
+    if (grid_switch) grid_active ?  lv_obj_add_state(grid_switch, LV_STATE_CHECKED) : lv_obj_remove_state(grid_switch, LV_STATE_CHECKED);
+    lv_roller_set_selected(language.roller, current_lang, LV_ANIM_OFF);
+    lv_label_set_text(language.state_label, lv_lang_string[language.ids[lv_roller_get_selected(language.roller)]][current_lang]);
     lv_screen_load(scr_menu_settings);
 }
 
@@ -403,14 +444,12 @@ void create_scr_menu_settings(void) {
     scr_menu_settings = lv_obj_create(NULL);
     lv_obj_t* temp_page;
 
-    // create menu
     menu = lv_menu_create(scr_menu_settings);
     lv_obj_add_style(menu, &style_font_default_36, LV_PART_MAIN);
     lv_obj_set_style_bg_color(menu, BG_COLOR_DARK_BLUE_GREY, LV_PART_MAIN);
     lv_obj_set_size(menu, lv_pct(100), lv_pct(100));
     lv_obj_center(menu);
 
-    // load styles
     load_styles();
 
     // main page
@@ -419,16 +458,16 @@ void create_scr_menu_settings(void) {
     lv_obj_set_scroll_dir(page_main, LV_DIR_VER);
 
     // wifi page
-    CREATE_SIMPLE_PAGE(page_main, page_sub_wifi, "WiFi");
+    CREATE_SIMPLE_PAGE(page_main, page_sub_wifi,  _(STRING_WIFI));
 
     page_sub_wifi_connect = lv_menu_page_create(menu, "");
     lv_obj_set_scroll_dir(page_sub_wifi_connect, LV_DIR_VER);
     lv_obj_t* scr_wifi_connect_btn = lv_obj_create(page_sub_wifi_connect);
     lv_obj_set_style_bg_color(scr_wifi_connect_btn, BG_COLOR_DARK_BLUE_GREY, LV_PART_MAIN);
-    temp_page = create_switch(page_sub_wifi, "Wifi connect", false, NULL);
+    temp_page = create_switch(page_sub_wifi,  _(STRING_WIFI_INFO), false, NULL);
     lv_menu_set_load_page_event(menu, temp_page, page_sub_wifi_connect);
 
-    CREATE_ROLLER_PAGE(page_sub_wifi, page_sub_wifi_frequency, &wifi_frequency, "Wifi frequency");
+    CREATE_ROLLER_PAGE(page_sub_wifi, page_sub_wifi_frequency, &wifi_frequency, _(STRING_WIFI_FREQUENCY));
 
     // bluetooth page
     page_sub_bluetooth = lv_menu_page_create(menu, "");
@@ -437,46 +476,44 @@ void create_scr_menu_settings(void) {
     lv_obj_set_style_text_color(label, lv_color_white(), LV_PART_MAIN);
     lv_obj_set_width(label, 630);
     lv_label_set_long_mode(label, LV_LABEL_LONG_WRAP);
-    lv_label_set_text(label, "\nnot connected to a device. Please ensure the Bluetooth microphone is turned on.");
+    lv_label_set_text(label, _(STRING_TX_DISCONNECT_TIP));
     lv_obj_set_style_text_align(label, LV_TEXT_ALIGN_CENTER, LV_PART_MAIN);
 
-    temp_page = create_text(page_main, "Bluetooth Device");
+    temp_page = create_text(page_main, _(STRING_BT_DEVICE));
     lv_menu_set_load_page_event(menu, temp_page, page_sub_bluetooth);
 
-    //pages
-    CREATE_ROLLER_PAGE(page_main, page_sub_auto_dormant, &auto_dormant, "Auto Dormant");
-    CREATE_ROLLER_PAGE(page_main, page_sub_auto_poweroff, &auto_poweroff, "Auto Poweroff");
-    CREATE_ROLLER_PAGE(page_main, page_sub_language, &language, "Language");
-    CREATE_ROLLER_PAGE(page_main, page_sub_video_format, &video_format, "Video Format");
-    CREATE_ROLLER_PAGE(page_main, page_sub_frequency, &frequency, "Frequency");
-    CREATE_ROLLER_PAGE(page_main, page_sub_voice_volume, &voice_volume, "Voice Volume");
-    CREATE_ROLLER_PAGE(page_main, page_sub_subscreen_play, &subscreen_play, "SubScreen Play");
+    // pages
+    CREATE_ROLLER_PAGE(page_main, page_sub_auto_dormant, &auto_dormant,  _(STRING_Auto_Dormant));
+    CREATE_ROLLER_PAGE(page_main, page_sub_auto_poweroff, &auto_poweroff,  _(STRING_AUTO_OFF));
+    CREATE_ROLLER_PAGE(page_main, page_sub_language, &language, _(STRING_LANGUAGE));
+    CREATE_ROLLER_PAGE(page_main, page_sub_video_format, &video_format, _(STRING_VIDEO_STANDARD));
+    CREATE_ROLLER_PAGE(page_main, page_sub_frequency, &frequency,  _(STRING_FREQ));
+    CREATE_ROLLER_PAGE(page_main, page_sub_voice_volume, &voice_volume, _(STRING_MIC_VOLUME));
+    CREATE_ROLLER_PAGE(page_main, page_sub_subscreen_play, &subscreen_play, _(STRING_SUBDISPLAY));
 
     // switch pages
-
-    create_switch(page_main, "LEDs", false, switch_leds_toggle);
-    create_switch(page_main, "Date Stamp", false, switch_date_stamp_toggle);
-    create_switch(page_main, "Stamp", false, switch_stamp_toggle);
-    create_switch(page_main, "Power Tone", false, switch_power_tone_toggle);
-    create_switch(page_main, "Key Tone", false, switch_key_tone_toggle);
-    create_switch(page_main, "Clap Tone", false, switch_clap_tone_toggle);
-    create_switch(page_main, "Grid", false, switch_grid_toggle);
-    create_switch(page_main, "Quick-Start Switch", false, switch_quick_start_toggle);
-
+    create_switch(page_main, _(STRING_LED), false, switch_leds_toggle);
+    create_switch(page_main, _(STRING_DATE_STAMP), false, switch_date_stamp_toggle);
+    create_switch(page_main, _(STRING_BRAND_STAMP), false, switch_stamp_toggle);
+    create_switch(page_main, _(STRING_BOOT_SOUND), false, switch_power_tone_toggle);
+    create_switch(page_main, _(STRING_KEY_TONE), false, switch_key_tone_toggle);
+    create_switch(page_main, _(STRING_CAP_TONE), false, switch_clap_tone_toggle);
+    create_switch(page_main, _(STRING_GRID), false, switch_grid_toggle);
+    create_switch(page_main, _(STRING_QUICK_START_SWITCH), false, switch_quick_start_toggle);
 
     // date time pages
-    CREATE_SIMPLE_PAGE(page_main, page_sub_date_time, "Date Time");
-    CREATE_SIMPLE_PAGE(page_sub_date_time, page_sub_date_time_date, "Date");
-    CREATE_SIMPLE_PAGE(page_sub_date_time, page_sub_date_time_time, "Time");
+    CREATE_SIMPLE_PAGE(page_main, page_sub_date_time,  _(STRING_DATE_TIME));
+    CREATE_SIMPLE_PAGE(page_sub_date_time, page_sub_date_time_date,_(STRING_DATE_FORMAT));
+    CREATE_SIMPLE_PAGE(page_sub_date_time, page_sub_date_time_time, _(STRING_TIME));
     CREATE_ROLLER_PAGE(page_sub_date_time, page_sub_date_time_date_format, &date_format, "Date Format");
 
     // voice page
     page_sub_voice_control = lv_menu_page_create(menu, "");
     lv_obj_set_scroll_dir(page_sub_voice_control, LV_DIR_VER);
-    temp_page = create_text(page_main, "Voice Control");
+    temp_page = create_text(page_main, _(STRING_VOICE_CTR));
     lv_menu_set_load_page_event(menu, temp_page, page_sub_voice_control);
 
-    create_switch(page_sub_voice_control, "Voice Control", false, switch_voice_control_toggle);
+    create_switch(page_sub_voice_control, _(STRING_VOICE_CTR), false, switch_voice_control_toggle);
 
     page_sub_voice_command = lv_menu_page_create(menu, "");
     lv_obj_set_scroll_dir(page_sub_voice_command, LV_DIR_VER);
@@ -486,12 +523,12 @@ void create_scr_menu_settings(void) {
     lv_label_set_long_mode(label, LV_LABEL_LONG_WRAP);
     lv_label_set_text(label, "command             command \ncommand             command \ncommand             command \ncommand             command \n");
     lv_obj_set_style_text_align(label, LV_TEXT_ALIGN_CENTER, LV_PART_MAIN);
-    temp_page = create_text(page_sub_voice_control, "Command List");
+    temp_page = create_text(page_sub_voice_control,  _(STRING_VOICE_INFO));
     lv_menu_set_load_page_event(menu, temp_page, page_sub_voice_command);
 
-    // ---- other pags ----
-    CREATE_SIMPLE_PAGE(page_main, page_sub_format_sd, "Format SD");
-    CREATE_SIMPLE_PAGE(page_main, page_sub_factory_reset, "Factory Reset");
+    // other pages
+    CREATE_SIMPLE_PAGE(page_main, page_sub_format_sd, _(STRING_FORMAT_SD));
+    CREATE_SIMPLE_PAGE(page_main, page_sub_factory_reset, _(STRING_DEFAULT_SET));
 
     page_sub_information = lv_menu_page_create(menu, "");
     lv_obj_set_scroll_dir(page_sub_information, LV_DIR_VER);
@@ -500,14 +537,12 @@ void create_scr_menu_settings(void) {
     lv_label_set_long_mode(label, LV_LABEL_LONG_WRAP);
     lv_label_set_text(label, "blablablabla\nblablabla");
     lv_obj_align(label, LV_ALIGN_TOP_LEFT, 0, 0);
-    temp_page = create_text(page_main, "Information");
-    lv_menu_set_load_page_event(menu, temp_page,  page_sub_information);
-
-    init_page_map();
+    temp_page = create_text(page_main, _(STRING_INFO));
+    lv_menu_set_load_page_event(menu, temp_page, page_sub_information);
 
     lv_obj_add_event_cb(menu, set_heading_cb, LV_EVENT_VALUE_CHANGED, lv_menu_get_cur_main_page(menu));
 
-    /**headers**/
+    //headers
     lv_obj_t* back_btn = lv_menu_get_main_header_back_button(menu);
 
     lv_obj_t* back_icon = lv_obj_get_child(back_btn, 0);
@@ -536,7 +571,7 @@ void create_scr_menu_settings(void) {
     lv_menu_set_mode_root_back_button(menu, LV_MENU_ROOT_BACK_BUTTON_ENABLED);
 }
 
-/**BLUETOOT**/
+// Bluetooth界面
 void create_scr_menu_bluetooth(void) {
     scr_menu_bluetooth = lv_obj_create(NULL);
     lv_obj_set_style_bg_color(scr_menu_bluetooth, BG_COLOR_DARK_BLUE_GREY, LV_PART_MAIN);
@@ -548,39 +583,157 @@ void create_scr_menu_bluetooth(void) {
     lv_obj_t* search_icon = create_search_icon(scr_menu_bluetooth);
     lv_obj_add_event_cb(search_icon, bluetooth_search_clicked_cb, LV_EVENT_CLICKED, NULL);
 
-    create_label_top_center(scr_menu_bluetooth, "Bluetooth");
+    create_label_top_center(scr_menu_bluetooth, _(STRING_BT_DEVICE));
 }
 
-// functional
-char* center_string(const char* str, int total_length) {
-    if (str == NULL) return NULL;
+void switch_language(uint8_t new_lang) {
+//    if (new_lang > 8) return;
 
-    int str_len = strlen(str);
-    if (str_len >= total_length) {
-        char* result = (char*)malloc(str_len + 1);
-        if (result) strcpy(result, str);
-        return result;
+
+
+ //   if (heading && cur_page) {
+ //       set_heading_cb(NULL);
+ //   }
+
+    // 刷新所有 roller
+refresh_all_rollers();
+}
+
+void refresh_all_rollers(void) {
+    char options[300];
+
+    // 刷新 auto_poweroff
+    if (auto_poweroff.roller) {
+        options[0] = '\0';
+        for (int i = 0; i < auto_poweroff.states_count; i++) {
+            strcat(options, lv_lang_string[auto_poweroff.ids[i]][current_lang]);
+            if (i < auto_poweroff.states_count - 1) strcat(options, "\n");
+        }
+        lv_roller_set_options(auto_poweroff.roller, options, LV_ROLLER_MODE_NORMAL);
+        int selected = lv_roller_get_selected(auto_poweroff.roller);
+        if (auto_poweroff.state_label) {
+            lv_label_set_text(auto_poweroff.state_label,
+                lv_lang_string[auto_poweroff.ids[selected]][current_lang]);
+        }
     }
 
-    int total_spaces = total_length - str_len;
-    int left_spaces = total_spaces / 2;
-    int right_spaces = total_spaces - left_spaces;
-
-    char* result = (char*)malloc(total_length + 1);
-    if (result == NULL) return NULL;
-
-    int pos = 0;
-    for (int i = 0; i < left_spaces; i++) {
-        result[pos++] = ' ';
+    // 刷新 auto_dormant
+    if (auto_dormant.roller) {
+        options[0] = '\0';
+        for (int i = 0; i < auto_dormant.states_count; i++) {
+            strcat(options, lv_lang_string[auto_dormant.ids[i]][current_lang]);
+            if (i < auto_dormant.states_count - 1) strcat(options, "\n");
+        }
+        lv_roller_set_options(auto_dormant.roller, options, LV_ROLLER_MODE_NORMAL);
+        int selected = lv_roller_get_selected(auto_dormant.roller);
+        if (auto_dormant.state_label) {
+            lv_label_set_text(auto_dormant.state_label,
+                lv_lang_string[auto_dormant.ids[selected]][current_lang]);
+        }
     }
-    for (int i = 0; i < str_len; i++) {
-        result[pos++] = str[i];
-    }
-    for (int i = 0; i < right_spaces; i++) {
-        result[pos++] = ' ';
-    }
-    result[pos] = '\0';
 
-    printf("%s\n", result);
-    return result;
+    // 刷新 language
+    if (language.roller) {
+        options[0] = '\0';
+        for (int i = 0; i < language.states_count; i++) {
+            strcat(options, lv_lang_string[language.ids[i]][current_lang]);
+            if (i < language.states_count - 1) strcat(options, "\n");
+        }
+        lv_roller_set_options(language.roller, options, LV_ROLLER_MODE_NORMAL);
+        int selected = lv_roller_get_selected(language.roller);
+        if (language.state_label) {
+            lv_label_set_text(language.state_label,
+                lv_lang_string[language.ids[selected]][current_lang]);
+        }
+    }
+
+    // 刷新 video_format
+    if (video_format.roller) {
+        options[0] = '\0';
+        for (int i = 0; i < video_format.states_count; i++) {
+            strcat(options, lv_lang_string[video_format.ids[i]][current_lang]);
+            if (i < video_format.states_count - 1) strcat(options, "\n");
+        }
+        lv_roller_set_options(video_format.roller, options, LV_ROLLER_MODE_NORMAL);
+        int selected = lv_roller_get_selected(video_format.roller);
+        if (video_format.state_label) {
+            lv_label_set_text(video_format.state_label,
+                lv_lang_string[video_format.ids[selected]][current_lang]);
+        }
+    }
+
+    // 刷新 frequency
+    if (frequency.roller) {
+        options[0] = '\0';
+        for (int i = 0; i < frequency.states_count; i++) {
+            strcat(options, lv_lang_string[frequency.ids[i]][current_lang]);
+            if (i < frequency.states_count - 1) strcat(options, "\n");
+        }
+        lv_roller_set_options(frequency.roller, options, LV_ROLLER_MODE_NORMAL);
+        int selected = lv_roller_get_selected(frequency.roller);
+        if (frequency.state_label) {
+            lv_label_set_text(frequency.state_label,
+                lv_lang_string[frequency.ids[selected]][current_lang]);
+        }
+    }
+
+    // 刷新 voice_volume
+    if (voice_volume.roller) {
+        options[0] = '\0';
+        for (int i = 0; i < voice_volume.states_count; i++) {
+            strcat(options, lv_lang_string[voice_volume.ids[i]][current_lang]);
+            if (i < voice_volume.states_count - 1) strcat(options, "\n");
+        }
+        lv_roller_set_options(voice_volume.roller, options, LV_ROLLER_MODE_NORMAL);
+        int selected = lv_roller_get_selected(voice_volume.roller);
+        if (voice_volume.state_label) {
+            lv_label_set_text(voice_volume.state_label,
+                lv_lang_string[voice_volume.ids[selected]][current_lang]);
+        }
+    }
+
+    // 刷新 subscreen_play
+    if (subscreen_play.roller) {
+        options[0] = '\0';
+        for (int i = 0; i < subscreen_play.states_count; i++) {
+            strcat(options, lv_lang_string[subscreen_play.ids[i]][current_lang]);
+            if (i < subscreen_play.states_count - 1) strcat(options, "\n");
+        }
+        lv_roller_set_options(subscreen_play.roller, options, LV_ROLLER_MODE_NORMAL);
+        int selected = lv_roller_get_selected(subscreen_play.roller);
+        if (subscreen_play.state_label) {
+            lv_label_set_text(subscreen_play.state_label,
+                lv_lang_string[subscreen_play.ids[selected]][current_lang]);
+        }
+    }
+
+    // 刷新 wifi_frequency
+    if (wifi_frequency.roller) {
+        options[0] = '\0';
+        for (int i = 0; i < wifi_frequency.states_count; i++) {
+            strcat(options, lv_lang_string[wifi_frequency.ids[i]][current_lang]);
+            if (i < wifi_frequency.states_count - 1) strcat(options, "\n");
+        }
+        lv_roller_set_options(wifi_frequency.roller, options, LV_ROLLER_MODE_NORMAL);
+        int selected = lv_roller_get_selected(wifi_frequency.roller);
+        if (wifi_frequency.state_label) {
+            lv_label_set_text(wifi_frequency.state_label,
+                lv_lang_string[wifi_frequency.ids[selected]][current_lang]);
+        }
+    }
+
+    // 刷新 date_format
+    if (date_format.roller) {
+        options[0] = '\0';
+        for (int i = 0; i < date_format.states_count; i++) {
+            strcat(options, lv_lang_string[date_format.ids[i]][current_lang]);
+            if (i < date_format.states_count - 1) strcat(options, "\n");
+        }
+        lv_roller_set_options(date_format.roller, options, LV_ROLLER_MODE_NORMAL);
+        int selected = lv_roller_get_selected(date_format.roller);
+        if (date_format.state_label) {
+            lv_label_set_text(date_format.state_label,
+                lv_lang_string[date_format.ids[selected]][current_lang]);
+        }
+    }
 }

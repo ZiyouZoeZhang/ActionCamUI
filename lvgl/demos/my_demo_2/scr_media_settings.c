@@ -63,6 +63,7 @@ void open_scr_media_settings_cb(){
     //create_scr_media_settings();
     update_scr_media_settings();
     lv_screen_load(scr_media_settings);
+
 }
 
 static void open_scr_media_selection_cb(lv_event_t * e){

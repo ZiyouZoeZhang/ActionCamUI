@@ -130,7 +130,7 @@ lv_obj_t *  create_search_icon(lv_obj_t * parent){
     return img_search;
 }
 
-lv_obj_t * create_label_top_center(lv_obj_t * parent, char str[]){
+lv_obj_t * create_label_top_center(lv_obj_t * parent, char * str){
     lv_obj_t * label = lv_label_create(parent);
     lv_label_set_text(label, str);
     lv_obj_add_style(label, &style_font_default_36, LV_PART_MAIN);

@@ -29,12 +29,25 @@ typedef struct {
     void (*action)(); ///
 } menu_btn_info_t;
 
+
+/*
 typedef struct {
     const char **states;   // Array of string options
     int states_count;             // Number of options
     lv_obj_t * roller;           // Current selected index
     lv_obj_t * state_label;
 } settings_roller_t;
+
+
+typedef struct {
+    const int* ids;    // Array of string options
+    int states_count;             // Number of options
+    lv_obj_t * roller;           // Current selected index
+    lv_obj_t * state_label;
+} settings_new_roller_t;
+*/
+
+
 
 void open_scr_menu_cb();
 void create_scr_menu();
