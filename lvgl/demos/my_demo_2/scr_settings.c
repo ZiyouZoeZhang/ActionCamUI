@@ -1,7 +1,6 @@
 #include "my_demo_2.h"
 
 void refresh_all_rollers(void);
-#define _(id) lv_lang_string[id][current_lang]
 
 #define INIT_ROLLER(name, list_array) \
     static settings_roller_t name = { \

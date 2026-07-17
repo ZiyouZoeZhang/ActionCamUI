@@ -22,12 +22,12 @@ typedef enum {
 
 
 typedef struct {
-    media_set_t btn;
-    const char *name;
+    int id;
+    int name_id;
     bool active;
     bool pro;
     int cur_state;
-    const char **states;
+    const int *states;
     int state_count;
 } media_set_btn_info_t;
 

@@ -3,6 +3,7 @@
 
 #define BG_COLOR_DARK_BLUE_GREY  lv_color_hex(0x1F3B4D)
 #define BG_COLOR_DARK_GREY  lv_color_hex(0x333333)
+#define _(id) lv_lang_string[id][current_lang]
 
 #include "lvgl.h"
 #include "camera_modes.h"

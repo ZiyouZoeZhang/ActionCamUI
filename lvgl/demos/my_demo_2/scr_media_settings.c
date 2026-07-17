@@ -1,7 +1,4 @@
-#include "scr_media_settings.h"
 #include "my_demo_2.h"
-#include "ui_components.h"
-#include "camera_menu.h"
 
 lv_obj_t * scr_media_settings = NULL;
 lv_obj_t * scr_media_settings_select = NULL;
@@ -33,37 +30,111 @@ static void pro_btn_toogled_cb(lv_event_t * e);
 static void roller_value_changed_cb(lv_event_t *e);
 static int count_active_media_btn();
 
-static const char *numer_states[] = {"3Photos", "5Photos", "10Photos", "15Photos"};
-static const char *self_timer_states[] = {"3Sec", "5Sec", "10Sec", "30Sec"};
-static const char *ldc_states[] = {"OFF", "ON"};
-static const char *meter_states[] = {"Center", "Average", "Spot"};
-static const char *exposure_states[] = {"+2", "+1.5", "+1", "+0.5", "0", "-0.5", "-1", "-1.5", "-2"};
-static const char *shutter_states[] = {"Auto", "1Sec", "2Sec", "4Sec", "8Sec"};
-static const char *iso_states[] = {"Auto", "6400 Max", "3200 Max", "1600 Max", "800 Max", "400 Max", "200 Max", "100 Max"};
-static const char *awb_states[] = {"Auto", "Sunny", "Cloudy", "Tungsten", "FLUOR_L", "FLUOR_H"};
-static const char *scene_mode_states[] = {"Auto", "Personage", "Scenery", "Defog"};
-static const char *sharpness_states[] = {"High", "Medium", "Low"};
-static const char *filter_states[] = {"Normal", "BW", "Colorful", "Brown", "Warm", "Cold"};
+
+static const int list_numer_states[] = {
+    STRING_3FPS,
+    STRING_5FPS,
+    STRING_10FPS,
+    STRING_15FPS
+};
+
+static const int list_self_timer_states[] = {
+    STRING_3S,
+    STRING_5S,
+    STRING_10S,
+    STRING_30S
+};
+
+static const int list_ldc_states[] = {
+    STRING_OFF,
+    STRING_ON
+};
+
+static const int list_meter_states[] = {
+    STRING_CENTRE,
+    STRING_AVERAGE,
+    STRING_SPOT
+};
+
+static const int list_exposure_states[] = {
+    STRING_EV_2,
+    STRING_EV_1_5,
+    STRING_EV_1,
+    STRING_EV_0_5,
+    STRING_EV_0,
+    STRING_EV_B0_5,
+    STRING_EV_B1,
+    STRING_EV_B1_5,
+    STRING_EV_B2
+};
+
+static const int list_shutter_states[] = {
+    STRING_AUTO,
+    STRING_1S,
+    STRING_2S,
+    STRING_4S,
+    STRING_8S
+};
+
+static const int list_iso_states[] = {
+    STRING_AUTO,
+    STRING_ISO6400_MAX,
+    STRING_ISO3200_MAX,
+    STRING_ISO1600_MAX,
+    STRING_ISO800_MAX,
+    STRING_ISO400_MAX,
+    STRING_ISO200_MAX,
+    STRING_ISO100_MAX
+};
+
+static const int list_awb_states[] = {
+    STRING_AUTO,
+    STRING_DAYLIGHT,
+    STRING_CLOUDY,
+    STRING_TUNGSTEN,
+    STRING_FLUOR_L,
+    STRING_FLUOR_H
+};
+
+static const int list_scene_mode_states[] = {
+    STRING_AUTO,
+    STRING_SCENE_Personage,
+    STRING_SCENE_Scenery,
+    STRING_SCENE_Defog
+};
+
+static const int list_sharpness_states[] = {
+    STRING_HIGH,
+    STRING_MEDIUM,
+    STRING_LOW
+};
+
+static const int list_filter_states[] = {
+    STRING_FILTER_NORMAL,
+    STRING_BLACK_AND_WHITE,
+    STRING_COLORFUL,
+    STRING_BROWN,
+    STRING_WARM_TONES,
+    STRING_COLD_TONES
+};
 
 media_set_btn_info_t media_buttons[] = {
-    {CAM_MEDIA_NUMBER,      "Number",        false, false, 0, numer_states,       4},
-    {CAM_MEDIA_SELF_TIMER,  "Self Timer",    false, false, 0, self_timer_states,  4},
-    {CAM_MEDIA_LDC,         "LDC",           true,  false, 0, ldc_states,         2},
-    {CAM_MEDIA_METER_MODE,  "Meter Mode",    true,  true,  1, meter_states,       3},
-    {CAM_MEDIA_EXPOSURE,    "Exposure",      true,  true,  0, exposure_states,    9},
-    {CAM_MEDIA_SHUTTER,     "Shutter",       true,  true,  0, shutter_states,     5},
-    {CAM_MEDIA_ISO,         "ISO",           true,  true,  0, iso_states,         8},
-    {CAM_MEDIA_AWB,         "White Balance", true,  true,  0, awb_states,         6},
-    {CAM_MEDIA_SCENE_MODE,  "Scene Mode",    true,  true,  0, scene_mode_states,  4},
-    {CAM_MEDIA_SHARPNESS,   "Sharpness",     true,  true,  0, sharpness_states,   3},
-    {CAM_MEDIA_FILTER,      "Filter",        true,  true,  0, filter_states,      6},
+    {CAM_MEDIA_NUMBER,      STRING_BUTST_TYPE,        false, false, 0, list_numer_states,       4},
+    {CAM_MEDIA_SELF_TIMER,  STRING_DELAY_TIME,    false, false, 0, list_self_timer_states,  4},
+    {CAM_MEDIA_LDC,         STRING_LDC,           true,  false, 0, list_ldc_states,         2},
+    {CAM_MEDIA_METER_MODE,  STRING_METER,         true,  true,  1, list_meter_states,       3},
+    {CAM_MEDIA_EXPOSURE,    STRING_EXPOSURE_EV,   true,  true,  0, list_exposure_states,    9},
+    {CAM_MEDIA_SHUTTER,     STRING_EXPOSURE_TIME, true,  true,  0, list_shutter_states,     5},
+    {CAM_MEDIA_ISO,         STRING_ISO,           true,  true,  0, list_iso_states,         8},
+    {CAM_MEDIA_AWB,         STRING_WB,            true,  true,  0, list_awb_states,         6},
+    {CAM_MEDIA_SCENE_MODE,  STRING_SCENE_MODE,    true,  true,  0, list_scene_mode_states,  4},
+    {CAM_MEDIA_SHARPNESS,   STRING_SHARPNESS,     true,  true,  0, list_sharpness_states,   3},
+    {CAM_MEDIA_FILTER,      STRING_FILTER,        true,  true,  0, list_filter_states,      6},
 };
 
 void open_scr_media_settings_cb(){
-    //create_scr_media_settings();
     update_scr_media_settings();
     lv_screen_load(scr_media_settings);
-
 }
 
 static void open_scr_media_selection_cb(lv_event_t * e){
@@ -80,15 +151,16 @@ static void open_scr_media_selection_cb(lv_event_t * e){
 static void update_scr_media_selection(media_set_btn_info_t * btn){///TBD
     char options[300] = ""; //format:  name\nname\nname\n etc
     for (int i = 0; i < btn->state_count; i++) {
-        strcat(options, btn->states[i]);
+            strcat(options, _(btn->states[i]));
         if (i < btn->state_count-1 ) {
             strcat(options, "\n");
         }
     }
-    lv_label_set_text(media_select_label, btn->name);
+    lv_label_set_text(media_select_label, _(btn->name_id));
     lv_roller_set_options(media_select_roller, options, LV_ROLLER_MODE_NORMAL);
     lv_roller_set_selected(media_select_roller, btn->cur_state, LV_ANIM_OFF);
     lv_obj_remove_event_cb(media_select_roller, roller_value_changed_cb);
+    lv_obj_add_event_cb(media_select_roller, roller_value_changed_cb, LV_EVENT_VALUE_CHANGED, btn);
     lv_obj_add_event_cb(media_select_roller, roller_value_changed_cb, LV_EVENT_VALUE_CHANGED, btn);
 }
 
@@ -218,13 +290,13 @@ static void create_settings_buttons_grid(lv_obj_t * parent) {
 
         //label of media setting name
         lv_obj_t *name_label = lv_label_create(btn);
-        lv_label_set_text(name_label, media_buttons[i].name);
+        lv_label_set_text(name_label, _(media_buttons[i].name_id));
         lv_obj_add_style(name_label, &style_font_default_30, LV_PART_MAIN);
         lv_obj_align(name_label, LV_ALIGN_CENTER, 0, -18);
 
         //label of media setting state
         lv_obj_t *state_label = lv_label_create(btn);
-        lv_label_set_text(state_label, media_buttons[i].states[media_buttons[i].cur_state]);
+        lv_label_set_text(state_label, _(media_buttons[i].states[media_buttons[i].cur_state]));
         lv_obj_add_style(state_label, &style_font_default_30, LV_PART_MAIN);
         lv_obj_align(state_label, LV_ALIGN_CENTER, 0, 17);
         lv_obj_set_style_text_opa(state_label, LV_OPA_100, LV_PART_MAIN);
