@@ -114,7 +114,7 @@ static const int list_language[] = {
     STRING_ja,
     STRING_CHINESE,
     STRING_zh_HK,
-    STRING_KR,
+ //   STRING_KR,
     STRING_fr,
     STRING_es,
     STRING_de,
@@ -166,6 +166,8 @@ static void roller_value_changed_cb(lv_event_t* e) {
 
     if (target->state_label) {
         const char* text = lv_lang_string[target->ids[selected]][current_lang];
+        printf(text);
+        printf("\n");
         lv_label_set_text(target->state_label, text);
     }
 
@@ -241,6 +243,7 @@ void switch_language(uint8_t new_lang);
 
 static void roller_language(){
     current_lang = lv_roller_get_selected(language.roller);
+    if (current_lang >= 4) current_lang+=1;
 
     lv_obj_clean(scr_menu_settings);
     create_scr_menu_settings();
@@ -423,6 +426,7 @@ void settings_action(void) {
     if (grid_switch) grid_active ?  lv_obj_add_state(grid_switch, LV_STATE_CHECKED) : lv_obj_remove_state(grid_switch, LV_STATE_CHECKED);
     lv_roller_set_selected(language.roller, current_lang, LV_ANIM_OFF);
     lv_label_set_text(language.state_label, lv_lang_string[language.ids[lv_roller_get_selected(language.roller)]][current_lang]);
+
     lv_screen_load(scr_menu_settings);
 }
 
