@@ -1,4 +1,5 @@
 #include "my_demo_2.h"
+#define EMPTY_STRING ""
 
 void refresh_all_rollers(void);
 
@@ -50,6 +51,7 @@ static lv_obj_t* scr_menu_settings;
 static lv_obj_t* menu;
 static lv_obj_t* cur_page;
 static lv_obj_t* heading;
+static lv_obj_t * bluetooth_titel;
 lv_style_t style_cont;
 
 
@@ -243,7 +245,7 @@ void switch_language(uint8_t new_lang);
 
 static void roller_language(){
     current_lang = lv_roller_get_selected(language.roller);
-    if (current_lang >= 4) current_lang+=1;
+    if (current_lang >= MY_LANG_KOREAN) current_lang+=1;
 
     lv_obj_clean(scr_menu_settings);
     create_scr_menu_settings();
@@ -294,9 +296,9 @@ static void set_heading_cb(lv_event_t* e) {
     } else if (cur_page == page_sub_voice_command) {
         lv_label_set_text(heading, _(STRING_VOICE_INFO));
     } else if (cur_page == page_sub_format_sd) {
-        lv_label_set_text(heading, _(STRING_FORMAT_SD));
+        lv_label_set_text(heading, EMPTY_STRING);
     } else if (cur_page == page_sub_factory_reset) {
-        lv_label_set_text(heading, _(STRING_DEFAULT_SET));
+        lv_label_set_text(heading, EMPTY_STRING);
     } else if (cur_page == page_sub_information) {
         lv_label_set_text(heading, _(STRING_INFO));
     } else {
@@ -424,8 +426,10 @@ void settings_action(void) {
     lv_menu_clear_history(menu);
     lv_menu_set_page(menu, page_main);
     if (grid_switch) grid_active ?  lv_obj_add_state(grid_switch, LV_STATE_CHECKED) : lv_obj_remove_state(grid_switch, LV_STATE_CHECKED);
-    lv_roller_set_selected(language.roller, current_lang, LV_ANIM_OFF);
+    if (current_lang>=MY_LANG_KOREAN) lv_roller_set_selected(language.roller, current_lang-1, LV_ANIM_OFF);
+    else lv_roller_set_selected(language.roller, current_lang, LV_ANIM_OFF);
     lv_label_set_text(language.state_label, lv_lang_string[language.ids[lv_roller_get_selected(language.roller)]][current_lang]);
+
 
     lv_screen_load(scr_menu_settings);
 }
@@ -436,11 +440,72 @@ void settings_search_clicked_cb(lv_event_t* e) {
 
 void bluetooth_action(void) {
     printf("Bluetooth toggle\n");
+    lv_label_set_text(bluetooth_titel, _(STRING_BT_DEVICE));
     lv_screen_load(scr_menu_bluetooth);
 }
 
 void bluetooth_search_clicked_cb(lv_event_t* e) {
     printf("searching bluetooth\n");
+}
+
+static lv_obj_t * create_page_basic(lv_obj_t * parent, char * str_title, char * str_text){
+
+    lv_obj_t * cont = lv_obj_create(parent);
+    lv_obj_set_size(cont, lv_pct(100), lv_pct(100));
+    lv_obj_add_style(cont, &style_cont_transparent, LV_PART_MAIN);
+
+    lv_obj_t* label = lv_label_create(cont);
+    lv_obj_set_style_text_color(label, lv_color_white(), LV_PART_MAIN);
+    lv_obj_set_width(label, 550);
+    lv_label_set_long_mode(label, LV_LABEL_LONG_WRAP);
+    lv_label_set_text(label,str_title);
+    lv_obj_align(label, LV_ALIGN_TOP_MID, 0, lv_pct(3));
+    lv_obj_set_style_text_align(label, LV_TEXT_ALIGN_CENTER, LV_PART_MAIN);
+
+    label = lv_label_create(cont);
+    lv_obj_add_style(label, &style_font_default_30, LV_PART_MAIN);
+    lv_obj_set_style_text_color(label, lv_palette_main(LV_PALETTE_GREY), LV_PART_MAIN);
+    lv_obj_set_width(label, 550);
+   lv_label_set_long_mode(label, LV_LABEL_LONG_WRAP);
+    lv_label_set_text(label, str_text);
+    lv_obj_align(label, LV_ALIGN_TOP_MID, 0, lv_pct(18));
+    lv_obj_set_style_text_align(label, LV_TEXT_ALIGN_CENTER, LV_PART_MAIN);
+
+    return cont;
+}
+
+
+static void back_cb(){
+    lv_obj_send_event(lv_menu_get_main_header_back_button(menu), LV_EVENT_CLICKED, NULL);
+}
+
+static void create_page_format_sd(){
+    page_sub_format_sd = lv_menu_page_create(menu, "");
+    lv_obj_t * cont = create_page_basic(page_sub_format_sd,  _(STRING_FORMAT_SD_AT_ONCE),  _(STRING_FORMAT_SD_PROMPT));
+
+     /**btn back**/
+    lv_obj_t * btn_cancle = create_btn_cancle(cont);
+    lv_obj_add_event_cb(btn_cancle, back_cb, LV_EVENT_CLICKED, NULL);
+
+    /**btn continue**/
+    lv_obj_t * btn_confirm = create_btn_confirm(cont);
+    lv_obj_add_event_cb(btn_confirm, open_scr_poweroff_cb, LV_EVENT_CLICKED, NULL);
+
+    lv_menu_set_load_page_event(menu, create_text(page_main,  _(STRING_FORMAT_SD)), page_sub_format_sd);
+}
+
+static void create_page_factory_reset(){
+    page_sub_factory_reset = lv_menu_page_create(menu, "");
+    lv_obj_t * cont = create_page_basic(page_sub_factory_reset,  _(STRING_RESET_FACTORY_AT_ONCE),  _(STRING_RESET_FACTORY_PROMPT));
+
+     /**btn back**/
+    lv_obj_t * btn_cancle = create_btn_cancle(cont);
+    lv_obj_add_event_cb(btn_cancle, back_cb, LV_EVENT_CLICKED, NULL);
+    /**btn continue**/
+    lv_obj_t * btn_confirm = create_btn_confirm(cont);
+    lv_obj_add_event_cb(btn_confirm, open_scr_poweroff_cb, LV_EVENT_CLICKED, NULL);
+
+    lv_menu_set_load_page_event(menu, create_text(page_main,  _(STRING_DEFAULT_SET)), page_sub_factory_reset);
 }
 
 void create_scr_menu_settings(void) {
@@ -529,9 +594,10 @@ void create_scr_menu_settings(void) {
     temp_page = create_text(page_sub_voice_control,  _(STRING_VOICE_INFO));
     lv_menu_set_load_page_event(menu, temp_page, page_sub_voice_command);
 
+
     // other pages
-    CREATE_SIMPLE_PAGE(page_main, page_sub_format_sd, _(STRING_FORMAT_SD));
-    CREATE_SIMPLE_PAGE(page_main, page_sub_factory_reset, _(STRING_DEFAULT_SET));
+    create_page_format_sd();
+    create_page_factory_reset();
 
     page_sub_information = lv_menu_page_create(menu, "");
     lv_obj_set_scroll_dir(page_sub_information, LV_DIR_VER);
@@ -586,7 +652,7 @@ void create_scr_menu_bluetooth(void) {
     lv_obj_t* search_icon = create_search_icon(scr_menu_bluetooth);
     lv_obj_add_event_cb(search_icon, bluetooth_search_clicked_cb, LV_EVENT_CLICKED, NULL);
 
-    create_label_top_center(scr_menu_bluetooth, _(STRING_BT_DEVICE));
+    bluetooth_titel = create_label_top_center(scr_menu_bluetooth, _(STRING_BT_DEVICE));
 }
 
 void switch_language(uint8_t new_lang) {

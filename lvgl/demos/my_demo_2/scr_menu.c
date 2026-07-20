@@ -194,12 +194,15 @@ static void create_pop_up_btn(lv_obj_t * parent){
 
 /**actions**/
 
+char buffer[128];
+
 static void rotation_action(void) {
     if (menu_buttons[CAM_MENU_AUTO_ROTATION].state == BTN_STATE_ON){
-        lv_label_set_text(pop_up_btn_label, "AUTO ROTATION: ON");
+        snprintf(buffer, sizeof(buffer), "%s: %s",  _(STRING_AUTOROTATE), _(STRING_ON));
     } else {
-         lv_label_set_text(pop_up_btn_label, "AUTO ROTATION: OFF");
+        snprintf(buffer, sizeof(buffer), "%s: %s",  _(STRING_AUTOROTATE), _(STRING_OFF));
     }
+    lv_label_set_text(pop_up_btn_label,buffer);
     lv_obj_remove_flag(pop_up_btn, LV_OBJ_FLAG_HIDDEN);
     lv_obj_move_foreground(pop_up_btn);
     lv_timer_reset(timer);
@@ -208,10 +211,11 @@ static void rotation_action(void) {
 
 static void voice_action(void) {
     if (menu_buttons[CAM_MENU_VOICE_REC].state == BTN_STATE_ON){
-        lv_label_set_text(pop_up_btn_label, "VOICE RECOGNITION: ON");
+        snprintf(buffer, sizeof(buffer), "%s: %s",  _(STRING_VOICE_CTR), _(STRING_ON));
     } else {
-        lv_label_set_text(pop_up_btn_label, "VOICE RECOGNITION: OFF");
+        snprintf(buffer, sizeof(buffer), "%s: %s",  _(STRING_VOICE_CTR), _(STRING_OFF));
     }
+    lv_label_set_text(pop_up_btn_label,buffer);
     lv_obj_remove_flag(pop_up_btn, LV_OBJ_FLAG_HIDDEN);
     lv_obj_move_foreground(pop_up_btn);
     lv_timer_reset(timer);
@@ -221,11 +225,12 @@ static void voice_action(void) {
 static void grid_action(void) {
     if (menu_buttons[CAM_MENU_GRID_VIEW].state == BTN_STATE_ON){
         grid_active = true;
-        lv_label_set_text(pop_up_btn_label,"GRID VIEW: ON");
+        snprintf(buffer, sizeof(buffer), "%s: %s",  _(STRING_GRID), _(STRING_ON));
     } else {
         grid_active = false;
-        lv_label_set_text(pop_up_btn_label, "GRID VIEW: OFF");
+        snprintf(buffer, sizeof(buffer), "%s: %s",  _(STRING_GRID), _(STRING_OFF));
     }
+    lv_label_set_text(pop_up_btn_label,buffer);
     lv_obj_remove_flag(pop_up_btn, LV_OBJ_FLAG_HIDDEN);
     lv_obj_move_foreground(pop_up_btn);
     lv_timer_reset(timer);
@@ -253,7 +258,7 @@ void wifi_action(void) {
     lv_obj_align(txt, LV_ALIGN_CENTER, lv_pct(18), lv_pct(-15));
 
     lv_obj_t * label = lv_label_create(btn);
-    lv_label_set_text(label, "CANCLE");
+    lv_label_set_text(label, _(STRING_CANCEL));
     lv_obj_add_style(label, &style_font_default_36, LV_PART_MAIN);
 
     lv_screen_load(scr);
@@ -264,29 +269,16 @@ static void poweroff_action(void) {
     lv_obj_set_style_bg_color(scr, BG_COLOR_DARK_BLUE_GREY,LV_PART_MAIN);
 
     /**btn back**/
-    lv_obj_t * btn_back  = lv_button_create(scr);
-    lv_obj_set_style_bg_color(btn_back, lv_palette_main(LV_PALETTE_GREY), LV_PART_MAIN);
-    lv_obj_set_size(btn_back, lv_pct(35), lv_pct(20));
-    lv_obj_align(btn_back, LV_ALIGN_BOTTOM_MID, lv_pct(-20), lv_pct(-25));
-    lv_obj_add_event_cb(btn_back, open_scr_menu_cb, LV_EVENT_CLICKED, NULL);
-
-    lv_obj_t * label_back = lv_label_create(btn_back);
-    lv_label_set_text(label_back, "CANCLE");
-    lv_obj_add_style(label_back, &style_font_default_36, LV_PART_MAIN);
+    lv_obj_t * btn_cancle = create_btn_cancle(scr);
+    lv_obj_add_event_cb(btn_cancle, open_scr_menu_cb, LV_EVENT_CLICKED, NULL);
 
     /**btn continue**/
-    lv_obj_t * btn_continue  = lv_button_create(scr);
-    lv_obj_set_style_bg_color(btn_continue, lv_palette_main(LV_PALETTE_BLUE), LV_PART_MAIN);
-    lv_obj_set_size(btn_continue, lv_pct(35), lv_pct(20));
-    lv_obj_align(btn_continue, LV_ALIGN_BOTTOM_MID, lv_pct(20), lv_pct(-25));
-    lv_obj_add_event_cb(btn_continue, open_scr_poweroff_cb, LV_EVENT_CLICKED, NULL);
+    lv_obj_t * btn_confirm = create_btn_confirm(scr);
+    lv_obj_add_event_cb(btn_confirm, open_scr_poweroff_cb, LV_EVENT_CLICKED, NULL);
 
-    lv_obj_t * label_continue = lv_label_create(btn_continue);
-    lv_label_set_text(label_continue, "CONTINUE");
-    lv_obj_add_style(label_continue, &style_font_default_36, LV_PART_MAIN);
 
     lv_obj_t * txt = lv_label_create(scr);
-    lv_label_set_text(txt, "POWEROFF");
+    lv_label_set_text(txt, _(STRING_POWEROFF_PROMT));
     lv_obj_add_style(txt, &style_font_default_36, LV_PART_MAIN);
     lv_obj_align(txt, LV_ALIGN_CENTER, 0, lv_pct(-15));
 

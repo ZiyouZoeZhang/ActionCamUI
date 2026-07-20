@@ -138,6 +138,32 @@ lv_obj_t * create_label_top_center(lv_obj_t * parent, char * str){
     return label;
 }
 
+lv_obj_t * create_btn_cancle(lv_obj_t * parent){
+    lv_obj_t * btn_cancle  = lv_button_create(parent);
+    lv_obj_set_style_bg_color(btn_cancle, lv_palette_main(LV_PALETTE_GREY), LV_PART_MAIN);
+    lv_obj_set_size(btn_cancle, lv_pct(35), lv_pct(20));
+    lv_obj_align(btn_cancle, LV_ALIGN_BOTTOM_MID, lv_pct(-20), lv_pct(-25));
+
+    lv_obj_t * label_cancle= lv_label_create(btn_cancle);
+    lv_label_set_text(label_cancle, _(STRING_CANCEL));
+    lv_obj_add_style(label_cancle, &style_font_default_36, LV_PART_MAIN);
+
+    return btn_cancle;
+}
+
+lv_obj_t * create_btn_confirm(lv_obj_t * parent){
+    lv_obj_t * btn_confirm  = lv_button_create(parent);
+    lv_obj_set_style_bg_color(btn_confirm, lv_palette_main(LV_PALETTE_BLUE), LV_PART_MAIN);
+    lv_obj_set_size(btn_confirm, lv_pct(35), lv_pct(20));
+    lv_obj_align(btn_confirm, LV_ALIGN_BOTTOM_MID, lv_pct(20), lv_pct(-25));
+
+    lv_obj_t * label_confirm = lv_label_create(btn_confirm);
+    lv_label_set_text(label_confirm, _(STRING_CONFIRM));
+    lv_obj_add_style(label_confirm, &style_font_default_36, LV_PART_MAIN);
+
+    return btn_confirm;
+}
+
 lv_obj_t * create_cam_mode_icon(lv_obj_t * parent, int mode){
     lv_obj_t * img_cam_mode = lv_image_create(parent);
     lv_obj_align(img_cam_mode, LV_ALIGN_BOTTOM_LEFT, 10, -20);

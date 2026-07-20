@@ -13,6 +13,16 @@ extern "C" {
 extern "C" {
 #endif
 
+#define MY_LANG_ENGLISH     0
+#define MY_LANG_JAPANESE    1
+#define MY_LANG_CHINESE     2
+#define MY_LANG_CHINESE_HK  3
+#define MY_LANG_KOREAN      4
+#define MY_LANG_FRENCH      5
+#define MY_LANG_SPANISH     6
+#define MY_LANG_GERMAN      7
+#define MY_LANG_ITALIAN     8
+
 #define STRING_LANG_ID 0
 #define STRING_SPACE 1
 #define STRING_APP_SYSTEM 2
