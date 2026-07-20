@@ -6,6 +6,7 @@
 
 lv_obj_t *scr_resolution = NULL;
 static lv_obj_t * roller = NULL;
+static lv_obj_t * heading;
 
 const char* cam_resolution_table[] = {
     "48MP(4:3)",
@@ -26,6 +27,7 @@ int get_selected_resolution_from_roller(void){
 
 void open_scr_resolution_cb(){
     //create_scr_resolution();
+    lv_label_set_text(heading, _(STRING_RESOLUTION));
     lv_screen_load(scr_resolution);
 }
 
@@ -43,7 +45,7 @@ void create_scr_resolution(){
 
     create_exit_icon(scr_resolution);
 
-    lv_obj_t * heading = lv_label_create(scr_resolution);
+    heading = lv_label_create(scr_resolution);
     lv_label_set_text(heading, "Resolution");
     lv_obj_add_style(heading, &style_font_default_36, LV_PART_MAIN);
     lv_obj_align(heading, LV_ALIGN_CENTER, 0, -120);

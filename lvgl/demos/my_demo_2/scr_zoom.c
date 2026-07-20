@@ -6,6 +6,7 @@
 
 lv_obj_t *scr_zoom = NULL;
 static lv_obj_t * roller = NULL;
+static lv_obj_t * heading;
 
 const char* cam_zoom_table[] = {
     "1.0X",
@@ -25,6 +26,7 @@ int get_selected_zoom_from_roller(void){
 }
 
 void open_scr_zoom_cb(){
+    lv_label_set_text(heading, _(STRING_ZOOM));
     lv_screen_load(scr_zoom);
 }
 
@@ -42,7 +44,7 @@ static void on_press_cb(){
 
     create_exit_icon(scr_zoom);
 
-    lv_obj_t * heading = lv_label_create(scr_zoom);
+    heading = lv_label_create(scr_zoom);
     lv_label_set_text(heading, "ZOOM");
     lv_obj_add_style(heading, &style_font_default_36, LV_PART_MAIN);
     lv_obj_align(heading, LV_ALIGN_TOP_LEFT, 95, 20);
