@@ -1,4 +1,5 @@
 #include "camera_modes.h"
+#include "lvgl_ex_language_string.h"
 
 const camera_mode_info_t mode_table[] = {
     {CAM_MODE_RAW,            "Raw",     &mode_rawphoto_normal, &filelist_rawphoto},
@@ -18,6 +19,23 @@ const camera_mode_info_t mode_table[] = {
     {CAM_MODE_CAR_LOOP,       "Car loop",    &mode_looprec_normal, &filelist_looprec},
     {CAM_MODE_VIDEO_PHOTO,    "Video photo", &mode_recsnap_normal, &filelist_recsnap},
     {CAM_MODE_NIGHT,          "Night",    &mode_nightrec_normal, &filelist_nightrec}
+};
+
+int mode_names[] = {
+    STRING_PHOTO_RAW,
+    STRING_PHOTO_LONGEX,
+    STRING_MULTI_BURST,
+    STRING_PHOTO_DELAY,
+    STRING_MULTI_LAPSE,
+    STRING_PHOTO_NORMAL,
+    STRING_RECORD_NORMAL,
+    STRING_RECORD_LAPSE,
+    STRING_RECORD_SLOW,
+    STRING_RECORD_SHORT,
+    STRING_RECORD_UNDERWATER,
+    STRING_RECORD_CAR,
+    STRING_RECORD_SNAP,
+    STRING_RECORD_NIGHT
 };
 
 // GET All mode and return table

@@ -3,9 +3,12 @@
 #include "camera_modes.h"
 #include "my_demo_2.h"
 
+
+
 static lv_obj_t * cam_modes_roller = NULL;
 static lv_obj_t * scr_mode_selection = NULL;
 static lv_obj_t * container;
+static lv_obj_t * label;
 
 static void swipe_scr_mode_selection_cb(lv_event_t *e);
 static void create_cam_mode_roller(lv_obj_t * parent, int cur_mode);
@@ -24,11 +27,20 @@ static void create_cam_mode_roller(lv_obj_t * parent, int cur_mode);
     lv_obj_remove_flag(swipe_icon, LV_OBJ_FLAG_SCROLLABLE);
     lv_obj_align(swipe_icon, LV_ALIGN_TOP_MID, 0, 40);
 
+    label = lv_label_create(scr_mode_selection);
+    lv_obj_add_style(label, &style_font_default_36, LV_PART_MAIN);
+    lv_obj_align(label, LV_ALIGN_TOP_MID, lv_pct(0), lv_pct(20));
+
     /**CB**/
+
     lv_obj_add_event_cb(scr_mode_selection, swipe_scr_mode_selection_cb, LV_EVENT_RELEASED, NULL);
 
     /**load screen**/
     lv_screen_load(scr_mode_selection);
+}
+
+static void value_changed_cb(){
+    lv_label_set_text(label, _(mode_names[get_selected_mode_from_roller(0)]));
 }
 
 static void create_cam_mode_roller(lv_obj_t * parent, int mode){
@@ -58,6 +70,8 @@ static void create_cam_mode_roller(lv_obj_t * parent, int mode){
     }
 
     lv_obj_scroll_by(container, 298, 0, LV_ANIM_OFF);
+
+    lv_obj_add_event_cb(container, value_changed_cb, LV_EVENT_SCROLL, NULL);
 }
 
 int get_selected_mode_from_roller(int cur) {
@@ -65,7 +79,10 @@ int get_selected_mode_from_roller(int cur) {
     return index;
 }
 
+
+
 void open_scr_cam_modes(){
+    lv_label_set_text(label, _(mode_names[get_selected_mode_from_roller(0)]));
     lv_screen_load(scr_mode_selection);
 }
 
