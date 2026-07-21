@@ -99,7 +99,7 @@ void swipe_scr_menu_cb(lv_event_t *e){
 void create_scr_menu(){
     /**background**/
     scr_menu = lv_obj_create(NULL);
-    lv_obj_set_style_bg_color(scr_menu, BG_COLOR_DARK_BLUE_GREY, LV_PART_MAIN);
+    lv_obj_set_style_bg_color(scr_menu, BG_COLOR_VERY_DARK_GREY, LV_PART_MAIN);
 
     create_menu_btnm(scr_menu);
     create_battery_icon(scr_menu, battery_charging, battery_level);
@@ -115,7 +115,7 @@ static void create_menu_grid() {
         lv_obj_t * btn = lv_btn_create(cont);
         lv_obj_set_grid_cell(btn, LV_GRID_ALIGN_STRETCH, i % 4, 1, LV_GRID_ALIGN_STRETCH, i / 4, 1);
         lv_obj_set_style_shadow_width(btn, 0, LV_PART_MAIN);
-        lv_obj_set_style_bg_color(btn, BG_COLOR_DARK_BLUE_GREY, LV_PART_MAIN);
+        lv_obj_set_style_bg_color(btn, BG_COLOR_VERY_DARK_GREY, LV_PART_MAIN);
 
         lv_obj_t *img = lv_image_create(btn);
         if (menu_buttons[i].state == BTN_STATE_ON){
@@ -125,7 +125,7 @@ static void create_menu_grid() {
         }
 
         lv_obj_align(img, LV_ALIGN_TOP_MID, 0, -10);
-        lv_obj_set_style_bg_color(img, BG_COLOR_DARK_BLUE_GREY, LV_PART_MAIN);
+        lv_obj_set_style_bg_color(img, BG_COLOR_VERY_DARK_GREY, LV_PART_MAIN);
         lv_obj_set_style_bg_opa(img, LV_OPA_COVER, LV_PART_MAIN);
 
         lv_obj_set_user_data(btn, (void*)(intptr_t)i);
@@ -144,7 +144,7 @@ static void create_menu_btnm(lv_obj_t * parent){
     cont = lv_obj_create(parent);
     lv_obj_set_size(cont, 780, 365);
     lv_obj_align(cont, LV_ALIGN_BOTTOM_MID, 0, -25);
-    lv_obj_set_style_bg_color(cont, BG_COLOR_DARK_BLUE_GREY, LV_PART_MAIN);
+    lv_obj_set_style_bg_color(cont, BG_COLOR_VERY_DARK_GREY, LV_PART_MAIN);
     lv_obj_set_style_border_width(cont, 0, LV_PART_MAIN);
     lv_obj_remove_flag(cont, LV_OBJ_FLAG_SCROLLABLE);
 
@@ -182,7 +182,7 @@ static void create_pop_up_btn(lv_obj_t * parent){
     pop_up_btn = lv_button_create(parent);
     lv_obj_set_style_bg_color(pop_up_btn, lv_palette_main(LV_PALETTE_BLUE), LV_PART_MAIN);
     lv_obj_set_size(pop_up_btn, lv_pct(100), lv_pct(17));
-    lv_obj_set_style_radius(pop_up_btn, 20, LV_PART_MAIN );
+    lv_obj_set_style_radius(pop_up_btn, 10, LV_PART_MAIN );
 
     pop_up_btn_label = lv_label_create(pop_up_btn);
     lv_obj_add_style(pop_up_btn_label, &style_font_default_36, LV_PART_MAIN);
@@ -241,7 +241,7 @@ static void grid_action(void) {
 
 void wifi_action(void) {
     lv_obj_t * scr = lv_obj_create(NULL);
-    lv_obj_set_style_bg_color(scr, BG_COLOR_DARK_BLUE_GREY,LV_PART_MAIN);
+    lv_obj_set_style_bg_color(scr, BG_COLOR_VERY_DARK_GREY,LV_PART_MAIN);
 
     lv_obj_t * qr = lv_image_create(scr);
     lv_image_set_src(qr, &xtugo_qrcode);
@@ -268,7 +268,7 @@ void wifi_action(void) {
 
 static void poweroff_action(void) {
     lv_obj_t * scr = lv_obj_create(NULL);
-    lv_obj_set_style_bg_color(scr, BG_COLOR_DARK_BLUE_GREY,LV_PART_MAIN);
+    lv_obj_set_style_bg_color(scr, BG_COLOR_VERY_DARK_GREY,LV_PART_MAIN);
 
     /**btn back**/
     lv_obj_t * btn_cancle = create_btn_cancle(scr);
@@ -343,7 +343,7 @@ static void slider_released_cb(lv_event_t * e){
 static void lock_action(void) {
     //draw default view
     lv_obj_t *scr = lv_obj_create(NULL);
-    lv_obj_set_style_bg_color(scr, BG_COLOR_DARK_BLUE_GREY, LV_PART_MAIN);
+    lv_obj_set_style_bg_color(scr, BG_COLOR_VERY_DARK_GREY, LV_PART_MAIN);
 
     lock_left = lv_image_create(scr);
     lv_obj_align(lock_left, LV_ALIGN_CENTER, lv_pct(-30), 0);

@@ -16,7 +16,7 @@ static void create_cam_mode_roller(lv_obj_t * parent, int cur_mode);
  void create_scr_mode_selection(int mode){
      /**background**/
     scr_mode_selection = lv_obj_create(NULL);
-    lv_obj_set_style_bg_color(scr_mode_selection,BG_COLOR_DARK_BLUE_GREY, LV_PART_MAIN);
+    lv_obj_set_style_bg_color(scr_mode_selection,BG_COLOR_DARK_GREY, LV_PART_MAIN);
 
     /**ui components**/
     create_cam_mode_roller(scr_mode_selection, mode);
@@ -25,6 +25,8 @@ static void create_cam_mode_roller(lv_obj_t * parent, int cur_mode);
     lv_obj_t * swipe_icon = lv_obj_create(scr_mode_selection);
     lv_obj_add_style(swipe_icon, &style_swipe_icon, LV_PART_MAIN);
     lv_obj_remove_flag(swipe_icon, LV_OBJ_FLAG_SCROLLABLE);
+    lv_obj_set_size(swipe_icon, lv_pct(17), lv_pct(2));
+    lv_obj_set_style_bg_color(swipe_icon, BG_COLOR_LIGHT_GREY, LV_PART_MAIN);
     lv_obj_align(swipe_icon, LV_ALIGN_TOP_MID, 0, 40);
 
     label = lv_label_create(scr_mode_selection);

@@ -1,8 +1,10 @@
 #ifndef MY_DEMO_2_H
 #define MY_DEMO_2_H
 
+#define BG_COLOR_LIGHT_GREY  lv_color_hex(0x8c8c8c)
 #define BG_COLOR_DARK_BLUE_GREY  lv_color_hex(0x1F3B4D)
 #define BG_COLOR_DARK_GREY  lv_color_hex(0x333333)
+#define BG_COLOR_VERY_DARK_GREY  lv_color_hex(0x191919)
 #define _(id) lv_lang_string[id][current_lang]
 
 #include "lvgl.h"

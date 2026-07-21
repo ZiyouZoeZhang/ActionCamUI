@@ -1,5 +1,6 @@
 #include "my_demo_2.h"
 #define EMPTY_STRING ""
+#define TEXT_WRAP_WIDTH 630
 
 void refresh_all_rollers(void);
 
@@ -330,7 +331,7 @@ static lv_obj_t* create_basics(lv_obj_t* parent, const char* txt) {
     lv_obj_t* cont = lv_obj_create(overall_cont);
     lv_obj_remove_flag(cont, LV_OBJ_FLAG_SCROLLABLE);
     lv_obj_add_style(cont, &style_cont, LV_PART_MAIN);
-    lv_obj_set_size(cont, 810, 75);
+    lv_obj_set_size(cont, 810, 77);
 
     lv_obj_t* label = lv_label_create(cont);
     lv_obj_add_style(label, &style_font_default_36, LV_PART_MAIN);
@@ -514,7 +515,7 @@ void create_scr_menu_settings(void) {
 
     menu = lv_menu_create(scr_menu_settings);
     lv_obj_add_style(menu, &style_font_default_36, LV_PART_MAIN);
-    lv_obj_set_style_bg_color(menu, BG_COLOR_DARK_BLUE_GREY, LV_PART_MAIN);
+    lv_obj_set_style_bg_color(menu, BG_COLOR_VERY_DARK_GREY, LV_PART_MAIN);
     lv_obj_set_size(menu, lv_pct(100), lv_pct(100));
     lv_obj_center(menu);
 
@@ -531,7 +532,7 @@ void create_scr_menu_settings(void) {
     page_sub_wifi_connect = lv_menu_page_create(menu, "");
     lv_obj_set_scroll_dir(page_sub_wifi_connect, LV_DIR_VER);
     lv_obj_t* scr_wifi_connect_btn = lv_obj_create(page_sub_wifi_connect);
-    lv_obj_set_style_bg_color(scr_wifi_connect_btn, BG_COLOR_DARK_BLUE_GREY, LV_PART_MAIN);
+    lv_obj_set_style_bg_color(scr_wifi_connect_btn, BG_COLOR_VERY_DARK_GREY, LV_PART_MAIN);
     temp_page = create_switch(page_sub_wifi,  _(STRING_WIFI_INFO), false, NULL);
     lv_menu_set_load_page_event(menu, temp_page, page_sub_wifi_connect);
 
@@ -542,7 +543,7 @@ void create_scr_menu_settings(void) {
     lv_obj_set_scroll_dir(page_sub_bluetooth, LV_DIR_VER);
     lv_obj_t* label = lv_label_create(page_sub_bluetooth);
     lv_obj_set_style_text_color(label, lv_color_white(), LV_PART_MAIN);
-    lv_obj_set_width(label, 630);
+    lv_obj_set_width(label, TEXT_WRAP_WIDTH);
     lv_label_set_long_mode(label, LV_LABEL_LONG_WRAP);
     lv_label_set_text(label, _(STRING_TX_DISCONNECT_TIP));
     lv_obj_set_style_text_align(label, LV_TEXT_ALIGN_CENTER, LV_PART_MAIN);
@@ -587,7 +588,7 @@ void create_scr_menu_settings(void) {
     lv_obj_set_scroll_dir(page_sub_voice_command, LV_DIR_VER);
     label = lv_label_create(page_sub_voice_command);
     lv_obj_set_style_text_color(label, lv_color_white(), LV_PART_MAIN);
-    lv_obj_set_width(label, 630);
+    lv_obj_set_width(label, TEXT_WRAP_WIDTH);
     lv_label_set_long_mode(label, LV_LABEL_LONG_WRAP);
     lv_label_set_text(label, "command             command \ncommand             command \ncommand             command \ncommand             command \n");
     lv_obj_set_style_text_align(label, LV_TEXT_ALIGN_CENTER, LV_PART_MAIN);
@@ -621,7 +622,7 @@ void create_scr_menu_settings(void) {
 
     lv_obj_t* heading_cont = lv_obj_create(lv_menu_get_main_header(menu));
     lv_obj_set_size(heading_cont, lv_pct(65), 60);
-    lv_obj_set_style_bg_color(heading_cont, BG_COLOR_DARK_BLUE_GREY, LV_PART_MAIN);
+    lv_obj_set_style_bg_color(heading_cont, BG_COLOR_VERY_DARK_GREY, LV_PART_MAIN);
     lv_obj_set_style_border_width(heading_cont, 0, LV_PART_MAIN);
     lv_obj_remove_flag(heading_cont, LV_OBJ_FLAG_SCROLLABLE);
     lv_obj_remove_flag(lv_menu_get_main_header(menu), LV_OBJ_FLAG_SCROLLABLE);
@@ -643,7 +644,7 @@ void create_scr_menu_settings(void) {
 // Bluetooth界面
 void create_scr_menu_bluetooth(void) {
     scr_menu_bluetooth = lv_obj_create(NULL);
-    lv_obj_set_style_bg_color(scr_menu_bluetooth, BG_COLOR_DARK_BLUE_GREY, LV_PART_MAIN);
+    lv_obj_set_style_bg_color(scr_menu_bluetooth, BG_COLOR_VERY_DARK_GREY, LV_PART_MAIN);
 
     lv_obj_t* exit_icon = create_exit_icon(scr_menu_bluetooth);
     lv_obj_remove_event_cb(exit_icon, open_scr_home_cb);

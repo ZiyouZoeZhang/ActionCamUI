@@ -69,7 +69,7 @@ void create_scr_pic_library(){
 
     /**background**/
     scr_pic_library = lv_obj_create(NULL);
-    lv_obj_set_style_bg_color(scr_pic_library,BG_COLOR_DARK_BLUE_GREY, LV_PART_MAIN);
+    lv_obj_set_style_bg_color(scr_pic_library,BG_COLOR_VERY_DARK_GREY, LV_PART_MAIN);
 
     create_exit_icon(scr_pic_library);
     icon_top_right = create_pic_select_icon(scr_pic_library);
