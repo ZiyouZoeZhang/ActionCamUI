@@ -130,6 +130,15 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="lvgl/font/font_declares.h" />
+		<Unit filename="lvgl/font/font_new_24.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="lvgl/font/font_new_30.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="lvgl/font/font_new_36.c">
+			<Option compilerVar="CC" />
+		</Unit>
 		<Unit filename="lvgl/lv_version.h" />
 		<Unit filename="lvgl/lvgl.h" />
 		<Unit filename="lvgl/pic_converted_transparent/common/Pattern_Return.c">

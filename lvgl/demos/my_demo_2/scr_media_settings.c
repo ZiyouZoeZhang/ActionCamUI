@@ -1,10 +1,11 @@
 #include "my_demo_2.h"
+#define MAX_ROW 14
 
 lv_obj_t * scr_media_settings = NULL;
 lv_obj_t * scr_media_settings_select = NULL;
 
 static lv_coord_t col_dsc[] = {LV_GRID_FR(1), LV_GRID_FR(1), LV_GRID_TEMPLATE_LAST};
-static lv_coord_t row_dsc[10];
+static lv_coord_t row_dsc[MAX_ROW];
 int rows = 0;
 
 static bool media_set_pro = false;
@@ -118,18 +119,123 @@ static const int list_filter_states[] = {
     STRING_COLD_TONES
 };
 
+static const int list_segment_states[] = {
+    STRING_AUTO,
+    STRING_1MIN,
+    STRING_3MIN,
+    STRING_5MIN
+};
+
+static const int list_loop_time_states[] = {
+    STRING_1MIN,
+    STRING_3MIN,
+    STRING_5MIN,
+    STRING_10MIN
+};
+
+static const int list_duration_states[] = {
+    STRING_15S,
+    STRING_20S,
+    STRING_25S,
+    STRING_30S
+};
+
+static const int list_lapse_states[] = {
+    STRING_1_2S,
+    STRING_1S,
+    STRING_2S,
+    STRING_5S,
+    STRING_10S,
+    STRING_30S,
+    STRING_60S
+};
+
+static const int list_audio_states[] = {
+    STRING_ON,
+    STRING_OFF
+};
+
+static const int list_video_encode_states[] = {
+    STRING_H264,
+    STRING_H265
+};
+
+static const int list_water_area_states[] = {
+    STRING_WATER_SEA,
+    STRING_WATER_Fresh
+};
+
+static const int list_pre_recording_states[] = {
+    STRING_OFF,
+    STRING_10S,
+    STRING_20S,
+    STRING_30S,
+    STRING_40S,
+    STRING_50S
+};
+
+static const int list_image_quality_states[] = {
+    STRING_STANDARD,
+    STRING_HIGH
+};
+
+static const int list_brightness_states[] = {
+    STRING_RANGE_1,
+    STRING_RANGE_2,
+    STRING_RANGE_3,
+    STRING_RANGE_4,
+    STRING_RANGE_5,
+    STRING_RANGE_6
+};
+
+static const int list_contrast_states[] = {
+    STRING_RANGE_1,
+    STRING_RANGE_2,
+    STRING_RANGE_3,
+    STRING_RANGE_4,
+    STRING_RANGE_5,
+    STRING_RANGE_6
+};
+
+static const int list_saturation_states[] = {
+    STRING_RANGE_1,
+    STRING_RANGE_2,
+    STRING_RANGE_3,
+    STRING_RANGE_4,
+    STRING_RANGE_5,
+    STRING_RANGE_6
+};
+
+static const int list_eis_anti_blur_states[] = {
+    STRING_ON,
+    STRING_OFF
+};
+
 media_set_btn_info_t media_buttons[] = {
-    {CAM_MEDIA_NUMBER,      STRING_BUTST_TYPE,        false, false, 0, list_numer_states,       4},
-    {CAM_MEDIA_SELF_TIMER,  STRING_DELAY_TIME,    false, false, 0, list_self_timer_states,  4},
-    {CAM_MEDIA_LDC,         STRING_LDC,           true,  false, 0, list_ldc_states,         2},
-    {CAM_MEDIA_METER_MODE,  STRING_METER,         true,  true,  1, list_meter_states,       3},
-    {CAM_MEDIA_EXPOSURE,    STRING_EXPOSURE_EV,   true,  true,  0, list_exposure_states,    9},
-    {CAM_MEDIA_SHUTTER,     STRING_EXPOSURE_TIME, true,  true,  0, list_shutter_states,     5},
-    {CAM_MEDIA_ISO,         STRING_ISO,           true,  true,  0, list_iso_states,         8},
-    {CAM_MEDIA_AWB,         STRING_WB,            true,  true,  0, list_awb_states,         6},
-    {CAM_MEDIA_SCENE_MODE,  STRING_SCENE_MODE,    true,  true,  0, list_scene_mode_states,  4},
-    {CAM_MEDIA_SHARPNESS,   STRING_SHARPNESS,     true,  true,  0, list_sharpness_states,   3},
-    {CAM_MEDIA_FILTER,      STRING_FILTER,        true,  true,  0, list_filter_states,      6},
+    {CAM_MEDIA_NUMBER,          STRING_BUTST_TYPE,         0, list_numer_states,         4},
+    {CAM_MEDIA_SEGMENT,         STRING_VIDEO_SEG,          0, list_segment_states,       4},
+    {CAM_MEDIA_LOOP_TIME,       STRING_LOOP_TIME,          0, list_loop_time_states,     4},
+    {CAM_MEDIA_DURATION,        STRING_SHORT_REC_TIME,     0, list_duration_states,      4},
+    {CAM_MEDIA_LAPSE,           STRING_LAPSE_INTERVAL,     0, list_lapse_states,         7},
+    {CAM_MEDIA_SELF_TIMER,      STRING_DELAY_TIME,         0, list_self_timer_states,    4},
+    {CAM_MEDIA_AUDIO,           STRING_AUDIO,              0, list_audio_states,         2},
+    {CAM_MEDIA_LDC,             STRING_LDC,                0, list_ldc_states,           2},
+    {CAM_MEDIA_VIDEO_ENCODE,    STRING_VIDEO_ENCODE,       0, list_video_encode_states,  2},
+    {CAM_MEDIA_WATER_AREA,      STRING_WATER_TYPE,         0, list_water_area_states,    2},
+    {CAM_MEDIA_PRE_RECORDING,   STRING_PRERECORD,          0, list_pre_recording_states, 6},
+    {CAM_MEDIA_METER_MODE,      STRING_METER,              1, list_meter_states,         3},
+    {CAM_MEDIA_EXPOSURE,        STRING_EXPOSURE_EV,        0, list_exposure_states,      9},
+    {CAM_MEDIA_SHUTTER,         STRING_EXPOSURE_TIME,      0, list_shutter_states,       5},
+    {CAM_MEDIA_ISO,             STRING_ISO,                0, list_iso_states,           8},
+    {CAM_MEDIA_AWB,             STRING_WB,                 0, list_awb_states,           6},
+    {CAM_MEDIA_SCENE_MODE,      STRING_SCENE_MODE,         0, list_scene_mode_states,    4},
+    {CAM_MEDIA_SHARPNESS,       STRING_SHARPNESS,          0, list_sharpness_states,     3},
+    {CAM_MEDIA_IMAGE_QUALITY,   STRING_VIDEO_QUA,          0, list_image_quality_states, 2},
+    {CAM_MEDIA_FILTER,          STRING_FILTER,             0, list_filter_states,        6},
+    {CAM_MEDIA_BRIGHTNESS,        STRING_BRIGHTNESS,           0, list_brightness_states,      6},
+    {CAM_MEDIA_CONTRAST,        STRING_CONTRAST,           0, list_contrast_states,      6},
+    {CAM_MEDIA_SATURATION,      STRING_SATURATION,         0, list_saturation_states,    6},
+    {CAM_MEDIA_EIS_ANTI_BLUR,   STRING_EIS_PUZZY_IMPROVE,  0, list_eis_anti_blur_states, 2},
 };
 
 void open_scr_media_settings_cb(){
@@ -148,7 +254,7 @@ static void open_scr_media_selection_cb(lv_event_t * e){
     lv_screen_load(scr_media_settings_select);
 }
 
-static void update_scr_media_selection(media_set_btn_info_t * btn){///TBD
+static void update_scr_media_selection(media_set_btn_info_t * btn){ ///TBD
     char options[300] = ""; //format:  name\nname\nname\n etc
     for (int i = 0; i < btn->state_count; i++) {
             strcat(options, _(btn->states[i]));
@@ -156,7 +262,11 @@ static void update_scr_media_selection(media_set_btn_info_t * btn){///TBD
             strcat(options, "\n");
         }
     }
+
     lv_label_set_text(media_select_label, _(btn->name_id));
+ //  lv_label_set_text(media_select_label, "Test Text");
+  //  printf(lv_label_get_text(media_select_label));
+
     lv_roller_set_options(media_select_roller, options, LV_ROLLER_MODE_NORMAL);
     lv_roller_set_selected(media_select_roller, btn->cur_state, LV_ANIM_OFF);
     lv_obj_remove_event_cb(media_select_roller, roller_value_changed_cb);
@@ -240,8 +350,9 @@ void create_scr_media_selection(){
     lv_obj_add_event_cb(scr_media_settings_select, open_scr_media_settings_cb, LV_EVENT_CLICKED, NULL);
 
     media_select_label = lv_label_create(scr_media_settings_select);
-    lv_obj_add_style(media_select_label, &style_font_default_24, LV_PART_MAIN);
+    lv_obj_add_style(media_select_label, &style_font_default_30, LV_PART_MAIN);
     lv_obj_align(media_select_label, LV_ALIGN_TOP_LEFT, 15, 15);
+    lv_label_set_text(media_select_label, "TEXT!!");
 
     //create roller
     media_select_roller = lv_roller_create(cont);
@@ -280,8 +391,8 @@ static void create_settings_buttons_grid(lv_obj_t * parent) {
     lv_obj_clean(parent);
     int cur_grid = 0;
     for (int i = 0; i < CAM_MEDIA_COUNT; i++) {
-        if (!media_buttons[i].active) continue;
-        if (!media_set_pro && media_buttons[i].pro) continue;
+   //     if (!media_buttons[i].active) continue;
+    //    if (!media_set_pro && media_buttons[i].pro) continue;
 
         lv_obj_t * btn = lv_btn_create(parent);
         lv_obj_set_grid_cell(btn, LV_GRID_ALIGN_STRETCH, cur_grid % 2, 1, LV_GRID_ALIGN_STRETCH, cur_grid / 2, 1);
@@ -343,7 +454,8 @@ static void roller_value_changed_cb(lv_event_t *e) {
 static int count_active_media_btn(){
     int count = 0;
     for (int i = 0; i < CAM_MEDIA_COUNT; i++) {
-        if (media_buttons[i].active && (media_set_pro || (!media_set_pro && !media_buttons[i].pro))) count ++;
+        //if (media_buttons[i].active && (media_set_pro || (!media_set_pro && !media_buttons[i].pro))) count ++;
+        count ++;
     }
     return count;
 }
