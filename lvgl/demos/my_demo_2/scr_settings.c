@@ -3,135 +3,6 @@
 #define EMPTY_STRING ""
 #define TEXT_WRAP_WIDTH 630
 
-typedef enum {
-    ROLLER_ID_DATE_FORMAT = 0,
-    ROLLER_ID_WIFI_FREQUENCY,
-    ROLLER_ID_FREQUENCY,
-    ROLLER_ID_VOICE_VOLUME,
-    ROLLER_ID_SUBSCREEN_PLAY,
-    ROLLER_ID_AUTO_DORMANT,
-    ROLLER_ID_AUTO_POWEROFF,
-    ROLLER_ID_VIDEO_FORMAT,
-    ROLLER_ID_LANGUAGE,
-    ROLLER_ID_COUNT
-} roller_id_t;
-
-
-typedef enum {
-    SWITCH_ID_LEDS = 0,
-    SWITCH_ID_DATE_STAMP,
-    SWITCH_ID_BRAND_STAMP,
-    SWITCH_ID_POWER_TONE,
-    SWITCH_ID_KEY_TONE,
-    SWITCH_ID_CLAP_TONE,
-    SWITCH_ID_GRID,
-    SWITCH_ID_QUICK_START,
-    SWITCH_ID_VOICE_CONTROL,
-    SWITCH_ID_COUNT
-} switch_id_t;
-
-typedef enum {
-    PAGE_ID_MAIN = 0,
-    PAGE_ID_WIFI,
-    PAGE_ID_WIFI_FREQUENCY,
-    PAGE_ID_WIFI_CONNECT,
-    PAGE_ID_BLUETOOTH,
-    PAGE_ID_AUTO_DORMANT,
-    PAGE_ID_AUTO_POWEROFF,
-    PAGE_ID_LANGUAGE,
-    PAGE_ID_VIDEO_FORMAT,
-    PAGE_ID_FREQUENCY,
-    PAGE_ID_VOICE_VOLUME,
-    PAGE_ID_SUBSCREEN_PLAY,
-    PAGE_ID_DATE_TIME,
-    PAGE_ID_DATE_TIME_DATE,
-    PAGE_ID_DATE_TIME_TIME,
-    PAGE_ID_DATE_TIME_DATE_FORMAT,
-    PAGE_ID_VOICE_CONTROL,
-    PAGE_ID_VOICE_COMMAND,
-    PAGE_ID_FORMAT_SD,
-    PAGE_ID_FACTORY_RESET,
-    PAGE_ID_INFORMATION,
-    PAGE_ID_COUNT
-} page_id_t;
-
-typedef struct menu_manager_t menu_manager_t;
-typedef struct roller_item_t roller_item_t;
-typedef struct switch_item_t switch_item_t;
-
-struct page_item_t {
-    int id;
-    int name;
-    lv_obj_t* label;
-    lv_obj_t* heading_label;
-    lv_obj_t* menu_item;
-    bool has_sub_menu;
-};
-
-struct roller_item_t {
-    int id;
-    int name;
-    lv_obj_t * label;
-    const int* states;
-    int states_count;
-    lv_obj_t* roller_obj;
-    lv_obj_t* state_label;
-    void (*on_change)(int selected);
-};
-
-struct switch_item_t {
-    int id;
-    int name;
-    lv_obj_t* label;
-    lv_obj_t* switch_obj;
-    bool state;
-    void (*toggle_cb)(bool state);
-};
-
-struct menu_manager_t {
-    lv_obj_t* menu;
-    lv_obj_t* current_page;
-    lv_obj_t* heading;          // 全局标题标签
-
-    // 使用固定数组管理所有页面
-    page_item_t pages[PAGE_ID_COUNT];
-
-    // 使用固定数组管理所有rollers和switches
-    roller_item_t rollers[ROLLER_ID_COUNT];
-    switch_item_t switches[SWITCH_ID_COUNT];
-};
-
-menu_manager_t* menu_manager_create(void);
-void menu_manager_destroy(menu_manager_t* mgr);
-
-void menu_manager_init(menu_manager_t* mgr);
-void menu_manager_show(menu_manager_t* mgr);
-void menu_manager_refresh_language(menu_manager_t* mgr);
-
-
-lv_obj_t* menu_manager_create_basic_page(menu_manager_t* mgr, const char* title, const char* prompt);
-lv_obj_t* menu_manager_create_roller_page(menu_manager_t* mgr, lv_obj_t* parent, roller_item_t* roller, const char* title);
-lv_obj_t* menu_manager_create_switch_item(menu_manager_t* mgr, lv_obj_t* parent, const char* title, bool initial_state, void (*toggle_cb)(bool));
-
-
-
-
-// ============ 外部接口 ============
-void open_scr_menu_cb(void);
-void open_scr_home_cb(void);
-void open_scr_poweroff_cb(void);
-
-#endif // MY_DEMO_2_H
-
-
-
-
-
-
-///-----------------------------------------------------------------------------------------------------------------------------------
-
-void refresh_all_rollers(void);
-
 #define INIT_ROLLER(name, list_array) \
     static settings_roller_t name = { \
         .ids = list_array, \
@@ -376,7 +247,8 @@ static void roller_language(){
     current_lang = lv_roller_get_selected(language.roller);
     if (current_lang >= MY_LANG_KOREAN) current_lang+=1;
 
-    lv_obj_clean(scr_menu_settings);
+ //   lv_obj_clean(scr_menu_settings);
+ lv_obj_delete(scr_menu_settings);
     create_scr_menu_settings();
     settings_action();
 }
@@ -476,7 +348,6 @@ static lv_obj_t* create_text(lv_obj_t* parent, const char* txt) {
     lv_obj_align(img, LV_ALIGN_RIGHT_MID, -30, 0);
     return cont;
 }
-
 static lv_obj_t* create_switch(lv_obj_t* parent, const char* txt, bool chk, void (*toggle_cb)(bool)) {
     lv_obj_t* cont = create_basics(parent, txt);
     lv_obj_t* sw = lv_switch_create(cont);
@@ -484,20 +355,26 @@ static lv_obj_t* create_switch(lv_obj_t* parent, const char* txt, bool chk, void
     lv_obj_add_state(sw, chk ? LV_STATE_CHECKED : 0);
     lv_obj_align(sw, LV_ALIGN_RIGHT_MID, -40, 0);
 
-    switch_item_t* item = (switch_item_t*)lv_malloc(sizeof(switch_item_t));
-    if (item) {
-        item->switch_obj = sw;
-        item->cont_obj = cont;
-        item->name = txt;
-        item->toggle_cb = toggle_cb;
+    switch_item_t item = {
+        .switch_obj = sw,
+        .cont_obj = cont,
+        .name = txt,
+        .toggle_cb = toggle_cb
+    };
+
+    switch_item_t* item_ptr = (switch_item_t*)lv_malloc(sizeof(switch_item_t));
+    if (item_ptr) {
+        *item_ptr = item;
+        lv_obj_set_user_data(cont, item_ptr);
+        lv_obj_set_user_data(sw, item_ptr);
     }
 
     lv_obj_add_flag(cont, LV_OBJ_FLAG_CLICKABLE);
     lv_obj_remove_flag(sw, LV_OBJ_FLAG_SCROLL_ON_FOCUS);
-    lv_obj_add_event_cb(cont, switch_cont_click_cb, LV_EVENT_CLICKED, item);
+    lv_obj_add_event_cb(cont, switch_cont_click_cb, LV_EVENT_CLICKED, item_ptr);
 
     if (toggle_cb) {
-        lv_obj_add_event_cb(sw, switch_value_changed_cb, LV_EVENT_VALUE_CHANGED, item);
+        lv_obj_add_event_cb(sw, switch_value_changed_cb, LV_EVENT_VALUE_CHANGED, item_ptr);
     }
 
     if (toggle_cb == switch_grid_toggle) grid_switch = sw;
@@ -782,156 +659,4 @@ void create_scr_menu_bluetooth(void) {
     lv_obj_add_event_cb(search_icon, bluetooth_search_clicked_cb, LV_EVENT_CLICKED, NULL);
 
     bluetooth_titel = create_label_top_center(scr_menu_bluetooth, _(STRING_BT_DEVICE));
-}
-
-void switch_language(uint8_t new_lang) {
-//    if (new_lang > 8) return;
-
-
-
- //   if (heading && cur_page) {
- //       set_heading_cb(NULL);
- //   }
-
-    // 刷新所有 roller
-refresh_all_rollers();
-}
-
-void refresh_all_rollers(void) {
-    char options[300];
-
-    // 刷新 auto_poweroff
-    if (auto_poweroff.roller) {
-        options[0] = '\0';
-        for (int i = 0; i < auto_poweroff.states_count; i++) {
-            strcat(options, lv_lang_string[auto_poweroff.ids[i]][current_lang]);
-            if (i < auto_poweroff.states_count - 1) strcat(options, "\n");
-        }
-        lv_roller_set_options(auto_poweroff.roller, options, LV_ROLLER_MODE_NORMAL);
-        int selected = lv_roller_get_selected(auto_poweroff.roller);
-        if (auto_poweroff.state_label) {
-            lv_label_set_text(auto_poweroff.state_label,
-                lv_lang_string[auto_poweroff.ids[selected]][current_lang]);
-        }
-    }
-
-    // 刷新 auto_dormant
-    if (auto_dormant.roller) {
-        options[0] = '\0';
-        for (int i = 0; i < auto_dormant.states_count; i++) {
-            strcat(options, lv_lang_string[auto_dormant.ids[i]][current_lang]);
-            if (i < auto_dormant.states_count - 1) strcat(options, "\n");
-        }
-        lv_roller_set_options(auto_dormant.roller, options, LV_ROLLER_MODE_NORMAL);
-        int selected = lv_roller_get_selected(auto_dormant.roller);
-        if (auto_dormant.state_label) {
-            lv_label_set_text(auto_dormant.state_label,
-                lv_lang_string[auto_dormant.ids[selected]][current_lang]);
-        }
-    }
-
-    // 刷新 language
-    if (language.roller) {
-        options[0] = '\0';
-        for (int i = 0; i < language.states_count; i++) {
-            strcat(options, lv_lang_string[language.ids[i]][current_lang]);
-            if (i < language.states_count - 1) strcat(options, "\n");
-        }
-        lv_roller_set_options(language.roller, options, LV_ROLLER_MODE_NORMAL);
-        int selected = lv_roller_get_selected(language.roller);
-        if (language.state_label) {
-            lv_label_set_text(language.state_label,
-                lv_lang_string[language.ids[selected]][current_lang]);
-        }
-    }
-
-    // 刷新 video_format
-    if (video_format.roller) {
-        options[0] = '\0';
-        for (int i = 0; i < video_format.states_count; i++) {
-            strcat(options, lv_lang_string[video_format.ids[i]][current_lang]);
-            if (i < video_format.states_count - 1) strcat(options, "\n");
-        }
-        lv_roller_set_options(video_format.roller, options, LV_ROLLER_MODE_NORMAL);
-        int selected = lv_roller_get_selected(video_format.roller);
-        if (video_format.state_label) {
-            lv_label_set_text(video_format.state_label,
-                lv_lang_string[video_format.ids[selected]][current_lang]);
-        }
-    }
-
-    // 刷新 frequency
-    if (frequency.roller) {
-        options[0] = '\0';
-        for (int i = 0; i < frequency.states_count; i++) {
-            strcat(options, lv_lang_string[frequency.ids[i]][current_lang]);
-            if (i < frequency.states_count - 1) strcat(options, "\n");
-        }
-        lv_roller_set_options(frequency.roller, options, LV_ROLLER_MODE_NORMAL);
-        int selected = lv_roller_get_selected(frequency.roller);
-        if (frequency.state_label) {
-            lv_label_set_text(frequency.state_label,
-                lv_lang_string[frequency.ids[selected]][current_lang]);
-        }
-    }
-
-    // 刷新 voice_volume
-    if (voice_volume.roller) {
-        options[0] = '\0';
-        for (int i = 0; i < voice_volume.states_count; i++) {
-            strcat(options, lv_lang_string[voice_volume.ids[i]][current_lang]);
-            if (i < voice_volume.states_count - 1) strcat(options, "\n");
-        }
-        lv_roller_set_options(voice_volume.roller, options, LV_ROLLER_MODE_NORMAL);
-        int selected = lv_roller_get_selected(voice_volume.roller);
-        if (voice_volume.state_label) {
-            lv_label_set_text(voice_volume.state_label,
-                lv_lang_string[voice_volume.ids[selected]][current_lang]);
-        }
-    }
-
-    // 刷新 subscreen_play
-    if (subscreen_play.roller) {
-        options[0] = '\0';
-        for (int i = 0; i < subscreen_play.states_count; i++) {
-            strcat(options, lv_lang_string[subscreen_play.ids[i]][current_lang]);
-            if (i < subscreen_play.states_count - 1) strcat(options, "\n");
-        }
-        lv_roller_set_options(subscreen_play.roller, options, LV_ROLLER_MODE_NORMAL);
-        int selected = lv_roller_get_selected(subscreen_play.roller);
-        if (subscreen_play.state_label) {
-            lv_label_set_text(subscreen_play.state_label,
-                lv_lang_string[subscreen_play.ids[selected]][current_lang]);
-        }
-    }
-
-    // 刷新 wifi_frequency
-    if (wifi_frequency.roller) {
-        options[0] = '\0';
-        for (int i = 0; i < wifi_frequency.states_count; i++) {
-            strcat(options, lv_lang_string[wifi_frequency.ids[i]][current_lang]);
-            if (i < wifi_frequency.states_count - 1) strcat(options, "\n");
-        }
-        lv_roller_set_options(wifi_frequency.roller, options, LV_ROLLER_MODE_NORMAL);
-        int selected = lv_roller_get_selected(wifi_frequency.roller);
-        if (wifi_frequency.state_label) {
-            lv_label_set_text(wifi_frequency.state_label,
-                lv_lang_string[wifi_frequency.ids[selected]][current_lang]);
-        }
-    }
-
-    // 刷新 date_format
-    if (date_format.roller) {
-        options[0] = '\0';
-        for (int i = 0; i < date_format.states_count; i++) {
-            strcat(options, lv_lang_string[date_format.ids[i]][current_lang]);
-            if (i < date_format.states_count - 1) strcat(options, "\n");
-        }
-        lv_roller_set_options(date_format.roller, options, LV_ROLLER_MODE_NORMAL);
-        int selected = lv_roller_get_selected(date_format.roller);
-        if (date_format.state_label) {
-            lv_label_set_text(date_format.state_label,
-                lv_lang_string[date_format.ids[selected]][current_lang]);
-        }
-    }
 }
