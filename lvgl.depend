@@ -12987,11 +12987,11 @@
 	<stdio.h>
 	"camera_modes.h"
 
-1784536739 c:\users\gku\desktop\lv_port_win_codeblocks\lvgl\demos\my_demo_2\ui_components.h
+1784872126 c:\users\gku\desktop\lv_port_win_codeblocks\lvgl\demos\my_demo_2\ui_components.h
 	"lvgl.h"
 	"camera_modes.h"
 
-1784537173 source:c:\users\gku\desktop\lv_port_win_codeblocks\lvgl\demos\my_demo_2\ui_components.c
+1784872126 source:c:\users\gku\desktop\lv_port_win_codeblocks\lvgl\demos\my_demo_2\ui_components.c
 	<string.h>
 	<stdio.h>
 	"ui_components.h"
@@ -13109,10 +13109,10 @@
 1784859733 c:\users\gku\desktop\lv_port_win_codeblocks\lvgl\demos\my_demo_2\camera_menu.h
 	"lvgl.h"
 
-1784101671 source:c:\users\gku\desktop\lv_port_win_codeblocks\lvgl\demos\my_demo_2\scr_home.c
+1784872126 source:c:\users\gku\desktop\lv_port_win_codeblocks\lvgl\demos\my_demo_2\scr_home.c
 	"my_demo_2.h"
 
-1784597527 source:c:\users\gku\desktop\lv_port_win_codeblocks\lvgl\demos\my_demo_2\scr_settings.c
+1784879646 source:c:\users\gku\desktop\lv_port_win_codeblocks\lvgl\demos\my_demo_2\scr_settings.c
 	"my_demo_2.h"
 
 1784517945 source:c:\users\gku\desktop\lv_port_win_codeblocks\lvgl\demos\my_demo_2\lvgl_ex_language_string.c

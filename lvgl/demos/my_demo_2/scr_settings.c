@@ -1,6 +1,134 @@
 #include "my_demo_2.h"
+
 #define EMPTY_STRING ""
 #define TEXT_WRAP_WIDTH 630
+
+typedef enum {
+    ROLLER_ID_DATE_FORMAT = 0,
+    ROLLER_ID_WIFI_FREQUENCY,
+    ROLLER_ID_FREQUENCY,
+    ROLLER_ID_VOICE_VOLUME,
+    ROLLER_ID_SUBSCREEN_PLAY,
+    ROLLER_ID_AUTO_DORMANT,
+    ROLLER_ID_AUTO_POWEROFF,
+    ROLLER_ID_VIDEO_FORMAT,
+    ROLLER_ID_LANGUAGE,
+    ROLLER_ID_COUNT
+} roller_id_t;
+
+
+typedef enum {
+    SWITCH_ID_LEDS = 0,
+    SWITCH_ID_DATE_STAMP,
+    SWITCH_ID_BRAND_STAMP,
+    SWITCH_ID_POWER_TONE,
+    SWITCH_ID_KEY_TONE,
+    SWITCH_ID_CLAP_TONE,
+    SWITCH_ID_GRID,
+    SWITCH_ID_QUICK_START,
+    SWITCH_ID_VOICE_CONTROL,
+    SWITCH_ID_COUNT
+} switch_id_t;
+
+typedef enum {
+    PAGE_ID_MAIN = 0,
+    PAGE_ID_WIFI,
+    PAGE_ID_WIFI_FREQUENCY,
+    PAGE_ID_WIFI_CONNECT,
+    PAGE_ID_BLUETOOTH,
+    PAGE_ID_AUTO_DORMANT,
+    PAGE_ID_AUTO_POWEROFF,
+    PAGE_ID_LANGUAGE,
+    PAGE_ID_VIDEO_FORMAT,
+    PAGE_ID_FREQUENCY,
+    PAGE_ID_VOICE_VOLUME,
+    PAGE_ID_SUBSCREEN_PLAY,
+    PAGE_ID_DATE_TIME,
+    PAGE_ID_DATE_TIME_DATE,
+    PAGE_ID_DATE_TIME_TIME,
+    PAGE_ID_DATE_TIME_DATE_FORMAT,
+    PAGE_ID_VOICE_CONTROL,
+    PAGE_ID_VOICE_COMMAND,
+    PAGE_ID_FORMAT_SD,
+    PAGE_ID_FACTORY_RESET,
+    PAGE_ID_INFORMATION,
+    PAGE_ID_COUNT
+} page_id_t;
+
+typedef struct menu_manager_t menu_manager_t;
+typedef struct roller_item_t roller_item_t;
+typedef struct switch_item_t switch_item_t;
+
+struct page_item_t {
+    int id;
+    int name;
+    lv_obj_t* label;
+    lv_obj_t* heading_label;
+    lv_obj_t* menu_item;
+    bool has_sub_menu;
+};
+
+struct roller_item_t {
+    int id;
+    int name;
+    lv_obj_t * label;
+    const int* states;
+    int states_count;
+    lv_obj_t* roller_obj;
+    lv_obj_t* state_label;
+    void (*on_change)(int selected);
+};
+
+struct switch_item_t {
+    int id;
+    int name;
+    lv_obj_t* label;
+    lv_obj_t* switch_obj;
+    bool state;
+    void (*toggle_cb)(bool state);
+};
+
+struct menu_manager_t {
+    lv_obj_t* menu;
+    lv_obj_t* current_page;
+    lv_obj_t* heading;          // 全局标题标签
+
+    // 使用固定数组管理所有页面
+    page_item_t pages[PAGE_ID_COUNT];
+
+    // 使用固定数组管理所有rollers和switches
+    roller_item_t rollers[ROLLER_ID_COUNT];
+    switch_item_t switches[SWITCH_ID_COUNT];
+};
+
+menu_manager_t* menu_manager_create(void);
+void menu_manager_destroy(menu_manager_t* mgr);
+
+void menu_manager_init(menu_manager_t* mgr);
+void menu_manager_show(menu_manager_t* mgr);
+void menu_manager_refresh_language(menu_manager_t* mgr);
+
+
+lv_obj_t* menu_manager_create_basic_page(menu_manager_t* mgr, const char* title, const char* prompt);
+lv_obj_t* menu_manager_create_roller_page(menu_manager_t* mgr, lv_obj_t* parent, roller_item_t* roller, const char* title);
+lv_obj_t* menu_manager_create_switch_item(menu_manager_t* mgr, lv_obj_t* parent, const char* title, bool initial_state, void (*toggle_cb)(bool));
+
+
+
+
+// ============ 外部接口 ============
+void open_scr_menu_cb(void);
+void open_scr_home_cb(void);
+void open_scr_poweroff_cb(void);
+
+#endif // MY_DEMO_2_H
+
+
+
+
+
+
+///-----------------------------------------------------------------------------------------------------------------------------------
 
 void refresh_all_rollers(void);
 
