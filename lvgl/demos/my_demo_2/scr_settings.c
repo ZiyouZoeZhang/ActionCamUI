@@ -397,7 +397,7 @@ static lv_obj_t* create_scrollbar(lv_obj_t* parent, const char* txt, settings_ro
 }
 
 static lv_obj_t* create_scr_scrollbar(lv_obj_t* parent, settings_roller_t* target) {
-    char options[300] = "";
+    char options[500] = "";
 
     for (int i = 0; i < target->states_count; i++) {
         strcat(options, lv_lang_string[target->ids[i]][current_lang]);

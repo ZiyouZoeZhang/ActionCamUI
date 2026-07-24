@@ -264,9 +264,6 @@ static void update_scr_media_selection(media_set_btn_info_t * btn){ ///TBD
     }
 
     lv_label_set_text(media_select_label, _(btn->name_id));
- //  lv_label_set_text(media_select_label, "Test Text");
-  //  printf(lv_label_get_text(media_select_label));
-
     lv_roller_set_options(media_select_roller, options, LV_ROLLER_MODE_NORMAL);
     lv_roller_set_selected(media_select_roller, btn->cur_state, LV_ANIM_OFF);
     lv_obj_remove_event_cb(media_select_roller, roller_value_changed_cb);
@@ -350,9 +347,8 @@ void create_scr_media_selection(){
     lv_obj_add_event_cb(scr_media_settings_select, open_scr_media_settings_cb, LV_EVENT_CLICKED, NULL);
 
     media_select_label = lv_label_create(scr_media_settings_select);
-    lv_obj_add_style(media_select_label, &style_font_default_30, LV_PART_MAIN);
+    lv_obj_add_style(media_select_label, &style_font_default_24, LV_PART_MAIN);
     lv_obj_align(media_select_label, LV_ALIGN_TOP_LEFT, 15, 15);
-    lv_label_set_text(media_select_label, "TEXT!!");
 
     //create roller
     media_select_roller = lv_roller_create(cont);

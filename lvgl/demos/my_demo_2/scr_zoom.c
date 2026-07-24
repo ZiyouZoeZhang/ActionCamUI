@@ -49,7 +49,7 @@ static void on_press_cb(){
     lv_obj_add_style(heading, &style_font_default_36, LV_PART_MAIN);
     lv_obj_align(heading, LV_ALIGN_TOP_LEFT, 95, 20);
 
-    char options[300] = ""; //format:  name\nname\nname\n etc
+    char options[500] = ""; //format:  name\nname\nname\n etc
     for (int i = 0; i < CAM_ZOOM_COUNT; i++) {
         strcat(options, cam_zoom_table[i]);
         if (i < CAM_ZOOM_COUNT-1 ) {

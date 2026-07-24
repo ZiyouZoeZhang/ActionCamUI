@@ -50,7 +50,7 @@ void create_scr_resolution(){
     lv_obj_add_style(heading, &style_font_default_36, LV_PART_MAIN);
     lv_obj_align(heading, LV_ALIGN_CENTER, 0, -120);
 
-    char options[300] = ""; //format:  name\nname\nname\n etc
+    char options[500] = ""; //format:  name\nname\nname\n etc
     for (int i = 0; i < CAM_RES_COUNT; i++) {
         strcat(options, cam_resolution_table[i]);
         if (i < CAM_RES_COUNT-1 ) {
