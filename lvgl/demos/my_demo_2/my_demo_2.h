@@ -18,7 +18,7 @@
 #include "image_storage.h"
 #include "lvgl_ex_language_string.h"
 
-
+#define ARRAY_SIZE(arr) (sizeof(arr) / sizeof((arr)[0]))
 /**variables for INPUT**/
 /**variables for INPUT**/
 extern int battery_level;
