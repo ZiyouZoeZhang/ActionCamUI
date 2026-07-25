@@ -84,7 +84,7 @@ static void initialize_screens(){
     create_scr_mode_selection(0);
 
     create_scr_menu_settings();
-    create_scr_menu_bluetooth();
+    //create_scr_menu_bluetooth();
 
     create_scr_home();
 }

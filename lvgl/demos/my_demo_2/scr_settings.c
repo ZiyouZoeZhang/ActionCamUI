@@ -279,12 +279,14 @@ static const struct {
 static menu_manager_t g_mgr = {0};
 lv_style_t style_cont;
 
+/* 蓝牙页面内部文本控件（用于语言刷新） */
+static lv_obj_t *s_bt_tip_label       = NULL;
+static lv_obj_t *s_bt_search_label    = NULL;
+static lv_obj_t *s_bt_list_tip_label  = NULL;
+
 extern void open_scr_home_cb(void);
 extern void open_scr_menu_cb(void);
 extern void open_scr_poweroff_cb(void);
-
-static lv_obj_t *s_bluetooth_scr = NULL;
-static lv_obj_t *s_bluetooth_title = NULL;
 
 /* ============================================================================
  * 工具函数
@@ -335,6 +337,13 @@ static void refresh_roller(roller_item_t *r)
     }
 }
 
+static void refresh_bluetooth_page(void)
+{
+    if (s_bt_tip_label) {
+        lv_label_set_text(s_bt_tip_label, _(STRING_TX_DISCONNECT_TIP));
+    }
+}
+
 static void refresh_all_rollers(void)
 {
     for (int i = 0; i < ROLLER_ID_COUNT; i++) {
@@ -364,9 +373,7 @@ static void refresh_all_page_entries(void)
     }
 }
 
-/* ============================================================================
- * 回调函数
- * ============================================================================ */
+//cb
 
 static void switch_cont_click_cb(lv_event_t *e)
 {
@@ -402,7 +409,7 @@ static void roller_value_changed_cb(lv_event_t *e)
 
 static void roller_language_cb(int selected)
 {
-    /* roller 里只有 9 项（0~8），对应 current_lang 0~9，跳过韩语（MY_LANG_KOREAN） */
+
     if (selected >= MY_LANG_KOREAN) {
         current_lang = selected + 1;
     } else {
@@ -412,6 +419,7 @@ static void roller_language_cb(int selected)
     refresh_all_rollers();
     refresh_all_switches();
     refresh_all_page_entries();
+    refresh_bluetooth_page();
     set_heading_cb(NULL);
 }
 
@@ -486,6 +494,12 @@ static void switch_quick_start_toggle(bool state) {
 
 static void switch_voice_control_toggle(bool state) {
     printf("Voice Control: %s\n", state ? "ON" : "OFF");
+}
+
+static void bluetooth_search_clicked_cb(lv_event_t *e)
+{
+    (void)e;
+    printf("searching bluetooth\n");
 }
 
 /* ============================================================================
@@ -755,20 +769,22 @@ void create_scr_menu_settings(void)
         lv_obj_t *wifi_conn_entry = create_text_entry(wifi_p->page_obj, safe_lang_text(wifi_conn->name_str_id));
         lv_menu_set_load_page_event(g_mgr.menu, wifi_conn_entry, wifi_conn->page_obj);
     }
-
-    /* 蓝牙提示页（设置菜单内） */
+    /* 蓝牙页面（标准 menu page） */
     {
         page_item_t *bt_p = &g_mgr.pages[PAGE_ID_BLUETOOTH];
         bt_p->menu_cont = create_text_entry(main_p->page_obj, safe_lang_text(bt_p->name_str_id));
         lv_menu_set_load_page_event(g_mgr.menu, bt_p->menu_cont, bt_p->page_obj);
 
-        lv_obj_t *bt_label = lv_label_create(bt_p->page_obj);
-        lv_obj_set_style_text_color(bt_label, lv_color_white(), LV_PART_MAIN);
-        lv_obj_set_width(bt_label, TEXT_WRAP_WIDTH);
-        lv_label_set_long_mode(bt_label, LV_LABEL_LONG_WRAP);
-        lv_label_set_text(bt_label, _(STRING_TX_DISCONNECT_TIP));
-        lv_obj_set_style_text_align(bt_label, LV_TEXT_ALIGN_CENTER, LV_PART_MAIN);
-        lv_obj_center(bt_label);
+        /* 断开提示 */
+        s_bt_tip_label = lv_label_create(bt_p->page_obj);
+        lv_obj_set_style_text_color(s_bt_tip_label, lv_color_white(), LV_PART_MAIN);
+        lv_obj_set_width(s_bt_tip_label, TEXT_WRAP_WIDTH);
+        lv_label_set_long_mode(s_bt_tip_label, LV_LABEL_LONG_WRAP);
+        lv_label_set_text(s_bt_tip_label, _(STRING_TX_DISCONNECT_TIP));
+        lv_obj_set_style_text_align(s_bt_tip_label, LV_TEXT_ALIGN_CENTER, LV_PART_MAIN);
+        lv_obj_set_style_pad_top(s_bt_tip_label, 30, LV_PART_MAIN);
+        lv_obj_set_style_pad_bottom(s_bt_tip_label, 20, LV_PART_MAIN);
+
     }
 
     /* Date Time 体系 */
@@ -880,70 +896,12 @@ void settings_action(void)
  * 独立蓝牙管理界面
  * ============================================================================ */
 
-static void bluetooth_search_clicked_cb(lv_event_t *e)
-{
-    (void)e;
-    printf("searching bluetooth\n");
-}
-
-void create_scr_menu_bluetooth(void)
-{
-    if (s_bluetooth_scr) return;
-
-    s_bluetooth_scr = lv_obj_create(NULL);
-    lv_obj_set_style_bg_color(s_bluetooth_scr, BG_COLOR_VERY_DARK_GREY, LV_PART_MAIN);
-    lv_obj_set_size(s_bluetooth_scr, lv_pct(100), lv_pct(100));
-
-    lv_obj_t *header = lv_obj_create(s_bluetooth_scr);
-    lv_obj_set_size(header, lv_pct(100), 80);
-    lv_obj_set_style_bg_color(header, BG_COLOR_VERY_DARK_GREY, LV_PART_MAIN);
-    lv_obj_set_style_border_width(header, 0, LV_PART_MAIN);
-    lv_obj_remove_flag(header, LV_OBJ_FLAG_SCROLLABLE);
-    lv_obj_align(header, LV_ALIGN_TOP_MID, 0, 0);
-
-    lv_obj_t *back_btn = lv_btn_create(header);
-    lv_obj_set_size(back_btn, 60, 60);
-    lv_obj_align(back_btn, LV_ALIGN_LEFT_MID, 20, 0);
-    lv_obj_set_style_bg_opa(back_btn, LV_OPA_0, LV_PART_MAIN);
-    lv_obj_set_style_border_width(back_btn, 0, LV_PART_MAIN);
-    lv_obj_add_event_cb(back_btn, open_scr_menu_cb_wrapper, LV_EVENT_CLICKED, NULL);
-
-    lv_obj_t *back_icon = lv_image_create(back_btn);
-    lv_image_set_src(back_icon, &Pattern_Return);
-    lv_obj_center(back_icon);
-
-    s_bluetooth_title = lv_label_create(header);
-    lv_obj_add_style(s_bluetooth_title, &style_font_default_36, LV_PART_MAIN);
-    lv_label_set_text(s_bluetooth_title, _(STRING_BT_DEVICE));
-    lv_obj_center(s_bluetooth_title);
-
-    lv_obj_t *search_btn = lv_btn_create(header);
-    lv_obj_set_size(search_btn, 60, 60);
-    lv_obj_align(search_btn, LV_ALIGN_RIGHT_MID, -20, 0);
-    lv_obj_set_style_bg_opa(search_btn, LV_OPA_0, LV_PART_MAIN);
-    lv_obj_set_style_border_width(search_btn, 0, LV_PART_MAIN);
-    lv_obj_add_event_cb(search_btn, bluetooth_search_clicked_cb, LV_EVENT_CLICKED, NULL);
-
-    lv_obj_t *search_icon = lv_image_create(search_btn);
-    lv_image_set_src(search_icon, &set_have_sub_menu);
-    lv_obj_center(search_icon);
-
-    lv_obj_t *list_cont = lv_obj_create(s_bluetooth_scr);
-    lv_obj_set_size(list_cont, lv_pct(90), lv_pct(75));
-    lv_obj_align(list_cont, LV_ALIGN_BOTTOM_MID, 0, -20);
-    lv_obj_set_style_bg_color(list_cont, BG_COLOR_DARK_GREY, LV_PART_MAIN);
-    lv_obj_set_style_border_width(list_cont, 0, LV_PART_MAIN);
-    lv_obj_remove_flag(list_cont, LV_OBJ_FLAG_SCROLLABLE);
-
-    lv_obj_t *tip = lv_label_create(list_cont);
-    lv_obj_set_style_text_color(tip, lv_palette_main(LV_PALETTE_GREY), LV_PART_MAIN);
-    lv_label_set_text(tip, _(STRING_TX_DISCONNECT_TIP));
-    lv_obj_center(tip);
-}
 
 void bluetooth_action(void)
 {
-    if (!s_bluetooth_scr) create_scr_menu_bluetooth();
-    lv_label_set_text(s_bluetooth_title, _(STRING_BT_DEVICE));
-    lv_screen_load(s_bluetooth_scr);
+    if (!g_mgr.scr) create_scr_menu_settings();
+
+    lv_screen_load(g_mgr.scr);
+    lv_menu_clear_history(g_mgr.menu);
+    lv_menu_set_page(g_mgr.menu, g_mgr.pages[PAGE_ID_BLUETOOTH].page_obj);
 }
