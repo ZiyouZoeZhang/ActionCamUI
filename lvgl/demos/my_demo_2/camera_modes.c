@@ -2,6 +2,7 @@
 #include "scr_media_settings.h"
 #include "lvgl_ex_language_string.h"
 
+/*
 static const media_set_t raw_non_pro_features[] = {
     CAM_MEDIA_NUMBER,
     CAM_MEDIA_SELF_TIMER,
@@ -94,12 +95,10 @@ static const media_set_t photo_pro_features[] = {
     CAM_MEDIA_SHARPNESS,
     CAM_MEDIA_FILTER
 };
-
+*/
 
 
 // ============ 4. 辅助宏 ============
-
-
 
 const camera_mode_info_t mode_table[] = {
     {CAM_MODE_RAW,            "Raw",     &mode_rawphoto_normal, &filelist_rawphoto},
@@ -139,7 +138,7 @@ int mode_names[] = {
 };
 
 // 0 = not supported, 1 = normal supproted, 2 = pro supported
-static const uint8_t supported_setting[CAM_MODE_COUNT][CAM_MEDIA_COUNT] = {
+const uint8_t supported_setting[CAM_MODE_COUNT][CAM_MEDIA_COUNT] = {
     // CAM_MODE_RAW
     {
         1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 2, 2, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0
@@ -163,6 +162,10 @@ static const uint8_t supported_setting[CAM_MODE_COUNT][CAM_MEDIA_COUNT] = {
     // CAM_MODE_PHOTO
     {
         1, 0, 0, 0, 1, 1, 0, 1, 0, 0, 0, 2, 2, 2, 2, 2, 2, 2, 0, 2, 0, 0, 0, 0
+    },
+    // CAM_MODE_VIDEO
+    {
+        0, 1, 0, 0, 0, 0, 1, 1, 1, 0, 2, 2, 2, 0, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2
     },
     // CAM_MODE_TIMELAPSE_VIDEO
     {
@@ -195,8 +198,7 @@ static const uint8_t supported_setting[CAM_MODE_COUNT][CAM_MEDIA_COUNT] = {
 };
 
 // ============ 3. 辅助宏和函数 ============
-#define IS_SUPPORTED(mode, setting, is_pro) \
-    (supported_setting[mode][setting] >= (is_pro ? 2 : 1))
+
 
 // 获取支持级别
 static inline uint8_t get_support(camera_mode_t mode, media_set_t setting) {

@@ -389,6 +389,7 @@ static void create_settings_buttons_grid(lv_obj_t * parent) {
     for (int i = 0; i < CAM_MEDIA_COUNT; i++) {
    //     if (!media_buttons[i].active) continue;
     //    if (!media_set_pro && media_buttons[i].pro) continue;
+        if (!IS_SUPPORTED(cur_cam_mode, i, media_set_pro)) continue;
 
         lv_obj_t * btn = lv_btn_create(parent);
         lv_obj_set_grid_cell(btn, LV_GRID_ALIGN_STRETCH, cur_grid % 2, 1, LV_GRID_ALIGN_STRETCH, cur_grid / 2, 1);
@@ -450,8 +451,11 @@ static void roller_value_changed_cb(lv_event_t *e) {
 static int count_active_media_btn(){
     int count = 0;
     for (int i = 0; i < CAM_MEDIA_COUNT; i++) {
+        if (IS_SUPPORTED(cur_cam_mode, i, media_set_pro)) count ++;
         //if (media_buttons[i].active && (media_set_pro || (!media_set_pro && !media_buttons[i].pro))) count ++;
-        count ++;
+        //count ++;
     }
+
+
     return count;
 }

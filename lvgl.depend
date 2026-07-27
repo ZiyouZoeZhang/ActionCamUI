@@ -8518,11 +8518,12 @@
 	"lvgl.h"
 	"lvgl/lvgl.h"
 
-1784540976 source:c:\users\gku\desktop\lv_port_win_codeblocks\lvgl\demos\my_demo_2\camera_modes.c
+1785117450 source:c:\users\gku\desktop\lv_port_win_codeblocks\lvgl\demos\my_demo_2\camera_modes.c
 	"camera_modes.h"
+	"scr_media_settings.h"
 	"lvgl_ex_language_string.h"
 
-1784970622 c:\users\gku\desktop\lv_port_win_codeblocks\lvgl\demos\my_demo_2\camera_modes.h
+1785119832 c:\users\gku\desktop\lv_port_win_codeblocks\lvgl\demos\my_demo_2\camera_modes.h
 	<string.h>
 	<stdio.h>
 	"lvgl.h"
@@ -13077,7 +13078,7 @@
 1784973509 c:\users\gku\desktop\lv_port_win_codeblocks\lvgl\demos\my_demo_2\scr_media_settings.h
 	"lvgl.h"
 
-1784626912 source:c:\users\gku\desktop\lv_port_win_codeblocks\lvgl\demos\my_demo_2\scr_media_settings.c
+1785119658 source:c:\users\gku\desktop\lv_port_win_codeblocks\lvgl\demos\my_demo_2\scr_media_settings.c
 	"my_demo_2.h"
 
 1783310204 source:c:\users\gku\desktop\lv_port_win_codeblocks\lvgl\font\font_30.c

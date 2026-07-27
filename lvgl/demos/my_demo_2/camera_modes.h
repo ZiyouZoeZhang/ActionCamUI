@@ -1,5 +1,7 @@
 #ifndef CAMERA_MODES_H_INCLUDED
 #define CAMERA_MODES_H_INCLUDED
+#define IS_SUPPORTED(mode, setting, is_pro) \
+    ((is_pro) ? (supported_setting[mode][setting] > 0) : (supported_setting[mode][setting] == 1))
 
 #include <string.h>
 #include <stdio.h>
@@ -50,7 +52,7 @@ typedef struct {
     int states_media_pro_count;
 } camera_mode_info_t;
 */
-
+extern const uint8_t supported_setting[][24];
 extern const camera_mode_info_t mode_table[];
 extern int mode_names[];
 
