@@ -3,41 +3,287 @@
 #include "scr_resolution.h"
 
 #define CAM_RES_COUNT 7
+#define CAM_RES_PRO_COUNT 10
+#define CAM_FRAME_RATES_PRO_COUNT 4
+#define CAM_GYRO_EIS_COUNT 7
 
 lv_obj_t *scr_resolution = NULL;
-static lv_obj_t * roller = NULL;
-static lv_obj_t * heading;
+lv_obj_t *scr_resolution_pro = NULL;
+lv_obj_t *scr_gyro_selection = NULL;
 
-const char* cam_resolution_table[] = {
-    "48MP(4:3)",
-    "20MP(4:3)",
-    "16MP(4:3)",
-    "12MP(4:3)",
-    "8MP(4:3)",
-    "5MP(4:3)",
-    "3MP(4:3)"
+//SCR RES
+static lv_obj_t * res_roller = NULL;
+static lv_obj_t * res_heading;
+
+//SCR RESPRO
+lv_obj_t * video_format_state = NULL;
+static lv_obj_t * video_format_label = NULL;
+bool pal_ntsc = true;
+
+lv_obj_t * gyro_eis_state = NULL;
+static lv_obj_t * gyro_eis_label = NULL;
+
+static lv_obj_t * res_pro_roller = NULL;
+static lv_obj_t * res_pro_heading;
+
+static lv_obj_t * frame_rate_pro_roller = NULL;
+static lv_obj_t * frame_rate_pro_heading;
+
+//GYROEIS SCREEN
+static lv_obj_t * gyro_eis_roller = NULL;
+static lv_obj_t * gyro_eis_title;
+static lv_obj_t * gyro_eis_text;
+
+static void gyro_eis_roller_toggled_cb();
+
+const int cam_resolution_table[] = {
+    STRING_48M,
+    STRING_20M,
+    STRING_16M,
+    STRING_12M,
+    STRING_8M,
+    STRING_5M,
+    STRING_3M
+};
+
+int cam_gyro_eis_table[] = {
+    STRING_OFF,
+    STRING_DIS_NORMAL,
+    STRING_DIS_SUPER,
+    STRING_DIS_GYROFLOW,
+    STRING_TILT_CORRECTION,
+    STRING_HORIZON_STABILIZATION,
+    STRING_360_HORIZON_CORRECTION
+};
+
+int cam_gyro_eis_text_table[] = {
+    STRING_DIS_OFF_TIPS,
+    STRING_DIS_NORMAL_TIPS,
+    STRING_DIS_SUPER_TIPS,
+    STRING_DIS_GYROFLOW_TIPS,
+    STRING_TILT_CORRECTION_TIPS,
+    STRING_HORIZON_STABILIZATION_TIPS,
+    STRING_360_HORIZON_CORRECTION_TIPS
+};
+
+const int cam_resolution_pro_table[] = {
+    STRING_4K,
+    STRING_4KS,
+    STRING_4KH,
+    STRING_2_7K,
+    STRING_2_7KH,
+    STRING_1440P_4_3,
+    STRING_1080P,
+    STRING_1080PS,
+    STRING_1080PH,
+    STRING_720P
+};
+
+
+int res_frame_map[CAM_RES_PRO_COUNT][CAM_FRAME_RATES_PRO_COUNT] = {
+    // 25, 50, 100, 200
+    {STRING_4K25, STRING_4K50, 0, 0},  // STRING_4K
+    {STRING_4K25_S, 0, 0, 0},  // STRING_4KS
+    {STRING_4K25_HDR, STRING_4K50_HDR, 0, 0},  // STRING_4KH
+    {STRING_2_7K25, STRING_2_7K50, 0, 0},  // STRING_2_7K
+    {STRING_2_7K25_HDR, 0, 0, 0},  // STRING_2_7KH
+    {STRING_1440P25, STRING_1440P50, 0, 0},  // STRING_1440P_4_3
+    {STRING_1080P25, STRING_1080P50, STRING_1080P100, 0},  // STRING_1080P
+    {STRING_1080P25_S, STRING_1080P50_S, 0, 0},  // STRING_1080PS
+    {STRING_1080P25_HDR, STRING_1080P50_HDR, 0, 0},  // STRING_1080PH
+    {STRING_720P25, STRING_720P50, STRING_720P100, 0}  // STRING_720P
+};
+
+const int cam_frame_rates_pro_table[] = {
+    25, 50, 100, 200
 };
 
 int get_selected_resolution_from_roller(void){
-    if(roller){
-        return lv_roller_get_selected(roller);
+    return res_frame_map[lv_roller_get_selected(res_pro_roller)][lv_roller_get_selected(frame_rate_pro_roller)];
+
+    if (cur_cam_mode >= CAM_MODE_VIDEO) {
+        if(res_pro_roller){
+                return res_frame_map[lv_roller_get_selected(res_pro_roller)][lv_roller_get_selected(frame_rate_pro_roller)];
+                //return cam_resolution_pro_table[lv_roller_get_selected(res_pro_roller)];
+            }
+    } else {
+        if(res_roller){
+            return cam_resolution_table[lv_roller_get_selected(res_roller)];
+        }
     }
     return 0;
 }
 
+static void switch_video_format_cb(){
+    pal_ntsc = !pal_ntsc;
+    open_scr_resolution_cb();
+}
+
+
+static void open_scr_gyro_selection_cb(){
+    //update_roller_options(gyro_eis_roller, cam_gyro_eis_table, CAM_GYRO_EIS_COUNT, false);
+
+    ///UPDATE ROLLER OPTION
+    gyro_eis_roller_toggled_cb();
+    lv_label_set_text(gyro_eis_title, _(STRING_DIS));
+
+
+    lv_screen_load(scr_gyro_selection);
+}
+
+///CREATE UPDATE ROLLER FUNCTION
+
+static void handle_roller_value_update(
+    lv_obj_t * roller_obj,
+    const int *options,
+    const bool *active,
+    bool special_options_only_int // frame rate only has int
+){
+    //count based on active
+    //then set options
+
+
+}
+
+
 void open_scr_resolution_cb(){
-    //create_scr_resolution();
-    lv_label_set_text(heading, _(STRING_RESOLUTION));
-    lv_screen_load(scr_resolution);
+
+    ///update all roller options
+    ///use update roller options
+
+
+    //update all labels
+    lv_label_set_text(frame_rate_pro_heading, _(STRING_FPS));
+    lv_label_set_text(res_pro_heading, _(STRING_RESOLUTION));
+    lv_label_set_text(gyro_eis_label, _(STRING_DIS));
+    lv_label_set_text(gyro_eis_state, _(cam_gyro_eis_table[lv_roller_get_selected(gyro_eis_roller)]));
+     lv_label_set_text(video_format_label, _(STRING_VIDEO_STANDARD));
+    (pal_ntsc) ? lv_label_set_text(video_format_state, _(STRING_PAL)) : lv_label_set_text(video_format_state, _(STRING_NTSC));
+
+
+    lv_screen_load(scr_resolution_pro);
+
+
+    /*
+    if (cur_cam_mode >= CAM_MODE_VIDEO) {
+        lv_label_set_text(frame_rate_pro_heading, _(STRING_FPS));
+        lv_label_set_text(res_pro_heading, _(STRING_RESOLUTION));
+        lv_screen_load(scr_resolution_pro);
+    } else{
+        lv_label_set_text(res_heading, _(STRING_RESOLUTION));
+        lv_screen_load(scr_resolution);
+    }
+    */
 }
 
-static void on_release_cb(){
-     lv_obj_set_style_text_color(roller, lv_palette_main(LV_PALETTE_BLUE), LV_PART_SELECTED);
+
+static lv_obj_t * create_btn(int label_id, int state_id, int y){
+        lv_obj_t * btn = lv_btn_create(scr_resolution_pro);
+        lv_obj_add_style(btn, &style_media_default_btn, LV_PART_MAIN);
+        lv_obj_align(btn, LV_ALIGN_RIGHT_MID, lv_pct(-2), y);
+        lv_obj_set_size(btn, 220, 90);
+
+//        lv_obj_add_event_cb(btn, open_scr_media_selection_cb, LV_EVENT_CLICKED, (void*)(intptr_t)i);
+
+        lv_obj_t *name_label = lv_label_create(btn);
+        lv_label_set_text(name_label, _(label_id));
+        lv_obj_add_style(name_label, &style_font_default_30, LV_PART_MAIN);
+        lv_obj_align(name_label, LV_ALIGN_CENTER, 0, -18);
+
+        lv_obj_t *state_label = lv_label_create(btn);
+        lv_label_set_text(state_label, _(state_id));
+
+        lv_obj_add_style(state_label, &style_font_default_30, LV_PART_MAIN);
+        lv_obj_align(state_label, LV_ALIGN_CENTER, 0, 20);
+        lv_obj_set_style_text_opa(state_label, LV_OPA_100, LV_PART_MAIN);
+
+        if (label_id == STRING_VIDEO_STANDARD){
+            video_format_state = state_label;
+            video_format_label = name_label;
+            lv_obj_add_event_cb(btn, switch_video_format_cb, LV_EVENT_CLICKED, NULL);
+        } else if (label_id == STRING_DIS){
+            gyro_eis_state = state_label;
+            gyro_eis_label = name_label;
+            lv_obj_add_event_cb(btn, open_scr_gyro_selection_cb, LV_EVENT_CLICKED, NULL);
+        }
+        return btn;
 }
 
-static void on_press_cb(){
-     lv_obj_set_style_text_color(roller, lv_color_white(), LV_PART_SELECTED);
+static void gyro_eis_roller_toggled_cb(){
+    lv_label_set_text(gyro_eis_text, _(cam_gyro_eis_text_table[lv_roller_get_selected(gyro_eis_roller)]));
 }
+
+static void create_gyro_selection_scr(){
+    scr_gyro_selection = lv_obj_create(NULL);
+    lv_obj_set_style_bg_color(scr_gyro_selection, BG_COLOR_DARK_BLUE_GREY, LV_PART_MAIN);
+
+    lv_obj_t * exit_icon = create_exit_icon(scr_gyro_selection);
+    lv_obj_remove_event_cb(exit_icon, open_scr_home_cb);
+    lv_obj_add_event_cb(exit_icon, open_scr_resolution_cb, LV_EVENT_CLICKED, NULL);
+
+    //gyro_eis_roller = create_roller(scr_gyro_selection, cam_gyro_eis_table, CAM_GYRO_EIS_COUNT, 0, 320, 250, &style_font_default_36, false);
+    gyro_eis_roller = create_roller_align_right(scr_gyro_selection, cam_gyro_eis_table, CAM_GYRO_EIS_COUNT, 0, 380, 250, &style_font_default_30, false, false);
+    lv_obj_align(gyro_eis_roller, LV_ALIGN_RIGHT_MID, 0, 0);
+    lv_obj_set_style_text_align(gyro_eis_roller, LV_TEXT_ALIGN_RIGHT, LV_PART_ANY);
+
+    gyro_eis_title = lv_label_create(scr_gyro_selection);
+    lv_label_set_text(gyro_eis_title, _(STRING_DIS));
+    lv_obj_add_style(gyro_eis_title, &style_font_default_36, LV_PART_MAIN);
+    lv_obj_align(gyro_eis_title, LV_ALIGN_TOP_LEFT, 95, 20);
+
+    gyro_eis_text = lv_label_create(scr_gyro_selection);
+    lv_label_set_text(gyro_eis_text, _(cam_gyro_eis_text_table[lv_roller_get_selected(gyro_eis_roller)]));
+    lv_obj_add_style(gyro_eis_text, &style_font_default_36, LV_PART_MAIN);
+    lv_obj_align(gyro_eis_text, LV_ALIGN_TOP_LEFT, 40, 90);
+    lv_label_set_long_mode(gyro_eis_text, LV_LABEL_LONG_WRAP);
+    lv_obj_set_width(gyro_eis_text, 300);
+    lv_obj_set_style_text_line_space(gyro_eis_text, -7, LV_PART_MAIN);
+
+    lv_obj_add_event_cb(gyro_eis_roller, gyro_eis_roller_toggled_cb, LV_EVENT_VALUE_CHANGED, NULL);
+}
+
+void create_scr_resolution_pro(){
+    scr_resolution_pro = lv_obj_create(NULL);
+    lv_obj_set_style_bg_color(scr_resolution_pro, BG_COLOR_DARK_BLUE_GREY, LV_PART_MAIN);
+
+    create_exit_icon(scr_resolution_pro);
+
+    res_pro_heading = lv_label_create(scr_resolution_pro);
+    lv_label_set_text(res_pro_heading, _(STRING_RESOLUTION));
+    lv_obj_add_style(res_pro_heading, &style_font_default_36, LV_PART_MAIN);
+    lv_obj_align(res_pro_heading, LV_ALIGN_CENTER, lv_pct(-30), -120);
+
+    res_pro_roller = create_roller(scr_resolution_pro, cam_resolution_pro_table, CAM_RES_PRO_COUNT, 0, 320, 250, &style_font_default_36, false);
+    lv_obj_align(res_pro_roller, LV_ALIGN_CENTER, lv_pct(-30), lv_pct(10));
+
+
+    frame_rate_pro_heading = lv_label_create(scr_resolution_pro);
+    lv_label_set_text(frame_rate_pro_heading, _(STRING_FPS));
+    lv_obj_add_style(frame_rate_pro_heading, &style_font_default_36, LV_PART_MAIN);
+    lv_obj_align(frame_rate_pro_heading, LV_ALIGN_CENTER, lv_pct(5), -120);
+
+    frame_rate_pro_roller = create_roller(scr_resolution_pro, cam_frame_rates_pro_table, CAM_FRAME_RATES_PRO_COUNT, 0, 250, 250, &style_font_default_36, true);
+    lv_obj_align(frame_rate_pro_roller, LV_ALIGN_CENTER, lv_pct(5), lv_pct(10));
+
+
+
+    static lv_point_precise_t line_points[2] = {{315, 120}, {315, 380}};
+
+    lv_obj_t * line;
+    line = lv_line_create(scr_resolution_pro);
+    lv_line_set_points(line, line_points, 2);
+    lv_obj_set_style_line_color(line, lv_color_white(), LV_PART_MAIN);
+    lv_obj_set_style_line_width(line, 3, LV_PART_MAIN);
+
+
+    create_btn(STRING_DIS, STRING_DIS_NORMAL, lv_pct(-5));
+    create_btn(STRING_VIDEO_STANDARD, STRING_PAL, lv_pct(25));
+
+     create_gyro_selection_scr();
+
+}
+
+
 
 void create_scr_resolution(){
     scr_resolution = lv_obj_create(NULL);
@@ -45,36 +291,11 @@ void create_scr_resolution(){
 
     create_exit_icon(scr_resolution);
 
-    heading = lv_label_create(scr_resolution);
-    lv_label_set_text(heading, "Resolution");
-    lv_obj_add_style(heading, &style_font_default_36, LV_PART_MAIN);
-    lv_obj_align(heading, LV_ALIGN_CENTER, 0, -120);
+    res_heading = lv_label_create(scr_resolution);
+    lv_label_set_text(res_heading, "Resolution");
+    lv_obj_add_style(res_heading, &style_font_default_36, LV_PART_MAIN);
+    lv_obj_align(res_heading, LV_ALIGN_CENTER, 0, -120);
 
-    char options[500] = ""; //format:  name\nname\nname\n etc
-    for (int i = 0; i < CAM_RES_COUNT; i++) {
-        strcat(options, cam_resolution_table[i]);
-        if (i < CAM_RES_COUNT-1 ) {
-            strcat(options, "\n");
-        }
-    }
+    res_roller = create_roller(scr_resolution, cam_resolution_table, CAM_RES_COUNT, 0, 250, 250, &style_font_default_36, false);
 
-    //create roller
-    roller = lv_roller_create(scr_resolution);
-    lv_obj_set_size(roller, 600, 250);
-    lv_obj_align(roller, LV_ALIGN_CENTER, 0, 50);
-
-    lv_roller_set_options(roller, options, LV_ROLLER_MODE_NORMAL);
-    lv_roller_set_selected(roller, 0, LV_ANIM_OFF);
-
-    lv_obj_set_style_bg_opa(roller, LV_OPA_0,  LV_PART_MAIN);
-    lv_obj_set_style_bg_opa(roller, LV_OPA_0,  LV_PART_SELECTED);
-    lv_obj_set_style_border_width(roller, 0, LV_PART_MAIN);
-
-    lv_obj_add_style(roller, &style_font_default_36, LV_PART_MAIN);
-    lv_obj_set_style_text_color(roller, lv_palette_main(LV_PALETTE_BLUE), LV_PART_SELECTED);
-    lv_obj_set_style_text_line_space(roller, 50, LV_PART_MAIN);
-
-    //roller cb
-    lv_obj_add_event_cb(roller, on_release_cb, LV_EVENT_VALUE_CHANGED, NULL);
-    lv_obj_add_event_cb(roller, on_press_cb, LV_EVENT_PRESSED, NULL);
 }

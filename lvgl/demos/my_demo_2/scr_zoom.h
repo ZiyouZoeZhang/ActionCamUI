@@ -3,7 +3,7 @@
 
 
 extern lv_obj_t * scr_zoom;
-extern const char* cam_zoom_table[];
+//extern const char* cam_zoom_table[];
 
 void open_scr_zoom_cb();
 void create_scr_zoom();

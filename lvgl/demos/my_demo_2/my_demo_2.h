@@ -44,29 +44,13 @@ extern lv_style_t style_cont_transparent;
 /** screen**/
 extern lv_obj_t *scr_home;
 extern lv_obj_t * scr_poweroff;
-/*
-extern lv_obj_t *scr_menu;
-extern lv_obj_t *scr_pic_library;
-extern lv_obj_t *scr_media_settings;
-extern lv_obj_t *scr_mode_selection;*/
-
 
 void open_scr_home_cb();
 void open_scr_poweroff_cb();
-/*
-void open_scr_menu_cb(void);
-void open_scr_pic_lib_cb(void);
-void open_scr_media_settings_cb(void);
-void open_scr_mode_selection_cb(void);*/
 
 void create_scr_poweroff();
 void create_scr_home();
 void create_scr_mode_selection(int mode);
-/*
-lv_obj_t* create_scr_menu(void);
-lv_obj_t* create_scr_pic_library(void);
-lv_obj_t* create_scr_media_settings(void);
-lv_obj_t* create_scr_mode_selection(void);*/
 
 /**main**/
 void my_demo_2_create();

@@ -14,7 +14,7 @@ static lv_obj_t * media_select_label;
 static lv_obj_t * cont_buttons;
 static lv_obj_t * media_select_roller;
 
-static lv_style_t style_btn;
+lv_style_t style_media_default_btn;
 
 static void update_scr_media_settings();
 static void update_scr_media_selection(media_set_btn_info_t * btn);
@@ -268,7 +268,7 @@ static void update_scr_media_selection(media_set_btn_info_t * btn){ ///TBD
     lv_roller_set_selected(media_select_roller, btn->cur_state, LV_ANIM_OFF);
     lv_obj_remove_event_cb(media_select_roller, roller_value_changed_cb);
     lv_obj_add_event_cb(media_select_roller, roller_value_changed_cb, LV_EVENT_VALUE_CHANGED, btn);
-    lv_obj_add_event_cb(media_select_roller, roller_value_changed_cb, LV_EVENT_VALUE_CHANGED, btn);
+  //  lv_obj_add_event_cb(media_select_roller, roller_value_changed_cb, LV_EVENT_VALUE_CHANGED, btn);
 }
 
 static void update_scr_media_settings(){
@@ -287,11 +287,11 @@ static void update_scr_media_settings(){
 void create_scr_media_settings(){
     /**pre process**/
     //set style
-    lv_style_init(&style_btn);
-    lv_style_set_shadow_width(&style_btn, 0);
-    lv_style_set_bg_color(&style_btn, BG_COLOR_DARK_GREY);
-    lv_style_set_bg_opa(&style_btn, LV_OPA_100);
-    lv_style_set_radius(&style_btn, 8);
+    lv_style_init(&style_media_default_btn);
+    lv_style_set_shadow_width(&style_media_default_btn, 0);
+    lv_style_set_bg_color(&style_media_default_btn, BG_COLOR_DARK_GREY);
+    lv_style_set_bg_opa(&style_media_default_btn, LV_OPA_100);
+    lv_style_set_radius(&style_media_default_btn, 8);
 
     /**create screen**/
     scr_media_settings = lv_obj_create(NULL);
@@ -308,7 +308,7 @@ void create_scr_media_settings(){
 
     /**create pro button**/
     lv_obj_t * pro_btn = lv_button_create(scr_media_settings);
-    lv_obj_add_style(pro_btn, &style_btn, LV_PART_MAIN);
+    lv_obj_add_style(pro_btn, &style_media_default_btn, LV_PART_MAIN);
     lv_obj_set_style_bg_color(pro_btn, lv_palette_main(LV_PALETTE_BLUE), LV_STATE_CHECKED);
     lv_obj_align(pro_btn, LV_ALIGN_TOP_RIGHT, -25, 25);
     lv_obj_set_size(pro_btn, 120, 55);
@@ -393,7 +393,7 @@ static void create_settings_buttons_grid(lv_obj_t * parent) {
 
         lv_obj_t * btn = lv_btn_create(parent);
         lv_obj_set_grid_cell(btn, LV_GRID_ALIGN_STRETCH, cur_grid % 2, 1, LV_GRID_ALIGN_STRETCH, cur_grid / 2, 1);
-        lv_obj_add_style(btn, &style_btn, LV_PART_MAIN);
+        lv_obj_add_style(btn, &style_media_default_btn, LV_PART_MAIN);
         lv_obj_add_event_cb(btn, open_scr_media_selection_cb, LV_EVENT_CLICKED, (void*)(intptr_t)i);
 
         //label of media setting name

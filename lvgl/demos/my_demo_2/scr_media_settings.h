@@ -43,6 +43,7 @@ typedef struct {
 
 extern lv_obj_t *scr_media_settings;
 extern media_set_btn_info_t media_buttons[];
+extern lv_style_t style_media_default_btn;
 void open_scr_media_settings_cb();
 void create_scr_media_settings();
 void create_scr_media_selection();

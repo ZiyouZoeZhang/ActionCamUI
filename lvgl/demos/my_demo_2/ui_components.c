@@ -27,9 +27,9 @@ void create_media_set_icon(lv_obj_t * parent){
 }
 
 void set_resolution_icon_bg(lv_obj_t *img, int res) {
-    if (strlen(cam_resolution_table[res]) <= 7) {
+    if (strlen(_(res)) <= 7) {
         lv_image_set_src(img, &main_Res_short);
-    } else if (strlen(cam_resolution_table[res]) <= 9) {
+    } else if (strlen(_(res)) <= 9) {
         lv_image_set_src(img, &main_Res_mid);
     } else {
         lv_image_set_src(img, &main_Res_bg);
@@ -44,7 +44,7 @@ lv_obj_t * create_resolution_icon(lv_obj_t * parent, int cur_res){
     set_resolution_icon_bg(img_res, cur_res);
 
     lv_obj_t * label = lv_label_create(img_res);
-    lv_label_set_text(label, cam_resolution_table[cur_res]);
+    lv_label_set_text(label, _(cur_res));
     lv_obj_add_style(label, &style_font_default_36, LV_PART_MAIN);
 
     lv_obj_add_event_cb(img_res, open_scr_resolution_cb, LV_EVENT_CLICKED, NULL);
@@ -58,7 +58,7 @@ lv_obj_t * create_zoom_icon(lv_obj_t * parent, int cur_zoom){
     lv_image_set_src(img_zoom, &main_Zoom_bg);
 
     lv_obj_t * label = lv_label_create(img_zoom);
-    lv_label_set_text(label, cam_zoom_table[cur_zoom]);
+    lv_label_set_text(label, _(cur_zoom));
     lv_obj_add_style(label, &style_font_default_36, LV_PART_MAIN);
 
     lv_obj_add_event_cb(img_zoom, open_scr_zoom_cb, LV_EVENT_CLICKED, NULL);
@@ -258,6 +258,119 @@ void update_spot_metering_cb(lv_event_t *e) {
 
 void reset_spot_metering(){
     lv_obj_center(img_spot_met);
+}
+
+
+static void on_roller_release_cb(lv_event_t * e){
+     lv_obj_set_style_text_color(lv_event_get_target(e), lv_palette_main(LV_PALETTE_BLUE), LV_PART_SELECTED);
+}
+
+static void on_roller_press_cb(lv_event_t * e){
+     lv_obj_set_style_text_color(lv_event_get_target(e), lv_color_white(), LV_PART_SELECTED);
+}
+
+lv_obj_t * create_roller(
+    lv_obj_t *parent,
+    const int *options,
+    int option_count,
+    int default_selected,
+    int width,
+    int height,
+    const lv_style_t *font_style,
+    bool special_options_only_int
+){
+    char temp_buffer[32];
+    char options_str[1024] = "";
+    for (int i = 0; i < option_count; i++) {
+        if (special_options_only_int) {
+            snprintf(temp_buffer, sizeof(temp_buffer), "%d", options[i]);
+            strcat(options_str, temp_buffer);
+        } else strcat(options_str, _(options[i]));
+        if (i < option_count - 1) {
+            strcat(options_str, "\n");
+        }
+    }
+
+    lv_obj_t  *roller = lv_roller_create(parent);
+    lv_obj_set_size(roller, width, height);
+    lv_obj_align(roller, LV_ALIGN_CENTER, 0, 50);
+
+    lv_roller_set_options(roller, options_str, LV_ROLLER_MODE_NORMAL);
+    lv_roller_set_selected(roller, default_selected, LV_ANIM_OFF);
+
+    lv_obj_set_style_bg_opa(roller, LV_OPA_0, LV_PART_MAIN);
+    lv_obj_set_style_bg_opa(roller, LV_OPA_0, LV_PART_SELECTED);
+    lv_obj_set_style_border_width(roller, 0, LV_PART_MAIN);
+
+    lv_obj_add_style(roller, font_style, LV_PART_MAIN);
+    lv_obj_set_style_text_color(roller, lv_palette_main(LV_PALETTE_BLUE), LV_PART_SELECTED);
+    lv_obj_set_style_text_line_space(roller, 50, LV_PART_MAIN);
+
+    lv_obj_add_event_cb(roller, on_roller_release_cb, LV_EVENT_VALUE_CHANGED, NULL);
+    lv_obj_add_event_cb(roller, on_roller_press_cb, LV_EVENT_PRESSED, NULL);
+
+    return roller;
+}
+
+lv_obj_t * create_roller_align_right(
+    lv_obj_t *parent,
+    const int *options,
+    int option_count,
+    int default_selected,
+    int width,
+    int height,
+    const lv_style_t *font_style,
+    bool special_options_only_int,
+    bool more_visible_rows
+) {
+    lv_obj_t * cont =  lv_obj_create(parent);
+    lv_obj_add_style(cont, &style_cont_transparent, LV_PART_MAIN);
+    lv_obj_align(cont, LV_ALIGN_RIGHT_MID, -40, 0);
+    lv_obj_set_size(cont, width+50, height+50);
+    lv_obj_remove_flag(cont, LV_OBJ_FLAG_SCROLLABLE);
+    //create roller
+    lv_obj_t * roller = create_roller(cont,options, option_count, default_selected, width, height,font_style, special_options_only_int);
+    lv_obj_align(roller, LV_ALIGN_RIGHT_MID, 0, 0);
+    if (more_visible_rows){
+            lv_obj_set_style_text_line_space(roller, 15, LV_PART_MAIN);
+            lv_roller_set_visible_row_count(roller, 9);
+    }
+    lv_obj_set_style_text_align(roller, LV_TEXT_ALIGN_RIGHT, LV_PART_MAIN);
+
+    //create indicator
+    lv_obj_t * ind = lv_image_create(parent);
+    lv_obj_align(ind, LV_ALIGN_RIGHT_MID, -15, 0);
+    lv_image_set_src(ind, &Pattern_Select);
+
+    return roller;
+}
+
+
+
+void update_roller_options(
+    lv_obj_t * roller_obj,
+    const int *options,
+    int option_count,
+    bool special_options_only_int
+){
+    char temp_buffer[32];
+    char options_str[1024] = "";
+    for (int i = 0; i < option_count; i++) {
+        if (special_options_only_int) {
+            snprintf(temp_buffer, sizeof(temp_buffer), "%d", options[i]);
+            strcat(options_str, temp_buffer);
+        } else strcat(options_str, _(options[i]));
+        if (i < option_count - 1) {
+            strcat(options_str, "\n");
+        }
+    }
+
+    int selected = lv_roller_get_selected(roller_obj);
+
+    lv_roller_set_options(roller_obj, options_str, LV_ROLLER_MODE_NORMAL);
+    lv_roller_set_selected(roller_obj, selected, LV_ANIM_OFF);
+
+    return;
 }
 
 /**CB**/

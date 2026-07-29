@@ -6,7 +6,7 @@ bool battery_charging = true;
 int sd_status = 1; //0 = none, 1 = available, -1 = error
 float sd_storage = 26.3;
 int cur_cam_mode = 0;
-int cur_cam_resolution = 0;
+int cur_cam_resolution = STRING_1080P;
 int cur_cam_zoom = 0;
 bool wifi_active = false;
 bool bluetooth_active = false;
@@ -82,6 +82,7 @@ static void initialize_screens(){
     create_scr_media_settings();
     create_scr_media_selection();
     create_scr_mode_selection(0);
+    create_scr_resolution_pro();
 
     create_scr_menu_settings();
     //create_scr_menu_bluetooth();
@@ -95,6 +96,4 @@ void my_demo_2_create() {
 
     /**driver code**/
     open_scr_home_cb();
-
-    //settings_action();
 }

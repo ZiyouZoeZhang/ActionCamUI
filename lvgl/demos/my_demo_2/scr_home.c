@@ -25,11 +25,11 @@ void update_scr_home(){
     lv_image_set_src(img_cam_mode, get_mode_icon(cur_cam_mode));
 
     cur_cam_zoom = get_selected_zoom_from_roller();
-    lv_label_set_text(label_zoom, cam_zoom_table[cur_cam_zoom]);
+    lv_label_set_text(label_zoom, _(cur_cam_zoom));
 
     cur_cam_resolution = get_selected_resolution_from_roller();
     set_resolution_icon_bg(img_res, cur_cam_resolution);
-    lv_label_set_text(label_res, cam_resolution_table[cur_cam_resolution]);
+    lv_label_set_text(label_res, _(cur_cam_resolution));
 }
 
 static void swipe_scr_main_cb(lv_event_t * e){

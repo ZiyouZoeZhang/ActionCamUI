@@ -23,6 +23,37 @@ void create_spot_metering(lv_obj_t * parent);
 lv_obj_t *create_pic_select_icon(lv_obj_t * parent);
 lv_obj_t * create_label_top_center(lv_obj_t * parent, char * str);
 
+
+lv_obj_t * create_roller(
+    lv_obj_t *parent,
+    const int *options,
+    int option_count,
+    int default_selected,
+    int width,
+    int height,
+    const lv_style_t *font_style,
+    bool special_options_only_int
+);
+
+lv_obj_t * create_roller_align_right(
+    lv_obj_t *parent,
+    const int *options,
+    int option_count,
+    int default_selected,
+    int width,
+    int height,
+    const lv_style_t *font_style,
+    bool special_options_only_int,
+    bool more_visible_rows
+);
+
+void update_roller_options(
+    lv_obj_t * roller_obj,
+    const int *options,
+    int option_count,
+    bool special_options_only_int
+);
+
 lv_obj_t * create_btn_confirm(lv_obj_t * parent);
 lv_obj_t * create_btn_cancle(lv_obj_t * parent);
 
