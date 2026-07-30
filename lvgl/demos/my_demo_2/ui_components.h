@@ -54,6 +54,14 @@ void update_roller_options(
     bool special_options_only_int
 );
 
+ void update_roller_options_active(
+    lv_obj_t * roller_obj,
+    const int *options,
+    const bool *active,
+    int option_count,
+    bool special_options_only_int // frame rate only has int
+);
+
 lv_obj_t * create_btn_confirm(lv_obj_t * parent);
 lv_obj_t * create_btn_cancle(lv_obj_t * parent);
 

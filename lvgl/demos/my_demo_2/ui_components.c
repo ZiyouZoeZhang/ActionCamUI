@@ -346,6 +346,33 @@ lv_obj_t * create_roller_align_right(
 }
 
 
+ void update_roller_options_active(
+    lv_obj_t * roller_obj,
+    const int *options,
+    const bool *active,
+    int option_count,
+    bool special_options_only_int // frame rate only has int
+){
+    char temp_buffer[32];
+    char options_str[1024] = "";
+    for (int i = 0; i < option_count; i++) {
+        if (!active[i]) continue;
+        if (special_options_only_int) {
+            snprintf(temp_buffer, sizeof(temp_buffer), "%d", options[i]);
+            strcat(options_str, temp_buffer);
+        } else strcat(options_str, _(options[i]));
+        if (i < option_count - 1) {
+            strcat(options_str, "\n");
+        }
+    }
+    int selected = lv_roller_get_selected(roller_obj);
+
+    lv_roller_set_options(roller_obj, options_str, LV_ROLLER_MODE_NORMAL);
+   lv_roller_set_selected(roller_obj, selected, LV_ANIM_OFF);
+    return;
+}
+
+
 
 void update_roller_options(
     lv_obj_t * roller_obj,
