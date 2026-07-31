@@ -155,18 +155,14 @@ const int cam_frame_rates_pro_table[2][CAM_FRAME_RATES_PRO_COUNT] = {
     {25, 50, 50, 100, 200}    //pal
 };
 
-static void update_all_rollers(){
+static void update_all_rollers_cb(){
 
     int cur_res = lv_roller_get_selected(res_pro_roller);
     //update ntsc roller
     if (cur_cam_mode == CAM_MODE_SLOW_MOTION){
-        if (pal_ntsc){
-            update_roller_options_active(frame_rate_pro_roller, cam_frame_rates_pro_table[0], supported_fram_rate_slow_mo[cur_res], 5, true);
-        } else {
-            update_roller_options_active(frame_rate_pro_roller, cam_frame_rates_pro_table[1], supported_frame_rate_video[cur_res], 5, true);
-        }
+            update_roller_options_active(frame_rate_pro_roller, cam_frame_rates_pro_table[pal_ntsc], supported_fram_rate_slow_mo[cur_res], 5, true);
     } else {
-
+            update_roller_options_active(frame_rate_pro_roller, cam_frame_rates_pro_table[pal_ntsc], supported_frame_rate_video[cur_res], 5, true);
     }
 }
 
@@ -204,13 +200,13 @@ void open_scr_resolution_cb(){
 
     ///update all roller options
     ///use update roller options
-    update_all_rollers();
+    update_all_rollers_cb();
 
     //update all labels
     lv_label_set_text(frame_rate_pro_heading, _(STRING_FPS));
     lv_label_set_text(res_pro_heading, _(STRING_RESOLUTION));
     lv_label_set_text(gyro_eis_label, _(STRING_DIS));
-    lv_label_set_text(gyro_eis_state, _(cam_gyro_eis_text_table[lv_roller_get_selected(gyro_eis_roller)]));
+    lv_label_set_text(gyro_eis_state, _(eis_7_list[lv_roller_get_selected(gyro_eis_roller)]));
      lv_label_set_text(video_format_label, _(STRING_VIDEO_STANDARD));
     (pal_ntsc) ? lv_label_set_text(video_format_state, _(STRING_PAL)) : lv_label_set_text(video_format_state, _(STRING_NTSC));
 
@@ -264,7 +260,7 @@ static lv_obj_t * create_btn(int label_id, int state_id, int y){
 }
 
 static void gyro_eis_roller_toggled_cb(){
-    lv_label_set_text(gyro_eis_text, _(cam_gyro_eis_text_table[lv_roller_get_selected(gyro_eis_roller)]));
+    lv_label_set_text(gyro_eis_text, _(eis_7_list[lv_roller_get_selected(gyro_eis_roller)]));
 }
 
 static void create_gyro_selection_scr(){
@@ -276,7 +272,7 @@ static void create_gyro_selection_scr(){
     lv_obj_add_event_cb(exit_icon, open_scr_resolution_cb, LV_EVENT_CLICKED, NULL);
 
     //gyro_eis_roller = create_roller(scr_gyro_selection, cam_gyro_eis_table, CAM_GYRO_EIS_COUNT, 0, 320, 250, &style_font_default_36, false);
-    gyro_eis_roller = create_roller_align_right(scr_gyro_selection, cam_gyro_eis_text_table, CAM_GYRO_EIS_COUNT, 0, 380, 250, &style_font_default_30, false, false);
+    gyro_eis_roller = create_roller_align_right(scr_gyro_selection, eis_7_list, CAM_GYRO_EIS_COUNT, 0, 380, 250, &style_font_default_30, false, false);
     lv_obj_align(gyro_eis_roller, LV_ALIGN_RIGHT_MID, 0, 0);
     lv_obj_set_style_text_align(gyro_eis_roller, LV_TEXT_ALIGN_RIGHT, LV_PART_ANY);
 
@@ -309,7 +305,7 @@ void create_scr_resolution_pro(){
 
     res_pro_roller = create_roller(scr_resolution_pro, cam_resolution_pro_table, CAM_RES_PRO_COUNT, 0, 320, 250, &style_font_default_36, false);
     lv_obj_align(res_pro_roller, LV_ALIGN_CENTER, lv_pct(-30), lv_pct(10));
-
+    lv_obj_add_event_cb(res_pro_roller, update_all_rollers_cb, LV_EVENT_VALUE_CHANGED, NULL);
 
     frame_rate_pro_heading = lv_label_create(scr_resolution_pro);
     lv_label_set_text(frame_rate_pro_heading, _(STRING_FPS));
@@ -318,6 +314,7 @@ void create_scr_resolution_pro(){
 
     frame_rate_pro_roller = create_roller(scr_resolution_pro, cam_frame_rates_pro_table[0], CAM_FRAME_RATES_PRO_COUNT, 0, 250, 250, &style_font_default_36, true);
     lv_obj_align(frame_rate_pro_roller, LV_ALIGN_CENTER, lv_pct(5), lv_pct(10));
+    lv_obj_add_event_cb(frame_rate_pro_roller, update_all_rollers_cb, LV_EVENT_VALUE_CHANGED, NULL);
 
 
 

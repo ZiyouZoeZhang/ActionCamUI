@@ -266,6 +266,7 @@ static void on_roller_release_cb(lv_event_t * e){
 }
 
 static void on_roller_press_cb(lv_event_t * e){
+    if (lv_roller_get_option_count(lv_event_get_target(e))==1) return;
      lv_obj_set_style_text_color(lv_event_get_target(e), lv_color_white(), LV_PART_SELECTED);
 }
 
@@ -355,20 +356,27 @@ lv_obj_t * create_roller_align_right(
 ){
     char temp_buffer[32];
     char options_str[1024] = "";
+    int first = 1;
+
     for (int i = 0; i < option_count; i++) {
         if (!active[i]) continue;
+
+        if (!first) strcat(options_str, "\n");
+        first = 0;
+
         if (special_options_only_int) {
             snprintf(temp_buffer, sizeof(temp_buffer), "%d", options[i]);
             strcat(options_str, temp_buffer);
-        } else strcat(options_str, _(options[i]));
-        if (i < option_count - 1) {
-            strcat(options_str, "\n");
+        } else {
+            strcat(options_str, _(options[i]));
         }
     }
     int selected = lv_roller_get_selected(roller_obj);
 
     lv_roller_set_options(roller_obj, options_str, LV_ROLLER_MODE_NORMAL);
-   lv_roller_set_selected(roller_obj, selected, LV_ANIM_OFF);
+
+    if (selected < lv_roller_get_option_count(roller_obj)) lv_roller_set_selected(roller_obj, selected, LV_ANIM_OFF);
+    else lv_roller_set_selected(roller_obj, 0, LV_ANIM_OFF);
     return;
 }
 
