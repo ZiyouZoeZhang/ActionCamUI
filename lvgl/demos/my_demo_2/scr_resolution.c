@@ -97,6 +97,14 @@ const int cam_resolution_pro_table[] = {
     STRING_720P
 };
 
+static const bool supported_resolution_video[CAM_RES_PRO_COUNT] = {
+    true, true, true, true, true, true, true, true, true, true
+};
+
+static const bool supported_resolution_slow_mo[CAM_RES_PRO_COUNT] = {
+    false, false, false, false, false, true, true, false, false, true
+};
+
 
 static const bool supported_frame_rate_video[CAM_RES_PRO_COUNT][CAM_FRAME_RATES_PRO_COUNT] = {
     //30,   50,    60,    120,    240
@@ -160,9 +168,11 @@ static void update_all_rollers_cb(){
     int cur_res = lv_roller_get_selected(res_pro_roller);
     //update ntsc roller
     if (cur_cam_mode == CAM_MODE_SLOW_MOTION){
-            update_roller_options_active(frame_rate_pro_roller, cam_frame_rates_pro_table[pal_ntsc], supported_fram_rate_slow_mo[cur_res], 5, true);
+            update_roller_options_active(frame_rate_pro_roller, cam_frame_rates_pro_table[pal_ntsc], supported_fram_rate_slow_mo[cur_res], CAM_FRAME_RATES_PRO_COUNT, true);
+            update_roller_options_active(res_pro_roller, cam_resolution_pro_table, supported_resolution_slow_mo, CAM_RES_PRO_COUNT, false);
     } else {
-            update_roller_options_active(frame_rate_pro_roller, cam_frame_rates_pro_table[pal_ntsc], supported_frame_rate_video[cur_res], 5, true);
+            update_roller_options_active(frame_rate_pro_roller, cam_frame_rates_pro_table[pal_ntsc], supported_frame_rate_video[cur_res], CAM_FRAME_RATES_PRO_COUNT, true);
+            update_roller_options_active(res_pro_roller, cam_resolution_pro_table, supported_resolution_video, CAM_RES_PRO_COUNT, false);
     }
 }
 

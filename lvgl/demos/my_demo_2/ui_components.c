@@ -376,7 +376,7 @@ lv_obj_t * create_roller_align_right(
     lv_roller_set_options(roller_obj, options_str, LV_ROLLER_MODE_NORMAL);
 
     if (selected < lv_roller_get_option_count(roller_obj)) lv_roller_set_selected(roller_obj, selected, LV_ANIM_OFF);
-    else lv_roller_set_selected(roller_obj, 0, LV_ANIM_OFF);
+    else lv_roller_set_selected(roller_obj, lv_roller_get_option_count(roller_obj)-1, LV_ANIM_OFF);
     return;
 }
 
