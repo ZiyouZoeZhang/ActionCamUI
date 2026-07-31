@@ -54,7 +54,7 @@ void update_roller_options(
     bool special_options_only_int
 );
 
- void update_roller_options_active(
+ int update_roller_options_active(
     lv_obj_t * roller_obj,
     const int *options,
     const bool *active,

@@ -347,7 +347,7 @@ lv_obj_t * create_roller_align_right(
 }
 
 
- void update_roller_options_active(
+ int update_roller_options_active(
     lv_obj_t * roller_obj,
     const int *options,
     const bool *active,
@@ -377,7 +377,7 @@ lv_obj_t * create_roller_align_right(
 
     if (selected < lv_roller_get_option_count(roller_obj)) lv_roller_set_selected(roller_obj, selected, LV_ANIM_OFF);
     else lv_roller_set_selected(roller_obj, lv_roller_get_option_count(roller_obj)-1, LV_ANIM_OFF);
-    return;
+    return lv_roller_get_selected(roller_obj);
 }
 
 
