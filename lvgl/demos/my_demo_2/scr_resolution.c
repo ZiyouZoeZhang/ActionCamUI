@@ -214,7 +214,7 @@ static void update_all_rollers_cb(){
             cur_gyro_eis = update_roller_options_active(gyro_eis_roller, cam_gyro_eis_table, supported_gyro_eis_modes_table[supported_gyro_eis_video[cur_res][cur_frame_rate]], CAM_GYRO_EIS_COUNT, false);
     }
 
-
+     lv_label_set_text(gyro_eis_state, _(cam_gyro_eis_table[lv_roller_get_selected(gyro_eis_roller)]));
     ///update any pop-up
 }
 
@@ -233,7 +233,6 @@ int get_selected_resolution_from_roller(void){
     if(res_roller){
         return cam_resolution_table[lv_roller_get_selected(res_roller)];
     }
-    printf("AAAAAAAAAAAAAAA\n");
     return 0;
 }
 

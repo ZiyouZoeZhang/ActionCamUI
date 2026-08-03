@@ -12992,7 +12992,7 @@
 	"lvgl.h"
 	"camera_modes.h"
 
-1785742851 source:c:\users\gku\desktop\lv_port_win_codeblocks\lvgl\demos\my_demo_2\ui_components.c
+1785747984 source:c:\users\gku\desktop\lv_port_win_codeblocks\lvgl\demos\my_demo_2\ui_components.c
 	<string.h>
 	<stdio.h>
 	"ui_components.h"
