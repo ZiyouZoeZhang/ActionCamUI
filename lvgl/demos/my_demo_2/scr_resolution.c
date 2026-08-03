@@ -16,6 +16,10 @@ static int current_frame_rate = 0;
 static int current_gyro_eis = 0;
 static bool current_is_slow_mo = false;  // 当前是否在slowmo模式
 
+int CURRENT_RESOLUTION = 0;
+int CURRENT_FRAME_RATE = 0;
+int CURRENT_GYRO_EIS = 0;
+
 //SCR RES
 static lv_obj_t * res_roller = NULL;
 static lv_obj_t * res_heading;
@@ -40,12 +44,6 @@ static lv_obj_t * gyro_eis_title;
 static lv_obj_t * gyro_eis_text;
 
 static void gyro_eis_roller_toggled_cb();
-
-typedef struct {
-    int cam_mode;
-    uint8_t eis_count;      // 支持的EIS数量
-    const int *eis_list;    // 指向EIS选项列表
-} cam_supported_res_frame_eis_t;
 
 const int cam_resolution_table[] = {
     STRING_48M,
@@ -184,7 +182,7 @@ int res_frame_map_video[2][CAM_RES_PRO_COUNT][CAM_FRAME_RATES_PRO_COUNT] = {
 
 int res_frame_map_slow_mo[2][3][3] = {
     {
-        STRING_1440P60, 0, 0},  // STRING_1440P_4_3
+        {STRING_1440P60, 0, 0},  // STRING_1440P_4_3
         {STRING_1080P60,STRING_1080P120, 0},  // STRING_1080P
         {STRING_720P60, STRING_720P120, STRING_720P240}  // STRING_720P
     },
@@ -201,7 +199,6 @@ const int cam_frame_rates_pro_table[2][CAM_FRAME_RATES_PRO_COUNT] = {
 };
 
 
-
 static void update_all_rollers_cb(){
     int cur_res = 0;
     int cur_frame_rate = 0;
@@ -215,25 +212,14 @@ static void update_all_rollers_cb(){
             cur_res = update_roller_options_active(res_pro_roller, cam_resolution_pro_table, supported_resolution_video, CAM_RES_PRO_COUNT, false);
             cur_frame_rate = update_roller_options_active(frame_rate_pro_roller, cam_frame_rates_pro_table[pal_ntsc], supported_frame_rate_video[cur_res], CAM_FRAME_RATES_PRO_COUNT, true);
             cur_gyro_eis = update_roller_options_active(gyro_eis_roller, cam_gyro_eis_table, supported_gyro_eis_modes_table[supported_gyro_eis_video[cur_res][cur_frame_rate]], CAM_GYRO_EIS_COUNT, false);
-
     }
 
-    printf("=== Current Values ===\n");
-printf("Resolution:    %d\n", cur_res);
-    printf("Frame Rate:    %d\n", cur_frame_rate);
-    printf("Gyro EIS:      %d\n", cur_gyro_eis);
-    int gyro_eis_index = supported_gyro_eis_video[cur_res][cur_frame_rate];
-            printf("gyro_eis_index (from video) = %d\n", gyro_eis_index);
-        printf("supported_gyro_eis_modes_table[%d] = %d\n",
-           gyro_eis_index, supported_gyro_eis_modes_table[gyro_eis_index]);
-    printf("=====================\n");
-
-    /// update all btn accodingly
 
     ///update any pop-up
 }
 
 int get_selected_resolution_from_roller(void){
+    update_all_rollers_cb();
     if (cur_cam_mode == CAM_MODE_SLOW_MOTION){
         if(res_pro_roller){
             return res_frame_map_slow_mo[pal_ntsc][lv_roller_get_selected(res_pro_roller)][lv_roller_get_selected(frame_rate_pro_roller)];

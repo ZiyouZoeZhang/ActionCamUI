@@ -358,6 +358,12 @@ lv_obj_t * create_roller_align_right(
     char options_str[1024] = "";
     int first = 1;
 
+    char selected_str[32];
+    lv_roller_get_selected_str(roller_obj, selected_str, sizeof(selected_str));
+    int selected_int = lv_roller_get_selected(roller_obj);
+
+    int target = -1;
+    int count = 0;
     for (int i = 0; i < option_count; i++) {
         if (!active[i]) continue;
 
@@ -366,17 +372,38 @@ lv_obj_t * create_roller_align_right(
 
         if (special_options_only_int) {
             snprintf(temp_buffer, sizeof(temp_buffer), "%d", options[i]);
+            if (strcmp(selected_str, temp_buffer) == 0) {
+                target = count;
+            }
             strcat(options_str, temp_buffer);
         } else {
+            const char *option_text = _(options[i]);
+            if (strcmp(selected_str, option_text) == 0) {
+                target = count;
+            }
             strcat(options_str, _(options[i]));
         }
+
+        count ++;
     }
-    int selected = lv_roller_get_selected(roller_obj);
 
     lv_roller_set_options(roller_obj, options_str, LV_ROLLER_MODE_NORMAL);
 
-    if (selected < lv_roller_get_option_count(roller_obj)) lv_roller_set_selected(roller_obj, selected, LV_ANIM_OFF);
-    else lv_roller_set_selected(roller_obj, lv_roller_get_option_count(roller_obj)-1, LV_ANIM_OFF);
+    if (target == -1){
+        if (options[selected_int]){
+                target = selected_int;
+        } else {
+            if (selected_int < lv_roller_get_option_count(roller_obj)) {
+                    target = selected_int;
+            }
+            else{
+                    target = lv_roller_get_option_count(roller_obj)-1;
+            }
+        }
+    }
+
+    lv_roller_set_selected(roller_obj, target, LV_ANIM_OFF);
+
     return lv_roller_get_selected(roller_obj);
 }
 

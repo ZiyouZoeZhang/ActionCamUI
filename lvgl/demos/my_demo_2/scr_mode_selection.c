@@ -9,9 +9,18 @@ static lv_obj_t * cam_modes_roller = NULL;
 static lv_obj_t * scr_mode_selection = NULL;
 static lv_obj_t * container;
 static lv_obj_t * label;
+static lv_obj_t * exit_icon;
 
 static void swipe_scr_mode_selection_cb(lv_event_t *e);
 static void create_cam_mode_roller(lv_obj_t * parent, int cur_mode);
+
+
+static void return_home_cb(){
+
+    printf("UPDATE RESOUTION ACOODINGLY\n");
+    open_scr_home_cb();
+
+}
 
  void create_scr_mode_selection(int mode){
      /**background**/
@@ -20,7 +29,9 @@ static void create_cam_mode_roller(lv_obj_t * parent, int cur_mode);
 
     /**ui components**/
     create_cam_mode_roller(scr_mode_selection, mode);
-    create_exit_icon(scr_mode_selection);
+    exit_icon = create_exit_icon(scr_mode_selection);
+    lv_obj_remove_event_cb(exit_icon, open_scr_home_cb);
+    lv_obj_add_event_cb(exit_icon, return_home_cb, LV_EVENT_CLICKED, NULL);
 
     lv_obj_t * swipe_icon = lv_obj_create(scr_mode_selection);
     lv_obj_add_style(swipe_icon, &style_swipe_icon, LV_PART_MAIN);
@@ -81,8 +92,6 @@ int get_selected_mode_from_roller(int cur) {
     return index;
 }
 
-
-
 void open_scr_cam_modes(){
     lv_label_set_text(label, _(mode_names[get_selected_mode_from_roller(0)]));
     lv_screen_load(scr_mode_selection);
@@ -92,7 +101,7 @@ static void swipe_scr_mode_selection_cb(lv_event_t *e){
     lv_dir_t dir = lv_indev_get_gesture_dir(lv_indev_active());
     switch(dir) {
         case LV_DIR_BOTTOM:
-            open_scr_home_cb();
+            return_home_cb();
             break;
         default:
             break;
