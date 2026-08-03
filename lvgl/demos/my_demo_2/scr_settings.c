@@ -208,6 +208,7 @@ static const struct {
  * ============================================================================ */
 
 static void roller_language_cb(int selected);
+static void video_format_cb(int selected);
 static void set_heading_cb(lv_event_t *e);
 
 static void switch_leds_toggle(bool state);
@@ -236,7 +237,7 @@ static const struct {
     {ROLLER_ID_SUBSCREEN_PLAY,  STRING_SUBDISPLAY,     list_subscreen_play, ARRAY_SIZE(list_subscreen_play), PAGE_ID_MAIN,      NULL},
     {ROLLER_ID_AUTO_DORMANT,    STRING_Auto_Dormant,   list_auto_dormant,   ARRAY_SIZE(list_auto_dormant),   PAGE_ID_MAIN,      NULL},
     {ROLLER_ID_AUTO_POWEROFF,   STRING_AUTO_OFF,       list_auto_poweroff,  ARRAY_SIZE(list_auto_poweroff),  PAGE_ID_MAIN,      NULL},
-    {ROLLER_ID_VIDEO_FORMAT,    STRING_VIDEO_STANDARD, list_video_format,   ARRAY_SIZE(list_video_format),   PAGE_ID_MAIN,      NULL},
+    {ROLLER_ID_VIDEO_FORMAT,    STRING_VIDEO_STANDARD, list_video_format,   ARRAY_SIZE(list_video_format),   PAGE_ID_MAIN,      video_format_cb},
     {ROLLER_ID_LANGUAGE,        STRING_LANGUAGE,       list_language,       ARRAY_SIZE(list_language),       PAGE_ID_MAIN,      roller_language_cb},
 };
 
@@ -421,6 +422,12 @@ static void roller_language_cb(int selected)
     refresh_all_page_entries();
     refresh_bluetooth_page();
     set_heading_cb(NULL);
+}
+
+
+static void video_format_cb(int selected){
+    if (selected == 0) pal_ntsc = true;
+    else pal_ntsc = false;
 }
 
 
@@ -886,6 +893,16 @@ void settings_action(void)
         if (lang->state_label) {
             int idx = lv_roller_get_selected(lang->roller_obj);
             lv_label_set_text(lang->state_label, safe_lang_text(lang->states[idx]));
+        }
+    }
+
+    roller_item_t *video_format = &g_mgr.rollers[ROLLER_ID_VIDEO_FORMAT];
+    if (video_format->roller_obj) {
+        if (pal_ntsc) lv_roller_set_selected(video_format->roller_obj, 0, LV_ANIM_OFF);
+        else  lv_roller_set_selected(video_format->roller_obj, 1, LV_ANIM_OFF);
+        if (video_format->state_label) {
+            int idx = lv_roller_get_selected(video_format->roller_obj);
+            lv_label_set_text(video_format->state_label, safe_lang_text(video_format->states[idx]));
         }
     }
 

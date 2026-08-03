@@ -9,6 +9,8 @@ void open_scr_resolution_cb();
 void create_scr_resolution();
 void create_scr_resolution_pro();
 
+extern bool pal_ntsc;
+
 int get_selected_resolution_from_roller(void);
 
 #endif // SCR_RESOLUTION_H_INCLUDED

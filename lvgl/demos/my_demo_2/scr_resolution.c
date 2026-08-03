@@ -16,10 +16,6 @@ static int current_frame_rate = 0;
 static int current_gyro_eis = 0;
 static bool current_is_slow_mo = false;  // 当前是否在slowmo模式
 
-int CURRENT_RESOLUTION = 0;
-int CURRENT_FRAME_RATE = 0;
-int CURRENT_GYRO_EIS = 0;
-
 //SCR RES
 static lv_obj_t * res_roller = NULL;
 static lv_obj_t * res_heading;
@@ -66,9 +62,9 @@ static const int cam_gyro_eis_table[] = {
 };
 
 static const bool supported_gyro_eis_modes_table[3][CAM_GYRO_EIS_COUNT] = {
-    {true, true, true, true, true, true, true, true},  // 7 modes all supported
-    {true, true, true, true, false, false, false, false}, // 4 modes supported
-    {true, true, false, false, false, false, false, false} // 2 modes supported
+    {true, true, true, true, true, true, true},  // 7 modes all supported
+    {true, true, true, true, false, false, false}, // 4 modes supported
+    {true, true, false, false, false, false, false} // 2 modes supported
 };
 
 
@@ -238,6 +234,7 @@ int get_selected_resolution_from_roller(void){
 
 static void switch_video_format_cb(){
     pal_ntsc = !pal_ntsc;
+    update_all_rollers_cb();
     open_scr_resolution_cb();
 }
 
@@ -250,7 +247,7 @@ static void open_scr_gyro_selection_cb(){
 
 void open_scr_resolution_cb(){
     if (cur_cam_mode >= CAM_MODE_VIDEO) {
-        update_all_rollers_cb();
+        //update_all_rollers_cb();
 
         //update all labels
          lv_label_set_text(frame_rate_pro_heading, _(STRING_FPS));
@@ -258,14 +255,13 @@ void open_scr_resolution_cb(){
          lv_label_set_text(gyro_eis_label, _(STRING_DIS));
          lv_label_set_text(gyro_eis_state, _(cam_gyro_eis_table[lv_roller_get_selected(gyro_eis_roller)]));
          lv_label_set_text(video_format_label, _(STRING_VIDEO_STANDARD));
-        (pal_ntsc) ? lv_label_set_text(video_format_state, _(STRING_PAL)) : lv_label_set_text(video_format_state, _(STRING_NTSC));
+         (pal_ntsc) ? lv_label_set_text(video_format_state, _(STRING_PAL)) : lv_label_set_text(video_format_state, _(STRING_NTSC));
 
         lv_screen_load(scr_resolution_pro);
     } else{
         lv_label_set_text(res_heading, _(STRING_RESOLUTION));
         lv_screen_load(scr_resolution);
     }
-
 }
 
 
