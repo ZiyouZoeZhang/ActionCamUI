@@ -408,6 +408,33 @@ static void roller_value_changed_cb(lv_event_t *e)
     if (r->on_change) r->on_change(sel);
 }
 
+// 在 roller_value_changed_cb 函数后面添加这个新函数
+static void roller_item_click_cb(lv_event_t *e)
+{
+    lv_obj_t *list_btn = lv_event_get_target(e);
+    roller_item_t *r = lv_event_get_user_data(e);
+    if (!r || !r->roller_obj) return;
+
+    // 获取当前点击的选项索引（存储在用户数据中）
+    int selected = (int)(intptr_t)lv_obj_get_user_data(list_btn);
+
+    // 更新 roller 的选择状态（保持数据同步）
+    lv_roller_set_selected(r->roller_obj, selected, LV_ANIM_OFF);
+
+    // 更新状态标签显示
+    if (r->state_label) {
+        lv_label_set_text(r->state_label, safe_lang_text(r->states[selected]));
+    }
+
+    // 执行回调（如果有）
+    if (r->on_change) {
+        r->on_change(selected);
+    }
+
+    // 触发返回上一页（模拟返回按钮点击）
+    lv_obj_send_event(lv_menu_get_main_header_back_button(g_mgr.menu), LV_EVENT_CLICKED, NULL);
+}
+
 static void roller_language_cb(int selected)
 {
 
@@ -594,26 +621,28 @@ static lv_obj_t *create_roller_entry(lv_obj_t *parent, roller_item_t *r, page_it
     return cont;
 }
 
+
 static void create_roller_page(lv_obj_t *parent, roller_item_t *r)
 {
+    r->roller_obj = lv_roller_create(parent);
+    lv_obj_add_flag(r->roller_obj, LV_OBJ_FLAG_HIDDEN);
+
     char buf[ROLLER_OPTIONS_BUF_SIZE];
     build_roller_options(r->states, r->states_count, buf, sizeof(buf));
 
-    r->roller_obj = lv_roller_create(parent);
-    lv_obj_set_size(r->roller_obj, lv_pct(100), 250);
-    lv_obj_align(r->roller_obj, LV_ALIGN_CENTER, 0, 0);
-    lv_roller_set_options(r->roller_obj, buf, LV_ROLLER_MODE_NORMAL);
-    lv_roller_set_selected(r->roller_obj, 0, LV_ANIM_OFF);
+    const char *options = buf;
+    int opt_count = r->states_count;
 
-    lv_obj_set_style_bg_opa(r->roller_obj, LV_OPA_0, LV_PART_MAIN);
-    lv_obj_set_style_bg_opa(r->roller_obj, LV_OPA_0, LV_PART_SELECTED);
-    lv_obj_set_style_border_width(r->roller_obj, 0, LV_PART_MAIN);
-    lv_obj_add_style(r->roller_obj, &style_font_default_36, LV_PART_MAIN);
-    lv_obj_set_style_text_color(r->roller_obj, lv_palette_main(LV_PALETTE_BLUE), LV_PART_SELECTED);
-    lv_obj_set_style_text_line_space(r->roller_obj, 30, LV_PART_MAIN);
+    for (int i = 0; i < opt_count; i++) {
 
-    lv_obj_add_event_cb(r->roller_obj, roller_value_changed_cb, LV_EVENT_VALUE_CHANGED, r);
+        lv_obj_t *btn = create_basics(parent, safe_lang_text(r->states[i]));
+         lv_obj_align(btn, LV_ALIGN_TOP_MID, 0, i*83);
+        lv_obj_set_user_data(btn, (void *)(intptr_t)i);
+
+        lv_obj_add_event_cb(btn, roller_item_click_cb, LV_EVENT_CLICKED, r);
+    }
 }
+
 
 static lv_obj_t *create_page_basic(lv_obj_t *parent, const char *title, const char *text)
 {
