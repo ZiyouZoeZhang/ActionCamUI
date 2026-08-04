@@ -5,9 +5,11 @@ static lv_obj_t * label_zoom = NULL;
 static lv_obj_t * img_res = NULL;
 static lv_obj_t * label_res = NULL;
 static lv_obj_t * grid_container = NULL;
+static lv_obj_t * mini_icon_cont = NULL;
 
 lv_obj_t *scr_home = NULL;
 lv_obj_t *scr_poweroff = NULL;
+
 
 /**SCREENS**/
 void update_scr_home(){
@@ -30,6 +32,8 @@ void update_scr_home(){
     cur_cam_resolution = get_selected_resolution_from_roller();
     set_resolution_icon_bg(img_res, cur_cam_resolution);
     lv_label_set_text(label_res, _(cur_cam_resolution));
+
+    update_mini_icon(mini_icon_cont);
 }
 
 static void swipe_scr_main_cb(lv_event_t * e){
@@ -77,12 +81,14 @@ void create_scr_home(){
     label_zoom = create_zoom_icon(scr_home, cur_cam_zoom);
     create_media_set_icon(scr_home);
     create_spot_metering(scr_home);
+    mini_icon_cont = create_mini_icon(scr_home);
 
     /**CB**/
     lv_obj_add_event_cb(scr_home, swipe_scr_main_cb, LV_EVENT_RELEASED, NULL);
     lv_obj_add_event_cb(grid_container, swipe_scr_main_cb, LV_EVENT_RELEASED, NULL);
     lv_obj_add_event_cb(grid_container, update_spot_metering_cb, LV_EVENT_CLICKED, NULL);
     lv_obj_add_event_cb(scr_home, update_spot_metering_cb, LV_EVENT_CLICKED, NULL);
+    lv_obj_add_event_cb(mini_icon_cont, update_spot_metering_cb, LV_EVENT_CLICKED, NULL);
 
     return;
 }

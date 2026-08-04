@@ -1,5 +1,5 @@
 #ifndef UI_COMPONENTS_H_INCLUDED
-#define UI_COMPONENTS_H_INCLUDED
+#define UI_COMPONENTS_H_INCLUDED1
 
 #include "lvgl.h"
 #include "camera_modes.h"
@@ -22,6 +22,8 @@ lv_obj_t * create_grid(lv_obj_t * parent); //£¿
 void create_spot_metering(lv_obj_t * parent);
 lv_obj_t *create_pic_select_icon(lv_obj_t * parent);
 lv_obj_t * create_label_top_center(lv_obj_t * parent, char * str);
+lv_obj_t * create_mini_icon(lv_obj_t * parent);
+void * update_mini_icon(lv_obj_t * cont);
 
 
 lv_obj_t * create_roller(
@@ -70,6 +72,8 @@ void update_battery_icon(bool charging, int level);
 void update_sd_icon(int status, float storage);
 void update_spot_metering_cb(lv_event_t * e);
 void reset_spot_metering();
+
+
 
 /**CB**/
 void open_scr_cam_modes();

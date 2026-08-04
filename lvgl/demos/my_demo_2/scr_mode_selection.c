@@ -4,8 +4,6 @@
 #include "my_demo_2.h"
 
 
-
-static lv_obj_t * cam_modes_roller = NULL;
 static lv_obj_t * scr_mode_selection = NULL;
 static lv_obj_t * container;
 static lv_obj_t * label;

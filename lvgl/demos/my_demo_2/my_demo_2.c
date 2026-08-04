@@ -11,6 +11,7 @@ int cur_cam_zoom = 0;
 bool wifi_active = false;
 bool bluetooth_active = false;
 bool grid_active = false;
+//bool voice_control_active = false;
 uint8_t current_lang = 0;
 
 //global

@@ -1,10 +1,8 @@
 #include <string.h>
 #include <stdio.h>
-#include "ui_components.h"
-#include "camera_modes.h"
-#include "pic_converted_transparent/image_declares.h"
-#include "scr_media_settings.h"
+
 #include "my_demo_2.h"
+#define MAX_MINI_ICON 3
 
 static lv_obj_t * img_battery = NULL;
 static lv_obj_t * img_sd = NULL;
@@ -49,6 +47,61 @@ lv_obj_t * create_resolution_icon(lv_obj_t * parent, int cur_res){
 
     lv_obj_add_event_cb(img_res, open_scr_resolution_cb, LV_EVENT_CLICKED, NULL);
     return img_res;
+}
+
+lv_obj_t * create_mini_icon(lv_obj_t * parent){
+    lv_obj_t * cont = lv_obj_create(parent);
+    lv_obj_add_style(cont, &style_cont_transparent, LV_PART_MAIN);
+    lv_obj_align(cont, LV_ALIGN_TOP_RIGHT, lv_pct(-10), 0);
+    lv_obj_set_size(cont, lv_pct(30), lv_pct(20));
+
+    return cont;
+}
+
+static const  void  * icon_gyro[7] = {
+    NULL,                           // OFF - ÎÞÍ¼±ê
+    &main_dis_base,             // DIS_NORMAL
+    &main_dis_ultra,                 // DIS_SUPER
+    &main_dis_gyroflow,             // DIS_GYROFLOW
+    &main_dis_horizon_10,           // TILT_CORRECTION
+    &main_dis_horizon_45,           // HORIZON_STABILIZATION
+    &main_dis_horizon_360           // 360_HORIZON_CORRECTION
+};
+
+static const void * icon_speech = &main_Speech_control;
+static const void * icon_mic = &board_mic;
+
+void * update_mini_icon(lv_obj_t * cont){
+    lv_obj_clean(cont);
+
+    const void *sources[MAX_MINI_ICON] = {NULL, NULL, NULL};
+    int count = 0;
+
+    int gyro_idx = get_current_gyro_eis();
+    bool voice_on = get_voice_control_state();
+    bool voice_rec_on = (menu_buttons[CAM_MENU_VOICE_REC].state == BTN_STATE_ON);
+
+    if (cur_cam_mode >= CAM_MODE_VIDEO && gyro_idx > 0) {
+        sources[count++] = icon_gyro[gyro_idx];
+    }
+
+    if (voice_rec_on) {
+        sources[count++] = icon_speech;
+    }
+
+    if (voice_on) {
+        sources[count++] = icon_mic;
+    }
+
+    if (count >MAX_MINI_ICON) count = MAX_MINI_ICON;
+
+    for (int i = 0; i < count; i++) {
+        if (sources[i] == NULL) continue;
+        lv_obj_t *img = lv_image_create(cont);
+        lv_obj_align(img, LV_ALIGN_TOP_RIGHT, i * -60, 0);
+        lv_image_set_src(img, sources[i]);
+
+    }
 }
 
 lv_obj_t * create_zoom_icon(lv_obj_t * parent, int cur_zoom){

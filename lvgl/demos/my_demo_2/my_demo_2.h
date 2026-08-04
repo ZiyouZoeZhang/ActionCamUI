@@ -7,6 +7,9 @@
 #define BG_COLOR_VERY_DARK_GREY  lv_color_hex(0x191919)
 #define _(id) lv_lang_string[id][current_lang]
 
+#include <string.h>
+#include <stdio.h>
+
 #include "lvgl.h"
 #include "camera_modes.h"
 #include "ui_components.h"
@@ -17,6 +20,7 @@
 #include "font/font_declares.h"
 #include "image_storage.h"
 #include "lvgl_ex_language_string.h"
+#include "pic_converted_transparent/image_declares.h"
 
 #define ARRAY_SIZE(arr) (sizeof(arr) / sizeof((arr)[0]))
 /**variables for INPUT**/
@@ -61,8 +65,11 @@ void open_scr_pic_lib_cb();
 void open_scr_menu_cb();
 void open_scr_poweroff_cb();
 
+
+
 /**others -> to be changed!!**/
 int get_selected_mode_from_roller(int cur);
+bool get_voice_control_state();
 
 /**CB**/
 void swipe_scr_menu_cb(lv_event_t *e);

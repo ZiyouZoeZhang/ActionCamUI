@@ -30,13 +30,6 @@ void open_scr_zoom_cb(){
     lv_screen_load(scr_zoom);
 }
 
-static void on_release_cb(){
-     lv_obj_set_style_text_color(roller, lv_palette_main(LV_PALETTE_BLUE), LV_PART_SELECTED);
-}
-
-static void on_press_cb(){
-     lv_obj_set_style_text_color(roller, lv_color_white(), LV_PART_SELECTED);
-}
 
  void create_scr_zoom(){
     scr_zoom = lv_obj_create(NULL);

@@ -5,49 +5,15 @@
 #define TEXT_WRAP_WIDTH 630
 #define ROLLER_OPTIONS_BUF_SIZE 512
 
-/* 修复1: 标准 C 数组大小宏 */
 #ifndef ARRAY_SIZE
 #define ARRAY_SIZE(arr) (sizeof(arr) / sizeof((arr)[0]))
 #endif
 
-/* ============================================================================
- * 外部符号声明（编译器不知道这些定义在其他文件）
- * ============================================================================ */
-
-extern uint8_t current_lang;
-extern bool grid_active;
-
-/* 外部样式 */
-extern lv_style_t style_font_default_36;
-extern lv_style_t style_font_default_30;
-extern lv_style_t style_scrollbar;
-extern lv_style_t style_cont_transparent;
-
-/* 外部图片资源（LVGL 图片描述符是 const） */
-extern const lv_img_dsc_t set_have_sub_menu;
-extern const lv_img_dsc_t Pattern_Return;
-extern const lv_img_dsc_t system_set_exit;
-
-/* 外部辅助函数（注意原代码拼写是 cancle） */
-extern lv_obj_t *create_btn_cancle(lv_obj_t *parent);
-extern lv_obj_t *create_btn_confirm(lv_obj_t *parent);
-
-/* 外部函数签名是 void(void)，但 LVGL 事件需要 void(lv_event_t*) */
 static void open_scr_poweroff_cb_wrapper(lv_event_t *e)
 {
     (void)e;
     open_scr_poweroff_cb();
 }
-
-static void open_scr_menu_cb_wrapper(lv_event_t *e)
-{
-    (void)e;
-    open_scr_menu_cb();
-}
-
-/* ============================================================================
- * 枚举
- * ============================================================================ */
 
 typedef enum {
     ROLLER_ID_DATE_FORMAT = 0,
@@ -285,13 +251,17 @@ static lv_obj_t *s_bt_tip_label       = NULL;
 static lv_obj_t *s_bt_search_label    = NULL;
 static lv_obj_t *s_bt_list_tip_label  = NULL;
 
-extern void open_scr_home_cb(void);
-extern void open_scr_menu_cb(void);
-extern void open_scr_poweroff_cb(void);
-
 /* ============================================================================
  * 工具函数
  * ============================================================================ */
+
+ bool get_voice_control_state() {
+    switch_item_t *voice = &g_mgr.switches[SWITCH_ID_VOICE_CONTROL];
+    if (voice && voice->switch_obj) {
+        return lv_obj_has_state(voice->switch_obj, LV_STATE_CHECKED);
+    }
+    return false;
+}
 
 static const char *get_lang_text(int str_id)
 {
@@ -398,15 +368,6 @@ static void switch_value_changed_cb(lv_event_t *e)
     item->toggle_cb(state);
 }
 
-static void roller_value_changed_cb(lv_event_t *e)
-{
-    lv_obj_t *roller = lv_event_get_target(e);
-    roller_item_t *r = lv_event_get_user_data(e);
-    if (!r) return;
-    int sel = lv_roller_get_selected(roller);
-    if (r->state_label) lv_label_set_text(r->state_label, safe_lang_text(r->states[sel]));
-    if (r->on_change) r->on_change(sel);
-}
 
 // 在 roller_value_changed_cb 函数后面添加这个新函数
 static void roller_item_click_cb(lv_event_t *e)
@@ -630,7 +591,6 @@ static void create_roller_page(lv_obj_t *parent, roller_item_t *r)
     char buf[ROLLER_OPTIONS_BUF_SIZE];
     build_roller_options(r->states, r->states_count, buf, sizeof(buf));
 
-    const char *options = buf;
     int opt_count = r->states_count;
 
     for (int i = 0; i < opt_count; i++) {

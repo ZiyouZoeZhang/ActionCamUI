@@ -69,7 +69,7 @@ static const int list_exposure_states[] = {
     STRING_EV_B2
 };
 
-static const int list_shutter_states[] = {
+static  const int list_shutter_states[] = {
     STRING_AUTO,
     STRING_1S,
     STRING_2S,

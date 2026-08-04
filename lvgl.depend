@@ -8529,10 +8529,12 @@
 	"lvgl.h"
 	"pic_converted_transparent/image_declares.h"
 
-1785310872 source:c:\users\gku\desktop\lv_port_win_codeblocks\lvgl\demos\my_demo_2\my_demo_2.c
+1785828984 source:c:\users\gku\desktop\lv_port_win_codeblocks\lvgl\demos\my_demo_2\my_demo_2.c
 	"my_demo_2.h"
 
-1785206660 c:\users\gku\desktop\lv_port_win_codeblocks\lvgl\demos\my_demo_2\my_demo_2.h
+1785830401 c:\users\gku\desktop\lv_port_win_codeblocks\lvgl\demos\my_demo_2\my_demo_2.h
+	<string.h>
+	<stdio.h>
 	"lvgl.h"
 	"camera_modes.h"
 	"ui_components.h"
@@ -8543,6 +8545,7 @@
 	"font/font_declares.h"
 	"image_storage.h"
 	"lvgl_ex_language_string.h"
+	"pic_converted_transparent/image_declares.h"
 
 1782455178 source:c:\users\gku\desktop\lv_port_win_codeblocks\lvgl\pic_converted_transparent\common\busy_process.c
 	"lvgl.h"
@@ -12988,17 +12991,13 @@
 	<stdio.h>
 	"camera_modes.h"
 
-1785738745 c:\users\gku\desktop\lv_port_win_codeblocks\lvgl\demos\my_demo_2\ui_components.h
+1785830711 c:\users\gku\desktop\lv_port_win_codeblocks\lvgl\demos\my_demo_2\ui_components.h
 	"lvgl.h"
 	"camera_modes.h"
 
-1785747984 source:c:\users\gku\desktop\lv_port_win_codeblocks\lvgl\demos\my_demo_2\ui_components.c
+1785830685 source:c:\users\gku\desktop\lv_port_win_codeblocks\lvgl\demos\my_demo_2\ui_components.c
 	<string.h>
 	<stdio.h>
-	"ui_components.h"
-	"camera_modes.h"
-	"pic_converted_transparent/image_declares.h"
-	"scr_media_settings.h"
 	"my_demo_2.h"
 
 1783330302 source:c:\users\gku\desktop\lv_port_win_codeblocks\lvgl\demos\my_demo_2\ui_roller.c
@@ -13023,16 +13022,16 @@
 	"ui_menu_btnm.h"
 	"pic_converted_transparent/image_declares.h"
 
-1785749881 c:\users\gku\desktop\lv_port_win_codeblocks\lvgl\demos\my_demo_2\scr_resolution.h
+1785815312 c:\users\gku\desktop\lv_port_win_codeblocks\lvgl\demos\my_demo_2\scr_resolution.h
 
-1785749666 source:c:\users\gku\desktop\lv_port_win_codeblocks\lvgl\demos\my_demo_2\scr_resolution.c
+1785826572 source:c:\users\gku\desktop\lv_port_win_codeblocks\lvgl\demos\my_demo_2\scr_resolution.c
 	"my_demo_2.h"
 	"ui_components.h"
 	"scr_resolution.h"
 
 1785310363 c:\users\gku\desktop\lv_port_win_codeblocks\lvgl\demos\my_demo_2\scr_zoom.h
 
-1785310855 source:c:\users\gku\desktop\lv_port_win_codeblocks\lvgl\demos\my_demo_2\scr_zoom.c
+1785830883 source:c:\users\gku\desktop\lv_port_win_codeblocks\lvgl\demos\my_demo_2\scr_zoom.c
 	"my_demo_2.h"
 	"ui_components.h"
 	"scr_zoom.h"
@@ -13078,7 +13077,7 @@
 1785226086 c:\users\gku\desktop\lv_port_win_codeblocks\lvgl\demos\my_demo_2\scr_media_settings.h
 	"lvgl.h"
 
-1785288149 source:c:\users\gku\desktop\lv_port_win_codeblocks\lvgl\demos\my_demo_2\scr_media_settings.c
+1785754061 source:c:\users\gku\desktop\lv_port_win_codeblocks\lvgl\demos\my_demo_2\scr_media_settings.c
 	"my_demo_2.h"
 
 1783310204 source:c:\users\gku\desktop\lv_port_win_codeblocks\lvgl\font\font_30.c
@@ -13092,28 +13091,22 @@
 1784597799 source:c:\users\gku\desktop\lv_port_win_codeblocks\lvgl\demos\my_demo_2\scr_picture_library.c
 	"my_demo_2.h"
 
-1785740112 source:c:\users\gku\desktop\lv_port_win_codeblocks\lvgl\demos\my_demo_2\scr_mode_selection.c
+1785830888 source:c:\users\gku\desktop\lv_port_win_codeblocks\lvgl\demos\my_demo_2\scr_mode_selection.c
 	<string.h>
 	<stdio.h>
 	"camera_modes.h"
 	"my_demo_2.h"
 
-1785750025 source:c:\users\gku\desktop\lv_port_win_codeblocks\lvgl\demos\my_demo_2\scr_menu.c
-	<string.h>
-	<stdio.h>
-	"lvgl.h"
-	"camera_modes.h"
+1785830888 source:c:\users\gku\desktop\lv_port_win_codeblocks\lvgl\demos\my_demo_2\scr_menu.c
 	"my_demo_2.h"
-	"camera_menu.h"
-	"pic_converted_transparent/image_declares.h"
 
 1784971339 c:\users\gku\desktop\lv_port_win_codeblocks\lvgl\demos\my_demo_2\camera_menu.h
 	"lvgl.h"
 
-1785738745 source:c:\users\gku\desktop\lv_port_win_codeblocks\lvgl\demos\my_demo_2\scr_home.c
+1785830509 source:c:\users\gku\desktop\lv_port_win_codeblocks\lvgl\demos\my_demo_2\scr_home.c
 	"my_demo_2.h"
 
-1784971181 source:c:\users\gku\desktop\lv_port_win_codeblocks\lvgl\demos\my_demo_2\scr_settings.c
+1785829471 source:c:\users\gku\desktop\lv_port_win_codeblocks\lvgl\demos\my_demo_2\scr_settings.c
 	"my_demo_2.h"
 	"lvgl_ex_language_string.h"
 

@@ -211,7 +211,13 @@ static void update_all_rollers_cb(){
     }
 
      lv_label_set_text(gyro_eis_state, _(cam_gyro_eis_table[lv_roller_get_selected(gyro_eis_roller)]));
+     current_gyro_eis = lv_roller_get_selected(gyro_eis_roller) ;
+
     ///update any pop-up
+}
+
+int get_current_gyro_eis(){
+    return current_gyro_eis;
 }
 
 int get_selected_resolution_from_roller(void){
