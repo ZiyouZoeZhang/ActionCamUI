@@ -67,7 +67,7 @@ void open_scr_pic_lib_cb();
 void open_scr_menu_cb();
 void open_scr_poweroff_cb();
 
-
+void create_scr_pic_large();
 
 /**others -> to be changed!!**/
 int get_selected_mode_from_roller(int cur);

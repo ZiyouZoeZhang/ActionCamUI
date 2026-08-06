@@ -2,6 +2,7 @@
 #define PICTURE_H 183
 #define PICTURE_W 244
 static lv_obj_t * scr_pic_library = NULL;
+static lv_obj_t * scr_pic_large = NULL;
 static bool select_mode = false;
 static int selected_pic_number = 0;
 static lv_obj_t * icon_top_right = NULL;
@@ -10,6 +11,8 @@ static lv_obj_t * cont_pics = NULL;
 static void image_clicked_cb(lv_event_t * e);
 static void delete_images_cb();
 static void create_image_btn(lv_obj_t * parent);
+
+static void swipe_scr_img_large_cb(lv_event_t *e);
 
 static void reset_image_select_icon(int index, bool hide){
     if (hide){
@@ -145,8 +148,68 @@ static void image_clicked_cb(lv_event_t * e) {
     }
 }
 
-void open_pic_large_cb(int index){
-    printf("ENTER PIC LARGE\n");
+lv_obj_t * exit_icon_pic_large = NULL;
+lv_obj_t * cam_icon_pic_large = NULL;
+lv_obj_t * label_index_pic_large = NULL;
+
+void create_scr_pic_large(){
+    scr_pic_large = lv_obj_create(NULL);
+    lv_obj_set_style_bg_color(scr_pic_large,BG_COLOR_VERY_DARK_GREY, LV_PART_MAIN);
+    lv_obj_add_event_cb(scr_pic_large, swipe_scr_img_large_cb, LV_EVENT_RELEASED, NULL);
+
+    exit_icon_pic_large = create_exit_icon(scr_pic_large);
+    lv_obj_remove_event_cb(exit_icon_pic_large, open_scr_home_cb);
+    lv_obj_add_event_cb(exit_icon_pic_large, open_scr_pic_lib_cb, LV_EVENT_CLICKED, NULL);
+
+    //  右上角delete
+     lv_image_set_src(create_pic_select_icon(scr_pic_large), &playback_filemanager);
+  //  lv_obj_add_event_cb(icon_top_right, top_right_icon_toggled_cb, LV_EVENT_CLICKED, NULL);
+
+    // 左下image
+    cam_icon_pic_large = lv_image_create(scr_pic_large);
+    lv_obj_align(cam_icon_pic_large, LV_ALIGN_BOTTOM_LEFT, lv_pct(3),  lv_pct(-5));
+
+    // 中上index
+    label_index_pic_large = lv_label_create(scr_pic_large);
+    lv_obj_add_style(label_index_pic_large, &style_font_default_36, LV_PART_MAIN);
+    lv_obj_align(label_index_pic_large, LV_ALIGN_TOP_MID, 0, lv_pct(5));
+
+}
+
+static int current_pic_index = 0;
+static int total_pic_count = 0;
+
+static void swipe_scr_img_large_cb(lv_event_t *e) {
+    lv_dir_t dir = lv_indev_get_gesture_dir(lv_indev_active());
+
+    int new_index = current_pic_index;
+
+    switch(dir) {
+        case LV_DIR_TOP:
+            new_index++;
+            break;
+        case LV_DIR_BOTTOM:
+            new_index--;
+        default:
+            break;
+    }
+
+    if (new_index >= 0 && new_index < total_pic_count) {
+        open_pic_large_cb(new_index);
+    }
+}
+
+void open_pic_large_cb(int index) {
+    total_pic_count = get_storage_image_count();
+    current_pic_index = index;
+
+    lv_image_set_src(cam_icon_pic_large, mode_table[storage_images[index].mode].filelist_icon_src);
+
+    char buf[32];
+    snprintf(buf, sizeof(buf), "%d/%d", index + 1, total_pic_count);
+    lv_label_set_text(label_index_pic_large, buf);
+
+    lv_screen_load(scr_pic_large);
 }
 
 void open_scr_pic_lib_cb(){

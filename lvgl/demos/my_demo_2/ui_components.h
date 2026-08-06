@@ -73,7 +73,6 @@ void update_sd_icon(int status, float storage);
 void update_spot_metering_cb(lv_event_t * e);
 void reset_spot_metering();
 void create_and_display_pop_up_btn(char * str);
-
 void toggle_zoom_icon(bool show);
 
 void initialize_ui();

@@ -198,6 +198,7 @@ const int cam_frame_rates_pro_table[2][CAM_FRAME_RATES_PRO_COUNT] = {
 static void update_all_rollers_cb(){
     int cur_res = 0;
     int cur_frame_rate = 0;
+    int past_gyro_eis = lv_roller_get_selected(gyro_eis_roller);
     int cur_gyro_eis = 0;
     //update ntsc roller
     if (cur_cam_mode == CAM_MODE_SLOW_MOTION){
@@ -213,7 +214,15 @@ static void update_all_rollers_cb(){
      lv_label_set_text(gyro_eis_state, _(cam_gyro_eis_table[lv_roller_get_selected(gyro_eis_roller)]));
      current_gyro_eis = lv_roller_get_selected(gyro_eis_roller) ;
 
+     if (past_gyro_eis != current_gyro_eis) {
+         printf(_(STRING_NO_EIS));
+         printf("\n");
+            create_and_display_pop_up_btn(_(STRING_NO_EIS));
+     }
+
     if (lv_roller_get_option_count(gyro_eis_roller)==2){
+            printf(_(STRING_NO_DIS));
+         printf("\n");
         create_and_display_pop_up_btn(_(STRING_NO_DIS));
     }
 
