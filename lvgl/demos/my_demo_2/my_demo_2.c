@@ -13,6 +13,7 @@ bool bluetooth_active = false;
 bool grid_active = false;
 //bool voice_control_active = false;
 uint8_t current_lang = 0;
+bool show_zoom = true;
 
 //global
 lv_style_t style_font_default_36;
@@ -93,7 +94,9 @@ static void initialize_screens(){
 
 void my_demo_2_create() {
     initializ_styles();
+    initialize_ui();
     initialize_screens();
+
 
     /**driver code**/
     open_scr_home_cb();

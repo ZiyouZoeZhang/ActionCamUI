@@ -9,6 +9,8 @@
 #define ARRAY_SIZE(arr) (sizeof(arr) / sizeof((arr)[0]))
 #endif
 
+static lv_obj_t *exit_icon;
+
 static void open_scr_poweroff_cb_wrapper(lv_event_t *e)
 {
     (void)e;
@@ -18,18 +20,19 @@ static void open_scr_poweroff_cb_wrapper(lv_event_t *e)
 typedef enum {
     ROLLER_ID_DATE_FORMAT = 0,
     ROLLER_ID_WIFI_FREQUENCY,
+    ROLLER_ID_AUTO_DORMANT,
+    ROLLER_ID_AUTO_POWEROFF,
+    ROLLER_ID_LANGUAGE,
+    ROLLER_ID_VIDEO_FORMAT,
     ROLLER_ID_FREQUENCY,
     ROLLER_ID_VOICE_VOLUME,
     ROLLER_ID_SUBSCREEN_PLAY,
-    ROLLER_ID_AUTO_DORMANT,
-    ROLLER_ID_AUTO_POWEROFF,
-    ROLLER_ID_VIDEO_FORMAT,
-    ROLLER_ID_LANGUAGE,
     ROLLER_ID_COUNT
 } roller_id_t;
 
 typedef enum {
-    SWITCH_ID_LEDS = 0,
+    SWITCH_ID_WIFI = 0,
+    SWITCH_ID_LEDS,
     SWITCH_ID_DATE_STAMP,
     SWITCH_ID_BRAND_STAMP,
     SWITCH_ID_POWER_TONE,
@@ -60,6 +63,7 @@ typedef enum {
     PAGE_ID_DATE_TIME_DATE_FORMAT,
     PAGE_ID_VOICE_CONTROL,
     PAGE_ID_VOICE_COMMAND,
+    PAGE_ID_EMERGENCY_REVERSE_CHARGING,
     PAGE_ID_FORMAT_SD,
     PAGE_ID_FACTORY_RESET,
     PAGE_ID_INFORMATION,
@@ -164,6 +168,7 @@ static const struct {
     {PAGE_ID_DATE_TIME_DATE_FORMAT, STRING_DATE_FORMAT},
     {PAGE_ID_VOICE_CONTROL,         STRING_VOICE_CTR},
     {PAGE_ID_VOICE_COMMAND,         STRING_VOICE_INFO},
+    {PAGE_ID_EMERGENCY_REVERSE_CHARGING,         STRING_EMERGE_REVERSE_CHARGING},
     {PAGE_ID_FORMAT_SD,             STRING_FORMAT_SD},
     {PAGE_ID_FACTORY_RESET,         STRING_DEFAULT_SET},
     {PAGE_ID_INFORMATION,           STRING_INFO},
@@ -177,6 +182,7 @@ static void roller_language_cb(int selected);
 static void video_format_cb(int selected);
 static void set_heading_cb(lv_event_t *e);
 
+static void switch_wifi_toggle(bool state);
 static void switch_leds_toggle(bool state);
 static void switch_date_stamp_toggle(bool state);
 static void switch_brand_stamp_toggle(bool state);  /* 修复5: 统一名称 */
@@ -198,26 +204,27 @@ static const struct {
 } roller_configs[ROLLER_ID_COUNT] = {
     {ROLLER_ID_DATE_FORMAT,     STRING_DATE_FORMAT,    list_date_format,    ARRAY_SIZE(list_date_format),    PAGE_ID_DATE_TIME, NULL},
     {ROLLER_ID_WIFI_FREQUENCY,  STRING_WIFI_FREQUENCY, list_wifi_frequency, ARRAY_SIZE(list_wifi_frequency), PAGE_ID_WIFI,      NULL},
+    {ROLLER_ID_AUTO_DORMANT,    STRING_Auto_Dormant,   list_auto_dormant,   ARRAY_SIZE(list_auto_dormant),   PAGE_ID_MAIN,      NULL},
+    {ROLLER_ID_AUTO_POWEROFF,   STRING_AUTO_OFF,       list_auto_poweroff,  ARRAY_SIZE(list_auto_poweroff),  PAGE_ID_MAIN,      NULL},
+    {ROLLER_ID_LANGUAGE,        STRING_LANGUAGE,       list_language,       ARRAY_SIZE(list_language),       PAGE_ID_MAIN,      roller_language_cb},
+    {ROLLER_ID_VIDEO_FORMAT,    STRING_VIDEO_STANDARD, list_video_format,   ARRAY_SIZE(list_video_format),   PAGE_ID_MAIN,      video_format_cb},
     {ROLLER_ID_FREQUENCY,       STRING_FREQ,           list_frequency,      ARRAY_SIZE(list_frequency),      PAGE_ID_MAIN,      NULL},
     {ROLLER_ID_VOICE_VOLUME,    STRING_MIC_VOLUME,     list_voice_volume,   ARRAY_SIZE(list_voice_volume),   PAGE_ID_MAIN,      NULL},
     {ROLLER_ID_SUBSCREEN_PLAY,  STRING_SUBDISPLAY,     list_subscreen_play, ARRAY_SIZE(list_subscreen_play), PAGE_ID_MAIN,      NULL},
-    {ROLLER_ID_AUTO_DORMANT,    STRING_Auto_Dormant,   list_auto_dormant,   ARRAY_SIZE(list_auto_dormant),   PAGE_ID_MAIN,      NULL},
-    {ROLLER_ID_AUTO_POWEROFF,   STRING_AUTO_OFF,       list_auto_poweroff,  ARRAY_SIZE(list_auto_poweroff),  PAGE_ID_MAIN,      NULL},
-    {ROLLER_ID_VIDEO_FORMAT,    STRING_VIDEO_STANDARD, list_video_format,   ARRAY_SIZE(list_video_format),   PAGE_ID_MAIN,      video_format_cb},
-    {ROLLER_ID_LANGUAGE,        STRING_LANGUAGE,       list_language,       ARRAY_SIZE(list_language),       PAGE_ID_MAIN,      roller_language_cb},
 };
 
 /* roller 到子页面的映射 */
 static const page_id_t roller_page_map[ROLLER_ID_COUNT] = {
     [ROLLER_ID_DATE_FORMAT]     = PAGE_ID_DATE_TIME_DATE_FORMAT,
     [ROLLER_ID_WIFI_FREQUENCY]  = PAGE_ID_WIFI_FREQUENCY,
+    [ROLLER_ID_AUTO_DORMANT]    = PAGE_ID_AUTO_DORMANT,
+    [ROLLER_ID_AUTO_POWEROFF]   = PAGE_ID_AUTO_POWEROFF,
+    [ROLLER_ID_LANGUAGE]        = PAGE_ID_LANGUAGE,
+    [ROLLER_ID_VIDEO_FORMAT]    = PAGE_ID_VIDEO_FORMAT,
     [ROLLER_ID_FREQUENCY]       = PAGE_ID_FREQUENCY,
     [ROLLER_ID_VOICE_VOLUME]    = PAGE_ID_VOICE_VOLUME,
     [ROLLER_ID_SUBSCREEN_PLAY]  = PAGE_ID_SUBSCREEN_PLAY,
-    [ROLLER_ID_AUTO_DORMANT]    = PAGE_ID_AUTO_DORMANT,
-    [ROLLER_ID_AUTO_POWEROFF]   = PAGE_ID_AUTO_POWEROFF,
-    [ROLLER_ID_VIDEO_FORMAT]    = PAGE_ID_VIDEO_FORMAT,
-    [ROLLER_ID_LANGUAGE]        = PAGE_ID_LANGUAGE,
+
 };
 
 /* switch 配置表 */
@@ -228,6 +235,7 @@ static const struct {
     page_id_t   parent_page_id;
     void      (*toggle_cb)(bool);
 } switch_configs[SWITCH_ID_COUNT] = {
+    {SWITCH_ID_WIFI,          STRING_WIFI,                false, PAGE_ID_WIFI,          switch_wifi_toggle},
     {SWITCH_ID_LEDS,          STRING_LED,                false, PAGE_ID_MAIN,          switch_leds_toggle},
     {SWITCH_ID_DATE_STAMP,    STRING_DATE_STAMP,         false, PAGE_ID_MAIN,          switch_date_stamp_toggle},
     {SWITCH_ID_BRAND_STAMP,   STRING_BRAND_STAMP,        false, PAGE_ID_MAIN,          switch_brand_stamp_toggle},
@@ -239,9 +247,6 @@ static const struct {
     {SWITCH_ID_VOICE_CONTROL, STRING_VOICE_CTR,          false, PAGE_ID_VOICE_CONTROL, switch_voice_control_toggle},
 };
 
-/* ============================================================================
- * 静态实例 + 外部符号
- * ============================================================================ */
 
 static menu_manager_t g_mgr = {0};
 lv_style_t style_cont;
@@ -250,10 +255,6 @@ lv_style_t style_cont;
 static lv_obj_t *s_bt_tip_label       = NULL;
 static lv_obj_t *s_bt_search_label    = NULL;
 static lv_obj_t *s_bt_list_tip_label  = NULL;
-
-/* ============================================================================
- * 工具函数
- * ============================================================================ */
 
  bool get_voice_control_state() {
     switch_item_t *voice = &g_mgr.switches[SWITCH_ID_VOICE_CONTROL];
@@ -453,6 +454,9 @@ static void settings_quit_cb(lv_event_t *e)
 /* ============================================================================
  * Switch toggle 实现（修复5: 统一函数名）
  * ============================================================================ */
+static void switch_wifi_toggle(bool state){
+    wifi_action();
+}
 
 static void switch_leds_toggle(bool state) {
     printf("LEDs: %s\n", state ? "ON" : "OFF");
@@ -512,12 +516,12 @@ static lv_obj_t *create_basics(lv_obj_t *parent, const char *txt)
 {
     lv_obj_t *overall_cont = lv_menu_cont_create(parent);
     lv_obj_remove_flag(overall_cont, LV_OBJ_FLAG_SCROLLABLE);
-    lv_obj_set_size(overall_cont, 810, 80);
+    lv_obj_set_size(overall_cont, 810, 100);
 
     lv_obj_t *cont = lv_obj_create(overall_cont);
     lv_obj_remove_flag(cont, LV_OBJ_FLAG_SCROLLABLE);
     lv_obj_add_style(cont, &style_cont, LV_PART_MAIN);
-    lv_obj_set_size(cont, 810, 77);
+    lv_obj_set_size(cont, 810, 95);
 
     lv_obj_t *label = lv_label_create(cont);
     lv_obj_add_style(label, &style_font_default_36, LV_PART_MAIN);
@@ -619,7 +623,7 @@ static lv_obj_t *create_page_basic(lv_obj_t *parent, const char *title, const ch
     lv_obj_set_style_text_align(label, LV_TEXT_ALIGN_CENTER, LV_PART_MAIN);
 
     label = lv_label_create(cont);
-    lv_obj_add_style(label, &style_font_default_30, LV_PART_MAIN);
+    lv_obj_add_style(label, &style_font_default_36, LV_PART_MAIN);
     lv_obj_set_style_text_color(label, lv_palette_main(LV_PALETTE_GREY), LV_PART_MAIN);
     lv_obj_set_width(label, 550);
     lv_label_set_long_mode(label, LV_LABEL_LONG_WRAP);
@@ -634,6 +638,19 @@ static void back_cb(lv_event_t *e)
 {
     (void)e;
     lv_obj_send_event(lv_menu_get_main_header_back_button(g_mgr.menu), LV_EVENT_CLICKED, NULL);
+}
+
+static void emergency_charging_popup_cb(lv_event_t *e){
+    (void)e;
+    create_and_display_pop_up_btn( _(STRING_DISCONNECT_USB_FIRST));
+}
+
+static void create_page_emergency_reverse_charging(void){
+    page_item_t *p = &g_mgr.pages[PAGE_ID_EMERGENCY_REVERSE_CHARGING];
+    p->page_obj = lv_menu_page_create(g_mgr.menu, "");
+
+    p->menu_cont = create_text_entry(g_mgr.pages[PAGE_ID_MAIN].page_obj, _(STRING_EMERGE_REVERSE_CHARGING));
+    lv_obj_add_event_cb(p->menu_cont, emergency_charging_popup_cb, LV_EVENT_CLICKED, NULL);
 }
 
 static void create_page_format_sd(void)
@@ -702,6 +719,7 @@ void create_scr_menu_settings(void)
     lv_obj_add_style(main_p->page_obj, &style_scrollbar, LV_PART_SCROLLBAR);
     lv_obj_set_scroll_dir(main_p->page_obj, LV_DIR_VER);
 
+    // 创建所有子页面
     for (int i = PAGE_ID_MAIN + 1; i < PAGE_ID_COUNT; i++) {
         if (!g_mgr.pages[i].page_obj) {
             g_mgr.pages[i].page_obj = lv_menu_page_create(g_mgr.menu, "");
@@ -709,44 +727,17 @@ void create_scr_menu_settings(void)
         }
     }
 
-    for (int i = 0; i < ROLLER_ID_COUNT; i++) {
-        roller_item_t *r = &g_mgr.rollers[i];
-        r->id = roller_configs[i].id;
-        r->name_str_id = roller_configs[i].name_str_id;
-        r->states = roller_configs[i].states;
-        r->states_count = roller_configs[i].states_count;
-        r->on_change = roller_configs[i].on_change;
-
-        page_id_t entry_page_id = roller_configs[i].entry_page_id;
-        page_id_t roller_page_id = roller_page_map[r->id];
-
-        /* 创建 roller 选择页面 */
-        page_item_t *rp = &g_mgr.pages[roller_page_id];
-        create_roller_page(rp->page_obj, r);
-
-        /* 在指定的父页面创建入口，并绑定到子页面的 menu_cont */
-        page_item_t *entry_p = &g_mgr.pages[entry_page_id];
-        lv_obj_t *entry = create_roller_entry(entry_p->page_obj, r, rp);  /* ← 传入 rp */
-        lv_menu_set_load_page_event(g_mgr.menu, entry, rp->page_obj);
-    }
-
-    for (int i = 0; i < SWITCH_ID_COUNT; i++) {
-        switch_item_t *s = &g_mgr.switches[i];
-        s->id = switch_configs[i].id;
-        s->name_str_id = switch_configs[i].name_str_id;
-        s->state = switch_configs[i].default_state;
-        s->toggle_cb = switch_configs[i].toggle_cb;
-
-        page_item_t *parent_p = &g_mgr.pages[switch_configs[i].parent_page_id];
-        lv_obj_t *entry = create_switch_impl(parent_p->page_obj, s);
-        (void)entry;
-    }
-
-    /* WiFi 体系 */
     {
         page_item_t *wifi_p = &g_mgr.pages[PAGE_ID_WIFI];
         wifi_p->menu_cont = create_text_entry(main_p->page_obj, safe_lang_text(wifi_p->name_str_id));
         lv_menu_set_load_page_event(g_mgr.menu, wifi_p->menu_cont, wifi_p->page_obj);
+
+       switch_item_t *wifi_btn = &g_mgr.switches[SWITCH_ID_WIFI];
+        wifi_btn->id = switch_configs[SWITCH_ID_WIFI].id;
+        wifi_btn->name_str_id = switch_configs[SWITCH_ID_WIFI].name_str_id;
+        wifi_btn->state = switch_configs[SWITCH_ID_WIFI].default_state;
+        wifi_btn->toggle_cb = switch_configs[SWITCH_ID_WIFI].toggle_cb;
+        create_switch_impl(g_mgr.pages[PAGE_ID_WIFI].page_obj, wifi_btn);
 
         page_item_t *wifi_conn = &g_mgr.pages[PAGE_ID_WIFI_CONNECT];
         lv_obj_t *wifi_conn_cont = lv_obj_create(wifi_conn->page_obj);
@@ -765,13 +756,12 @@ void create_scr_menu_settings(void)
         lv_obj_t *wifi_conn_entry = create_text_entry(wifi_p->page_obj, safe_lang_text(wifi_conn->name_str_id));
         lv_menu_set_load_page_event(g_mgr.menu, wifi_conn_entry, wifi_conn->page_obj);
     }
-    /* 蓝牙页面（标准 menu page） */
+
     {
         page_item_t *bt_p = &g_mgr.pages[PAGE_ID_BLUETOOTH];
         bt_p->menu_cont = create_text_entry(main_p->page_obj, safe_lang_text(bt_p->name_str_id));
         lv_menu_set_load_page_event(g_mgr.menu, bt_p->menu_cont, bt_p->page_obj);
 
-        /* 断开提示 */
         s_bt_tip_label = lv_label_create(bt_p->page_obj);
         lv_obj_set_style_text_color(s_bt_tip_label, lv_color_white(), LV_PART_MAIN);
         lv_obj_set_width(s_bt_tip_label, TEXT_WRAP_WIDTH);
@@ -780,10 +770,44 @@ void create_scr_menu_settings(void)
         lv_obj_set_style_text_align(s_bt_tip_label, LV_TEXT_ALIGN_CENTER, LV_PART_MAIN);
         lv_obj_set_style_pad_top(s_bt_tip_label, 30, LV_PART_MAIN);
         lv_obj_set_style_pad_bottom(s_bt_tip_label, 20, LV_PART_MAIN);
-
     }
 
-    /* Date Time 体系 */
+    for (int i = 0; i < ROLLER_ID_COUNT; i++) {
+        roller_item_t *r = &g_mgr.rollers[i];
+        r->id = roller_configs[i].id;
+        r->name_str_id = roller_configs[i].name_str_id;
+        r->states = roller_configs[i].states;
+        r->states_count = roller_configs[i].states_count;
+        r->on_change = roller_configs[i].on_change;
+
+        page_id_t entry_page_id = roller_configs[i].entry_page_id;
+        page_id_t roller_page_id = roller_page_map[r->id];
+
+        page_item_t *rp = &g_mgr.pages[roller_page_id];
+        create_roller_page(rp->page_obj, r);
+
+        page_item_t *entry_p = &g_mgr.pages[entry_page_id];
+        lv_obj_t *entry = create_roller_entry(entry_p->page_obj, r, rp);
+        lv_menu_set_load_page_event(g_mgr.menu, entry, rp->page_obj);
+    }
+
+    // ========== 4. 所有 Switches (开关设置项) ==========
+    // 先创建所有在 MAIN 页面上的 switches
+    for (int i = 0; i < SWITCH_ID_COUNT; i++) {
+        switch_item_t *s = &g_mgr.switches[i];
+        s->id = switch_configs[i].id;
+        s->name_str_id = switch_configs[i].name_str_id;
+        s->state = switch_configs[i].default_state;
+        s->toggle_cb = switch_configs[i].toggle_cb;
+
+        page_item_t *parent_p = &g_mgr.pages[switch_configs[i].parent_page_id];
+        if (parent_p->page_obj == main_p->page_obj) {
+            create_switch_impl(main_p->page_obj, s);
+        }
+        }
+
+
+    // ========== 5. Date Time (在 MAIN 页面上的入口) ==========
     {
         page_item_t *dt_p = &g_mgr.pages[PAGE_ID_DATE_TIME];
         dt_p->menu_cont = create_text_entry(main_p->page_obj, safe_lang_text(dt_p->name_str_id));
@@ -798,12 +822,13 @@ void create_scr_menu_settings(void)
         lv_menu_set_load_page_event(g_mgr.menu, entry_time, dt_time->page_obj);
     }
 
-    /* Voice 体系 */
+    // ========== 6. Voice Control (在 MAIN 页面上的入口) ==========
     {
         page_item_t *voice_p = &g_mgr.pages[PAGE_ID_VOICE_CONTROL];
         voice_p->menu_cont = create_text_entry(main_p->page_obj, safe_lang_text(voice_p->name_str_id));
         lv_menu_set_load_page_event(g_mgr.menu, voice_p->menu_cont, voice_p->page_obj);
 
+        // Voice Control 子页面：Voice Command
         page_item_t *vcmd = &g_mgr.pages[PAGE_ID_VOICE_COMMAND];
         lv_obj_t *vcmd_label = lv_label_create(vcmd->page_obj);
         lv_obj_set_style_text_color(vcmd_label, lv_color_white(), LV_PART_MAIN);
@@ -817,9 +842,15 @@ void create_scr_menu_settings(void)
         lv_menu_set_load_page_event(g_mgr.menu, vcmd_entry, vcmd->page_obj);
     }
 
+    create_page_emergency_reverse_charging();
+
+    // ========== 7. Format SD ==========
     create_page_format_sd();
+
+    // ========== 8. Factory Reset ==========
     create_page_factory_reset();
 
+    // ========== 9. Information (排最后) ==========
     {
         page_item_t *info_p = &g_mgr.pages[PAGE_ID_INFORMATION];
         info_p->menu_cont = create_text_entry(main_p->page_obj, safe_lang_text(info_p->name_str_id));
@@ -832,6 +863,17 @@ void create_scr_menu_settings(void)
         lv_obj_align(info_label, LV_ALIGN_TOP_LEFT, 30, 30);
     }
 
+    // ========== 创建 Voice Control Switch (在 Voice Control 子页面) ==========
+    // 这个 switch 在 VOICE_CONTROL 页面上，单独创建
+    for (int i = 0; i < SWITCH_ID_COUNT; i++) {
+        if (switch_configs[i].parent_page_id == PAGE_ID_VOICE_CONTROL) {
+            switch_item_t *s = &g_mgr.switches[i];
+            page_item_t *parent_p = &g_mgr.pages[PAGE_ID_VOICE_CONTROL];
+            create_switch_impl(parent_p->page_obj, s);
+        }
+    }
+
+    // ========== 菜单事件和标题设置 ==========
     lv_obj_add_event_cb(g_mgr.menu, set_heading_cb, LV_EVENT_VALUE_CHANGED, NULL);
 
     lv_obj_t *back_btn = lv_menu_get_main_header_back_button(g_mgr.menu);
@@ -851,7 +893,7 @@ void create_scr_menu_settings(void)
     lv_obj_add_style(g_mgr.heading, &style_font_default_36, LV_PART_MAIN);
     lv_obj_center(g_mgr.heading);
 
-    lv_obj_t *exit_icon = lv_image_create(lv_menu_get_main_header(g_mgr.menu));
+    exit_icon = lv_image_create(lv_menu_get_main_header(g_mgr.menu));
     lv_image_set_src(exit_icon, &system_set_exit);
     lv_obj_align(exit_icon, LV_ALIGN_RIGHT_MID, 0, 0);
     lv_obj_add_flag(exit_icon, LV_OBJ_FLAG_CLICKABLE);
@@ -869,11 +911,16 @@ void settings_action(void)
     lv_menu_clear_history(g_mgr.menu);
     lv_menu_set_page(g_mgr.menu, g_mgr.pages[PAGE_ID_MAIN].page_obj);
 
+     lv_image_set_src(exit_icon, &system_set_exit);
+
     switch_item_t *grid = &g_mgr.switches[SWITCH_ID_GRID];
     if (grid->switch_obj) {
         if (grid_active) lv_obj_add_state(grid->switch_obj, LV_STATE_CHECKED);
         else             lv_obj_remove_state(grid->switch_obj, LV_STATE_CHECKED);
     }
+
+    switch_item_t *wifi_btn = &g_mgr.switches[SWITCH_ID_WIFI];
+     lv_obj_remove_state(wifi_btn->switch_obj, LV_STATE_CHECKED);
 
     roller_item_t *lang = &g_mgr.rollers[ROLLER_ID_LANGUAGE];
     if (lang->roller_obj) {
@@ -906,6 +953,7 @@ void settings_action(void)
 void bluetooth_action(void)
 {
     if (!g_mgr.scr) create_scr_menu_settings();
+    lv_image_set_src(exit_icon, &Pattern_Search);
 
     lv_screen_load(g_mgr.scr);
     lv_menu_clear_history(g_mgr.menu);

@@ -34,6 +34,8 @@ void update_scr_home(){
     lv_label_set_text(label_res, _(cur_cam_resolution));
 
     update_mini_icon(mini_icon_cont);
+    toggle_zoom_icon(determine_zoom());
+
 }
 
 static void swipe_scr_main_cb(lv_event_t * e){

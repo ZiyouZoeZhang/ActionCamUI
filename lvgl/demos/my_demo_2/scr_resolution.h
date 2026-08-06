@@ -8,6 +8,7 @@ extern const int cam_resolution_table[];
 void open_scr_resolution_cb();
 void create_scr_resolution();
 void create_scr_resolution_pro();
+bool determine_zoom();
 
 int get_current_gyro_eis();
 

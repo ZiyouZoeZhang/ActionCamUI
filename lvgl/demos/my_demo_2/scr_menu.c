@@ -193,6 +193,7 @@ static void create_pop_up_btn(lv_obj_t * parent){
 
 char buffer[128];
 
+
 static void rotation_action(void) {
     if (menu_buttons[CAM_MENU_AUTO_ROTATION].state == BTN_STATE_ON){
         snprintf(buffer, sizeof(buffer), "%s: %s",  _(STRING_AUTOROTATE), _(STRING_ON));
@@ -234,6 +235,8 @@ static void grid_action(void) {
     lv_timer_resume(timer);
 }
 
+
+
 void wifi_action(void) {
     lv_obj_t * scr = lv_obj_create(NULL);
     lv_obj_set_style_bg_color(scr, BG_COLOR_VERY_DARK_GREY,LV_PART_MAIN);
@@ -247,7 +250,7 @@ void wifi_action(void) {
     lv_obj_set_style_bg_color(btn, lv_palette_main(LV_PALETTE_BLUE), LV_PART_MAIN);
     lv_obj_set_size(btn, lv_pct(100), lv_pct(25));
     lv_obj_align(btn, LV_ALIGN_BOTTOM_MID, 0, 0);
-    lv_obj_add_event_cb(btn, open_scr_menu_cb, LV_EVENT_CLICKED, NULL);
+    lv_obj_add_event_cb(btn, open_scr_home_cb, LV_EVENT_CLICKED, NULL);
 
     lv_obj_t * txt = lv_label_create(scr);
     lv_label_set_text(txt, "TQWERTYUIOHJ \nasdfghjkzxcvbnm \nqwertyhbncxfg");

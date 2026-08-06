@@ -36,6 +36,7 @@ extern bool wifi_active;
 extern bool bluetooth_active;
 extern bool grid_active;
 extern uint8_t current_lang;
+extern bool show_zoom;
 
 extern lv_style_t style_font_default_36;
 extern lv_style_t style_font_default_30;
@@ -55,6 +56,7 @@ void open_scr_poweroff_cb();
 void create_scr_poweroff();
 void create_scr_home();
 void create_scr_mode_selection(int mode);
+
 
 /**main**/
 void my_demo_2_create();
