@@ -8,11 +8,17 @@ static int selected_pic_number = 0;
 static lv_obj_t * icon_top_right = NULL;
 static lv_obj_t * cont_pics = NULL;
 
+static int current_pic_index = 0;
+static int total_pic_count = 0;
+
+static bool individual_image_opened = true;
+
 static void image_clicked_cb(lv_event_t * e);
 static void delete_images_cb();
 static void create_image_btn(lv_obj_t * parent);
-
+static void open_scr_delete_images();
 static void swipe_scr_img_large_cb(lv_event_t *e);
+static void delete_image_large(int index);
 
 static void reset_image_select_icon(int index, bool hide){
     if (hide){
@@ -41,7 +47,7 @@ static void top_right_icon_toggled_cb(){
 
     if (!select_mode) { //delete mode
         if (selected_pic_number > 0) { //delete these picture
-            delete_images_cb();
+            open_scr_delete_images();
             return;
         }
         for (int i = 0; i<get_storage_image_count(); i++){ //switch select to off
@@ -51,19 +57,62 @@ static void top_right_icon_toggled_cb(){
     return;
 }
 
-static void delete_images_cb(){
-    printf("deleting\n");
-    //lv_obj_clean(scr_pic_library);
-     for (int index = 0; index <  get_storage_image_count() ; index++) {
-            if (storage_images[index].selected) {
-                    ///delete image from storage_images
-            }
-            storage_images[index].selected = false;
-            reset_image_select_icon(index, true);
-     }
-      ///create_image_btn
-     lv_image_set_src(icon_top_right, &filelist_multiselect);
+static lv_obj_t * scr_delete;
+
+static void cancle_clicked_cb(){
+    if (individual_image_opened){
+        lv_screen_load(scr_pic_large);
+    } else {
+        open_scr_pic_lib_cb();
+    }
 }
+
+static void confirm_clicked_cb(){
+    delete_images_cb();
+    cancle_clicked_cb();
+}
+
+void create_scr_delete(){
+    scr_delete = lv_obj_create(NULL);
+     lv_obj_set_style_bg_color(scr_delete,BG_COLOR_VERY_DARK_GREY, LV_PART_MAIN);
+
+    lv_obj_t *label = lv_label_create(scr_delete);
+    lv_obj_set_style_text_color(label, lv_color_white(), LV_PART_MAIN);
+    lv_obj_add_style(label, &style_font_default_36, LV_PART_MAIN);
+    lv_obj_set_width(label, 550);
+    lv_label_set_long_mode(label, LV_LABEL_LONG_WRAP);
+    lv_label_set_text(label, _(STRING_DIALOG_Delete_ASK));
+    lv_obj_align(label, LV_ALIGN_TOP_MID, 0, lv_pct(30));
+    lv_obj_set_style_text_align(label, LV_TEXT_ALIGN_CENTER, LV_PART_MAIN);
+
+    lv_obj_t *btn_cancel = create_btn_cancle(scr_delete);
+    lv_obj_add_event_cb(btn_cancel, cancle_clicked_cb, LV_EVENT_CLICKED, NULL);
+
+    lv_obj_t *btn_confirm = create_btn_confirm(scr_delete);
+    lv_obj_add_event_cb(btn_confirm, confirm_clicked_cb, LV_EVENT_CLICKED, NULL);
+}
+
+
+static void open_scr_delete_images(){
+    lv_screen_load(scr_delete);
+}
+
+static void delete_images_cb(){
+    //printf("deleting\n");
+    if (individual_image_opened){
+            delete_image_large(current_pic_index);
+    } else {
+         for (int index = 0; index <  get_storage_image_count() ; index++) {
+                if (storage_images[index].selected) {
+                        ///delete image from storage_images
+                }
+                storage_images[index].selected = false;
+                reset_image_select_icon(index, true);
+         }
+         lv_image_set_src(icon_top_right, &filelist_multiselect);
+    }
+}
+
 
 void create_scr_pic_library(){
     /**preset**/
@@ -151,6 +200,7 @@ static void image_clicked_cb(lv_event_t * e) {
 lv_obj_t * exit_icon_pic_large = NULL;
 lv_obj_t * cam_icon_pic_large = NULL;
 lv_obj_t * label_index_pic_large = NULL;
+lv_obj_t * delete_icon_pic_large = NULL;
 
 void create_scr_pic_large(){
     scr_pic_large = lv_obj_create(NULL);
@@ -162,8 +212,11 @@ void create_scr_pic_large(){
     lv_obj_add_event_cb(exit_icon_pic_large, open_scr_pic_lib_cb, LV_EVENT_CLICKED, NULL);
 
     //  ÓÒÉÏ½Çdelete
-     lv_image_set_src(create_pic_select_icon(scr_pic_large), &playback_filemanager);
-  //  lv_obj_add_event_cb(icon_top_right, top_right_icon_toggled_cb, LV_EVENT_CLICKED, NULL);
+    delete_icon_pic_large = create_pic_select_icon(scr_pic_large);
+     lv_image_set_src(delete_icon_pic_large, &playback_filemanager);
+
+  //   open_scr_delete_images
+   lv_obj_add_event_cb(delete_icon_pic_large, open_scr_delete_images, LV_EVENT_CLICKED, NULL);
 
     // ×óÏÂimage
     cam_icon_pic_large = lv_image_create(scr_pic_large);
@@ -176,8 +229,6 @@ void create_scr_pic_large(){
 
 }
 
-static int current_pic_index = 0;
-static int total_pic_count = 0;
 
 static void swipe_scr_img_large_cb(lv_event_t *e) {
     lv_dir_t dir = lv_indev_get_gesture_dir(lv_indev_active());
@@ -199,7 +250,24 @@ static void swipe_scr_img_large_cb(lv_event_t *e) {
     }
 }
 
+static void delete_image_large(int index) {
+
+    int new_index = index;
+
+    if (index+1 < total_pic_count){
+        open_pic_large_cb(index+1);
+        return;
+    } else if (index-1 >=0) {
+        open_pic_large_cb(index-1);
+        return;
+    } else {
+        open_scr_pic_lib_cb();
+        return;
+    }
+}
+
 void open_pic_large_cb(int index) {
+    individual_image_opened = true;
     total_pic_count = get_storage_image_count();
     current_pic_index = index;
 
@@ -213,6 +281,7 @@ void open_pic_large_cb(int index) {
 }
 
 void open_scr_pic_lib_cb(){
+    individual_image_opened = false;
     lv_screen_load(scr_pic_library);
 }
 
