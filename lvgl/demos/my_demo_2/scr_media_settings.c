@@ -361,6 +361,7 @@ void create_scr_media_selection(){
     lv_obj_set_style_border_width(media_select_roller, 0, LV_PART_MAIN);
     lv_obj_add_flag(media_select_roller, LV_OBJ_FLAG_CLICKABLE);
     lv_obj_set_style_text_line_space(media_select_roller, 50, LV_PART_MAIN);
+    lv_obj_set_style_text_align(media_select_roller, LV_TEXT_ALIGN_RIGHT, LV_PART_MAIN);
 
     //create roller indicator
     lv_obj_t * ind = lv_image_create(cont);

@@ -11,6 +11,8 @@ lv_obj_t *scr_resolution = NULL;
 lv_obj_t *scr_resolution_pro = NULL;
 lv_obj_t *scr_gyro_selection = NULL;
 
+static void set_gyro_eis_state_label(lv_obj_t * label, int cur_state);
+
 static int current_res = 0;
 static int current_frame_rate = 0;
 static int current_gyro_eis = 0;
@@ -211,7 +213,8 @@ static void update_all_rollers_cb(){
             cur_gyro_eis = update_roller_options_active(gyro_eis_roller, cam_gyro_eis_table, supported_gyro_eis_modes_table[supported_gyro_eis_video[cur_res][cur_frame_rate]], CAM_GYRO_EIS_COUNT, false);
     }
 
-     lv_label_set_text(gyro_eis_state, _(cam_gyro_eis_table[lv_roller_get_selected(gyro_eis_roller)]));
+    // lv_label_set_text(gyro_eis_state, _(cam_gyro_eis_table[lv_roller_get_selected(gyro_eis_roller)]));
+     set_gyro_eis_state_label(gyro_eis_state, cam_gyro_eis_table[lv_roller_get_selected(gyro_eis_roller)]);
      current_gyro_eis = lv_roller_get_selected(gyro_eis_roller) ;
 
      if (past_gyro_eis != current_gyro_eis) {
@@ -264,6 +267,17 @@ static void open_scr_gyro_selection_cb(){
     lv_screen_load(scr_gyro_selection);
 }
 
+void set_gyro_eis_state_label(lv_obj_t * label, int cur_state){
+    if (strlen(_(cur_state)) <= 9) {
+         lv_obj_add_style(label, &style_font_default_30, LV_PART_MAIN);
+    } else {
+         lv_obj_add_style(label, &style_font_default_24, LV_PART_MAIN);
+             lv_label_set_long_mode(label, LV_LABEL_LONG_WRAP);
+
+    }
+    lv_label_set_text(label, _(cur_state));
+}
+
 void open_scr_resolution_cb(){
     if (cur_cam_mode >= CAM_MODE_VIDEO) {
         //update_all_rollers_cb();
@@ -272,7 +286,9 @@ void open_scr_resolution_cb(){
          lv_label_set_text(frame_rate_pro_heading, _(STRING_FPS));
          lv_label_set_text(res_pro_heading, _(STRING_RESOLUTION));
          lv_label_set_text(gyro_eis_label, _(STRING_DIS));
-         lv_label_set_text(gyro_eis_state, _(cam_gyro_eis_table[lv_roller_get_selected(gyro_eis_roller)]));
+         //lv_label_set_text(gyro_eis_state, _(cam_gyro_eis_table[lv_roller_get_selected(gyro_eis_roller)]));
+        set_gyro_eis_state_label(gyro_eis_state, cam_gyro_eis_table[lv_roller_get_selected(gyro_eis_roller)]);
+
          lv_label_set_text(video_format_label, _(STRING_VIDEO_STANDARD));
          (pal_ntsc) ? lv_label_set_text(video_format_state, _(STRING_PAL)) : lv_label_set_text(video_format_state, _(STRING_NTSC));
 
@@ -298,8 +314,16 @@ static lv_obj_t * create_btn(int label_id, int state_id, int y){
         lv_obj_t *state_label = lv_label_create(btn);
         lv_label_set_text(state_label, _(state_id));
 
+
         lv_obj_add_style(state_label, &style_font_default_30, LV_PART_MAIN);
+      //  lv_obj_set_size(state_label, 220, 90);
+    //    lv_label_set_
         lv_obj_align(state_label, LV_ALIGN_CENTER, 0, 20);
+        lv_obj_set_width(state_label, 220);
+        lv_obj_set_style_text_align(state_label, LV_TEXT_ALIGN_CENTER, LV_PART_MAIN);
+        lv_obj_set_style_text_line_space(state_label, -10, LV_PART_MAIN);
+
+
         lv_obj_set_style_text_opa(state_label, LV_OPA_100, LV_PART_MAIN);
 
         if (label_id == STRING_VIDEO_STANDARD){
