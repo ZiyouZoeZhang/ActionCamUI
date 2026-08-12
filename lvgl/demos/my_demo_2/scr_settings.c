@@ -89,6 +89,7 @@ typedef struct {
     int states_count;
     lv_obj_t *roller_obj;
     lv_obj_t *state_label;
+    lv_obj_t **btns;
     void (*on_change)(int selected);
 } roller_item_t;
 
@@ -290,8 +291,7 @@ static void build_roller_options(const int *ids, int count, char *buf, size_t bu
     buf[offset] = '\0';
 }
 
-static void refresh_roller(roller_item_t *r)
-{
+static void refresh_roller(roller_item_t *r) {
     if (!r || !r->roller_obj) return;
 
     char buf[ROLLER_OPTIONS_BUF_SIZE];
@@ -386,6 +386,15 @@ static void roller_item_click_cb(lv_event_t *e)
     // 更新状态标签显示
     if (r->state_label) {
         lv_label_set_text(r->state_label, safe_lang_text(r->states[selected]));
+    }
+
+    for (int i = 0; i < r->states_count; i++) {
+        lv_obj_t *child = lv_obj_get_child(r->btns[i], 0);
+        if (i == selected) {
+            lv_obj_set_style_text_color(child, lv_palette_main(LV_PALETTE_BLUE), 0);
+        } else {
+            lv_obj_set_style_text_color(child, lv_color_white(), 0);
+        }
     }
 
     // 执行回调（如果有）
@@ -597,11 +606,22 @@ static void create_roller_page(lv_obj_t *parent, roller_item_t *r)
 
     int opt_count = r->states_count;
 
-    for (int i = 0; i < opt_count; i++) {
+    r->btns = lv_malloc(opt_count * sizeof(lv_obj_t *));
+    if (!r->btns) return;
 
+    for (int i = 0; i < opt_count; i++) {
         lv_obj_t *btn = create_basics(parent, safe_lang_text(r->states[i]));
-         lv_obj_align(btn, LV_ALIGN_TOP_MID, 0, i*83);
+        lv_obj_align(btn, LV_ALIGN_TOP_MID, 0, i * 83);
         lv_obj_set_user_data(btn, (void *)(intptr_t)i);
+        r->btns[i] = btn;   // ← 存到结构体里
+
+        if (i == lv_roller_get_selected(r->roller_obj)) {
+            lv_obj_set_style_text_color(lv_obj_get_child(btn, 0),
+                                        lv_palette_main(LV_PALETTE_BLUE), LV_PART_MAIN);
+        } else {
+            lv_obj_set_style_text_color(lv_obj_get_child(btn, 0),
+                                        lv_color_white(), LV_PART_MAIN);
+        }
 
         lv_obj_add_event_cb(btn, roller_item_click_cb, LV_EVENT_CLICKED, r);
     }
