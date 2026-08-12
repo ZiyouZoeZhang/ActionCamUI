@@ -303,6 +303,11 @@ static void refresh_roller(roller_item_t *r) {
         lv_roller_set_selected(r->roller_obj, sel, LV_ANIM_OFF);
     }
 
+    for (int i = 0; i < r->states_count; i++) {
+        lv_obj_t *child = lv_obj_get_child(r->btns[i], 0);
+        lv_label_set_text(child,  safe_lang_text(r->states[i]));
+    }
+
     if (r->state_label) {
         int selected = lv_roller_get_selected(r->roller_obj);
         lv_label_set_text(r->state_label, safe_lang_text(r->states[selected]));
