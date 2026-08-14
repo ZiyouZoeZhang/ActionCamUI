@@ -530,16 +530,17 @@ static lv_obj_t *create_basics(lv_obj_t *parent, const char *txt)
 {
     lv_obj_t *overall_cont = lv_menu_cont_create(parent);
     lv_obj_remove_flag(overall_cont, LV_OBJ_FLAG_SCROLLABLE);
-    lv_obj_set_size(overall_cont, 810, 100);
+    lv_obj_set_size(overall_cont, lv_pct(100)+10, 100);
 
     lv_obj_t *cont = lv_obj_create(overall_cont);
     lv_obj_remove_flag(cont, LV_OBJ_FLAG_SCROLLABLE);
     lv_obj_add_style(cont, &style_cont, LV_PART_MAIN);
-    lv_obj_set_size(cont, 810, 95);
+  lv_obj_set_style_border_width(cont, 0, LV_PART_MAIN);
+    lv_obj_set_size(cont, lv_pct(100), 95);
 
     lv_obj_t *label = lv_label_create(cont);
     lv_obj_add_style(label, &style_font_default_36, LV_PART_MAIN);
-    lv_obj_align(label, LV_ALIGN_LEFT_MID, 30, 0);
+    lv_obj_align(label, LV_ALIGN_LEFT_MID, lv_pct(2), 0);
     lv_label_set_text(label, txt);
 
     return cont;
