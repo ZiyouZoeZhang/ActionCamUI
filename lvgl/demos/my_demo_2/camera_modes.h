@@ -7,9 +7,9 @@
 #include <stdio.h>
 
 #include "lvgl.h"
-#include "pic_converted_transparent/image_declares.h"
+#include "/image_declares.h"
 
-typedef enum {
+typedef enum   {pic_converted_transparent
     // 拍照模式
     CAM_MODE_RAW,                      // Raw拍照
     CAM_MODE_LONG_EXPOSURE,       // 长曝光拍照
